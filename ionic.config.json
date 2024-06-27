@@ -1,0 +1,7 @@
+{
+  "name": "temple-accounts",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}
