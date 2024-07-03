@@ -1,0 +1,46 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Temples</ion-title>
+    <ion-buttons slot="end">
+      <ion-button color="primary" fill="solid" routerLink="add">
+        <ion-icon name="add-outline"></ion-icon>
+        Add Temple
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <ion-grid [fixed]="true" class="ion-no-padding ion-text-center">
+    <ion-row class="ion-justify-content-center">
+      <ion-col>Temple Name</ion-col>
+      <ion-col class="ion-hide-sm-down">Temple Address</ion-col>
+      <ion-col class="actions-col">Actions</ion-col>
+    </ion-row>
+    @for (temple of temples; track $index) {
+    <ion-row class="ion-justify-content-center ion-nowrap">
+      <ion-col>{{temple.templeName}}</ion-col>
+      <ion-col class="ion-hide-sm-down">{{temple.templeAddress}}</ion-col>
+      <ion-col class="actions-col">
+        <ion-buttons>
+          <ion-button routerLink="edit/{{temple.id}}">
+            <ion-icon name="create-outline"></ion-icon>
+          </ion-button>
+          <ion-button routerLink="view/{{temple.id}}">
+            <ion-icon name="eye-outline"></ion-icon>
+          </ion-button>
+          <ion-button (click)="presentDeleteTempleAlert(temple)">
+            <ion-icon name="trash-outline"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+      </ion-col>
+    </ion-row>
+    } @empty {
+    <ion-row class="no-entries-row">
+      <ion-col size="12" class="ion-text-center">No entries to show.</ion-col>
+    </ion-row>
+    }
+  </ion-grid>
+</ion-content>

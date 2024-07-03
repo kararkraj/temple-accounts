@@ -1,3 +1,116 @@
-<ion-app>
-  <ion-router-outlet></ion-router-outlet>
+<ion-app [class.ion-palette-dark]="dark">
+
+  <ion-split-pane contentId="main-content">
+    <ion-menu contentId="main-content">
+      <ion-content>
+
+        @if (isAuthenticated) {
+
+        <ion-list lines="none">
+          <ion-list-header>
+            Manage
+          </ion-list-header>
+
+          @for (page of appPages; track $index) {
+
+          <ion-menu-toggle autoHide="false">
+            <ion-item button [routerLink]="page.url" routerLinkActive="selected" routerDirection="root" detail="false">
+              <ion-icon slot="start" [name]="page.icon"></ion-icon>
+              <ion-label>
+                {{page.title}}
+              </ion-label>
+            </ion-item>
+          </ion-menu-toggle>
+
+          }
+        </ion-list>
+
+        <ion-list lines="none">
+          <ion-list-header>
+            Account
+          </ion-list-header>
+
+          <ion-menu-toggle autoHide="false">
+            <ion-item button routerLink="/account" routerLinkActive="active" routerDirection="root" detail="false">
+              <ion-icon slot="start" name="person"></ion-icon>
+              <ion-label>
+                My Profile
+              </ion-label>
+            </ion-item>
+          </ion-menu-toggle>
+
+          <ion-menu-toggle autoHide="false">
+            <ion-item button detail="false" id="present-logout-alert">
+              <ion-icon slot="start" name="log-out-outline"></ion-icon>
+              <ion-label>
+                Logout
+              </ion-label>
+              <ion-alert trigger="present-logout-alert" header="Are you sure you want to logout?"
+                [buttons]="logoutAlertButtons"></ion-alert>
+            </ion-item>
+          </ion-menu-toggle>
+
+          <ion-item>
+            <ion-icon slot="start" name="moon-outline"></ion-icon>
+            <ion-toggle [(ngModel)]="dark">
+              Dark Mode
+            </ion-toggle>
+          </ion-item>
+        </ion-list>
+
+        } @else {
+
+        <ion-list lines="none">
+          <ion-list-header>
+            Account
+          </ion-list-header>
+
+          <ion-menu-toggle autoHide="false">
+            <ion-item button routerLink="/login" routerLinkActive="active" routerDirection="root" detail="false">
+              <ion-icon slot="start" name="log-in-outline"></ion-icon>
+              <ion-label>
+                Login
+              </ion-label>
+            </ion-item>
+          </ion-menu-toggle>
+
+          <ion-menu-toggle autoHide="false">
+            <ion-item button routerLink="/register" routerLinkActive="active" routerDirection="root" detail="false">
+              <ion-icon slot="start" name="person-add-outline"></ion-icon>
+              <ion-label>
+                Register
+              </ion-label>
+            </ion-item>
+          </ion-menu-toggle>
+
+          <ion-item>
+            <ion-icon slot="start" name="moon-outline"></ion-icon>
+            <ion-toggle [(ngModel)]="dark">
+              Dark Mode
+            </ion-toggle>
+          </ion-item>
+        </ion-list>
+
+        }
+
+        <ion-list lines="none">
+          <ion-list-header>
+            Tutorial
+          </ion-list-header>
+          <ion-menu-toggle autoHide="false">
+            <ion-item button (click)="openTutorial()" detail="false">
+              <ion-icon slot="start" name="hammer-outline"></ion-icon>
+              <ion-label>Show Tutorial</ion-label>
+            </ion-item>
+          </ion-menu-toggle>
+
+        </ion-list>
+      </ion-content>
+    </ion-menu>
+
+    <ion-router-outlet (activate)="subscribeToChildEvents($event)" (deactivate)="unsubscribeToChildEvents($event)"
+      id="main-content"></ion-router-outlet>
+
+  </ion-split-pane>
+
 </ion-app>

@@ -1,0 +1,34 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Entries</ion-title>
+    <ion-buttons slot="end">
+      <ion-button color="primary" fill="solid" routerLink="../add-entry">
+        <ion-icon name="add-outline"></ion-icon>
+        Add Entry
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <ion-grid class="ion-no-padding ion-text-center" [fixed]="true">
+    <ion-row>
+      <ion-col>Name</ion-col>
+      <ion-col>Amount</ion-col>
+      <ion-col>Seva Name</ion-col>
+    </ion-row>
+    @for (entry of entries; track $index) {
+    <ion-row>
+      <ion-col>{{entry.name}}</ion-col>
+      <ion-col>{{entry.payment}}</ion-col>
+      <ion-col>{{entry.sevaName}}</ion-col>
+    </ion-row>
+    } @empty {
+    <ion-row class="no-entries-row">
+      <ion-col size="12" class="ion-text-center">No entries to show.</ion-col>
+    </ion-row>
+    }
+  </ion-grid>
+</ion-content>

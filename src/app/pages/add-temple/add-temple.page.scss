@@ -1,0 +1,13 @@
+@media (max-width: 560px) {
+    ion-input.amount-input {
+        flex: 20%;
+    }
+}
+@media (min-width: 561px) and (max-width: 1000px) {
+    ion-input.amount-input {
+        flex: 60%;
+    }
+}
+.input-disabled, .textarea-disabled {
+    opacity: 0.5;
+}

@@ -1,0 +1,41 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Add Entry</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="container">
+    <form [formGroup]="addEntryForm" (ngSubmit)="onSubmit()">
+
+      <ion-item lines="full">
+        <ion-select formControlName="title" label="Title *" label-placement="floating" placeholder="Select title"
+          required name="title">
+          <ion-select-option value="Sri.">Sri. (Shriman)</ion-select-option>
+          <ion-select-option value="Smt.">Smt. (Shrimati)</ion-select-option>
+          <ion-select-option value="Kum.">Kum. (Kumar/Kumari)</ion-select-option>
+        </ion-select>
+      </ion-item>
+
+      <ion-item lines="full">
+        <ion-input formControlName="name" label="Name *" label-placement="floating" placeholder="Enter name"
+          type="text" name="name" required helperText="Only a-z, A-Z and 0-9 characters allowed"
+          errorText="Only a-z, A-Z and 0-9 characters allowed"></ion-input>
+      </ion-item>
+
+      <ion-item lines="full">
+        <ion-select formControlName="service" label="Seva *" label-placement="floating" placeholder="Select sevas"
+          required name="seva">
+          @for (seva of sevas; track $index) {
+          <ion-select-option [value]="seva">{{seva.name}}</ion-select-option>
+          }
+        </ion-select>
+      </ion-item>
+
+      <ion-button expand="full" type="submit">Submit</ion-button>
+    </form>
+  </div>
+</ion-content>

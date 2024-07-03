@@ -31,7 +31,8 @@
                 "output": "assets"
               }
             ],
-            "styles": ["src/global.scss", "src/theme/variables.scss"],
+            "styles": [{"input": "src/global.scss", "inject": true}, 
+            {"input": "src/theme/variables.scss", "inject": true}],
             "scripts": []
           },
           "configurations": {
@@ -126,7 +127,10 @@
     }
   },
   "cli": {
-    "schematicCollections": ["@ionic/angular-toolkit"]
+    "schematicCollections": [
+      "@ionic/angular-toolkit"
+    ],
+    "analytics": "c121c8cd-e961-49e0-9213-c38374ae2fbb"
   },
   "schematics": {
     "@ionic/angular-toolkit:component": {

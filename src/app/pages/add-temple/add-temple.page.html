@@ -1,0 +1,72 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="tabs/temples"></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{title}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <form [formGroup]="templeForm" (ngSubmit)="onSubmit()">
+
+    <ion-item-group>
+      <ion-item-divider>
+        <ion-label>Temple details:</ion-label>
+      </ion-item-divider>
+      <ion-item lines="none">
+        <ion-input formControlName="templeName" label="Temple Name *" label-placement="floating"
+          placeholder="Enter temple name" type="text" name="templeName" required maxlength="100"
+          helperText="Only a-z, A-Z and 0-9 characters allowed"
+          errorText="Only a-z, A-Z and 0-9 characters allowed"></ion-input>
+      </ion-item>
+
+      <ion-item lines="none">
+        <ion-textarea formControlName="templeAddress" label="Temple Address *" label-placement="floating"
+          placeholder="Enter temple address" name="templeAddress" required [autoGrow]="true" maxlength="500"
+          helperText="Only a-z, A-Z, 0-9, comma, ., -` and new line characters allowed"
+          errorText="Only a-z, A-Z, 0-9, comma, ., - and new line characters allowed" rows="3"></ion-textarea>
+      </ion-item>
+    </ion-item-group>
+
+    <ion-item-group formArrayName="services">
+      <ion-item-divider>
+        <ion-label>Temple service details:</ion-label>
+      </ion-item-divider>
+      @for (serviceForm of services.controls; track $index) {
+      <ion-item lines="none" [formGroup]="serviceForm" class="ion-align-items-start">
+        <ion-input formControlName="serviceName" [label]="'Service name ' + ($index + 1) + ' *'"
+          label-placement="floating" placeholder="Enter Service name" type="text" name="serviceName" required
+          maxlength="30" helperText="Only a-z, A-Z and 0-9 characters allowed"
+          errorText="Only a-z, A-Z and 0-9 characters allowed" class="ion-margin-end"></ion-input>
+
+        <ion-input formControlName="amount" label="Amount (Rs.) *" label-placement="floating" placeholder="1111"
+          type="number" name="amount" required helperText="Required" errorText="Required" min="1"
+          class="amount-input"></ion-input>
+
+        @if ($index > 0 && canEdit) {
+        <ion-button (click)="removeLastService($index)" size="default" class="ion-align-self-center">
+          <ion-icon name="trash-outline" slot="icon-only"></ion-icon>
+        </ion-button>
+        }
+      </ion-item>
+      }
+    </ion-item-group>
+
+
+    <ng-container *ngIf="canEdit">
+      <ion-button size="small" type="button" (click)="addNewService()" class="ion-margin-top">Add another
+        service</ion-button>
+
+      <ion-grid class="ion-no-padding">
+        <ion-row>
+          <ion-col>
+            <ion-button expand="full" type="button" color="light" (click)="resetForm()">Reset</ion-button>
+          </ion-col>
+          <ion-col>
+            <ion-button expand="full" type="submit">Submit</ion-button>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ng-container>
+  </form>
+</ion-content>
