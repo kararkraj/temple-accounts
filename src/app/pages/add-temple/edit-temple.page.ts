@@ -59,7 +59,7 @@ export class EditTemplePage extends AddTemplePage implements OnInit {
                 next: (temple) => {
                     this.temple = temple;
                     this.toaster.presentToast({ message: 'Temple was updated successfully!', color: 'success' });
-                    this.resetForm(temple);
+                    this.resetForm();
                     loader.dismiss();
                 }
             })
@@ -68,6 +68,10 @@ export class EditTemplePage extends AddTemplePage implements OnInit {
         } else {
             await this.toaster.presentToast({ message: "Nothing to update.", color: "success" });
         }
+    }
+
+    override resetForm() {
+        this.templeForm.reset(this.temple);
     }
 
 }

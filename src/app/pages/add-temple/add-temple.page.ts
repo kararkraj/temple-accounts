@@ -1,9 +1,8 @@
-import { Component, Input, OnInit, numberAttribute } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnInit, numberAttribute } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonTextarea, IonInput, IonButtons, IonMenuButton, IonItem, IonIcon, LoadingController, IonLabel, IonItemDivider, IonItemGroup, IonGrid, IonRow, IonCol, IonBackButton } from '@ionic/angular/standalone';
 import { DataService } from 'src/app/services/data.service';
-import { Temple } from 'src/app/interfaces/temple';
 import { ToasterService } from 'src/app/services/toaster.service';
 
 @Component({
@@ -24,7 +23,8 @@ export class AddTemplePage implements OnInit {
     private formBuilder: FormBuilder,
     public dataService: DataService,
     public loader: LoadingController,
-    public toaster: ToasterService
+    public toaster: ToasterService,
+    private cdr: ChangeDetectorRef
   ) {
     this.templeForm = this.formBuilder.group({
       name: [null, [Validators.required, Validators.maxLength(100), Validators.pattern("[a-zA-Z0-9 ]+")]],
@@ -33,7 +33,6 @@ export class AddTemplePage implements OnInit {
   }
 
   ngOnInit(): void {
-
   }
 
   async onSubmit() {
@@ -50,11 +49,13 @@ export class AddTemplePage implements OnInit {
       })
     } else {
       this.templeForm.markAllAsTouched();
+      this.cdr.detectChanges();
     }
   }
 
-  resetForm(temple?: Temple) {
-    this.templeForm.reset(temple ? temple : null);
+  resetForm() {
+    this.templeForm.reset();
+    this.cdr.detectChanges();
   }
 
 }
