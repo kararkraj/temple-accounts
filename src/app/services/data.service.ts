@@ -1,6 +1,6 @@
 import { Injectable, WritableSignal, signal } from '@angular/core';
 import { Entry } from '../interfaces/entry';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { StorageService } from './storage.service';
 import { Temple } from '../interfaces/temple';
 import { STORAGE_KEYS } from '../storage.config';
@@ -40,13 +40,16 @@ export class DataService {
 
   addTemple(temple: Temple): Observable<Temple> {
     return new Observable(observer => {
-      this.storage.get(STORAGE_KEYS.TEMPLE.temples).then(temples => {
-        temples.push(temple);
-        this.storage.set(STORAGE_KEYS.TEMPLE.temples, temples);
-        this.storage.set(STORAGE_KEYS.TEMPLE.lastStoredId, temple.id).then(() => {
-          observer.next(temple);
-          this.triggerTemplesUpdatedEvent();
-          observer.complete();
+      this.getTempleNextId().then(templeId => {
+        temple.id = templeId
+        this.storage.get(STORAGE_KEYS.TEMPLE.temples).then(temples => {
+          temples.push(temple);
+          this.storage.set(STORAGE_KEYS.TEMPLE.temples, temples);
+          this.storage.set(STORAGE_KEYS.TEMPLE.lastStoredId, temple.id).then(() => {
+            observer.next(temple);
+            this.triggerTemplesUpdatedEvent();
+            observer.complete();
+          });
         });
       });
     });

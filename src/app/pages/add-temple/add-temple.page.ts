@@ -41,11 +41,7 @@ export class AddTemplePage implements OnInit {
       const loader = await this.loader.create({ message: 'Adding temple...' });
       await loader.present();
 
-      const templeFormValue = this.templeForm.getRawValue();
-      const id = await this.dataService.getTempleNextId();
-      const temple: Temple = { id, ...templeFormValue };
-
-      this.dataService.addTemple(temple).subscribe({
+      this.dataService.addTemple({ ...this.templeForm.getRawValue(), id: 0 }).subscribe({
         next: (temple) => {
           this.toaster.presentToast({ message: 'Temple was added successfully!', color: 'success' });
           this.resetForm();

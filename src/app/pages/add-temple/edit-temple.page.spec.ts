@@ -30,7 +30,6 @@ describe('EditTemplePage', () => {
     const fakeLoadingObject = jasmine.createSpyObj('FakeLoadingObject', ['present', 'dismiss']);
 
     beforeEach(async () => {
-
         await TestBed.configureTestingModule({
             providers: [
                 { provide: DataService, useValue: dataServiceStub },
@@ -45,9 +44,10 @@ describe('EditTemplePage', () => {
         dataService = fixture.debugElement.injector.get(DataService);
     });
 
-    it("should set title to Edit Temple", () => {
+    it("should set title to Edit Temple and canEdit to true", () => {
         fixture.detectChanges();
         expect(component.title).toEqual("Edit Temple");
+        expect(component.canEdit).toBeTrue();
     })
 
     describe("When temple Id is invalid", () => {
@@ -70,7 +70,7 @@ describe('EditTemplePage', () => {
         });
         
         it('should assign temple variable and patch the form with default temple values', () => {
-            const getTempleByIdSpy = spyOn<any, any>(dataService, 'getTempleById').and.callThrough();
+            const getTempleByIdSpy = spyOn(dataService, 'getTempleById').and.callThrough();
             fixture.detectChanges();
 
             expect(getTempleByIdSpy).toHaveBeenCalledOnceWith(temple.id);

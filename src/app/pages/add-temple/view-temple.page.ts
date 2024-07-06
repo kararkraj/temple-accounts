@@ -38,7 +38,6 @@ import { Router } from '@angular/router';
 })
 export class ViewTemplePage extends AddTemplePage implements OnInit {
 
-    private temple!: Temple;
     router = inject(Router);
 
     override ngOnInit(): void {
@@ -46,7 +45,6 @@ export class ViewTemplePage extends AddTemplePage implements OnInit {
         this.canEdit = false;
         this.dataService.getTempleById(this.templeId).subscribe({
             next: temple => {
-                this.temple = temple;
                 this.templeForm.patchValue(temple);
                 this.templeForm.disable();
             },
@@ -56,22 +54,4 @@ export class ViewTemplePage extends AddTemplePage implements OnInit {
             }
         });
     }
-
-    override async onSubmit() {
-        if (this.templeForm.valid && this.templeForm.dirty) {
-            const loader = await this.loader.create({ message: 'Updating temple...' });
-            await loader.present();
-
-            this.dataService.updateTemple({ id: this.templeId, ...this.templeForm.getRawValue() }).subscribe({
-                next: (temple) => {
-                    this.toaster.presentToast({ message: 'Temple was updated successfully!', color: 'success' });
-                    this.resetForm(temple);
-                    loader.dismiss();
-                }
-            })
-        } else {
-            this.templeForm.markAllAsTouched();
-        }
-    }
-
 }
