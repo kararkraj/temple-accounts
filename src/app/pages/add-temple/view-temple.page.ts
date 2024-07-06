@@ -46,9 +46,6 @@ export class ViewTemplePage extends AddTemplePage implements OnInit {
         this.canEdit = false;
         this.dataService.getTempleById(this.templeId).subscribe({
             next: temple => {
-                for (let i = 1; i < temple.services.length; i++) {
-                    this.addNewService();
-                }
                 this.temple = temple;
                 this.templeForm.patchValue(temple);
                 this.templeForm.disable();
@@ -75,13 +72,6 @@ export class ViewTemplePage extends AddTemplePage implements OnInit {
         } else {
             this.templeForm.markAllAsTouched();
         }
-    }
-
-    override resetForm(temple?: Temple) {
-        for (let i = this.services.length; i < this.temple.services.length; i++) {
-            this.addNewService();
-        }
-        this.templeForm.reset(temple ? temple : this.temple);
     }
 
 }

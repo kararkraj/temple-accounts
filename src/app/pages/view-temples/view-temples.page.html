@@ -21,8 +21,8 @@
     </ion-row>
     @for (temple of temples; track $index) {
     <ion-row class="ion-justify-content-center ion-nowrap">
-      <ion-col>{{temple.templeName}}</ion-col>
-      <ion-col class="ion-hide-sm-down">{{temple.templeAddress}}</ion-col>
+      <ion-col>{{temple.name}}</ion-col>
+      <ion-col class="ion-hide-sm-down">{{temple.address}}</ion-col>
       <ion-col class="actions-col">
         <ion-buttons>
           <ion-button routerLink="edit/{{temple.id}}">

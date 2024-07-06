@@ -1,12 +1,11 @@
 export interface Temple {
     id: number;
-    templeName: string;
-    templeAddress: string;
-    services: TempleService[]
+    name: string;
+    address: string;
 }
 
 export interface TempleService {
     id: number;
-    serviceName: string;
+    name: string;
     amount: number;
 }

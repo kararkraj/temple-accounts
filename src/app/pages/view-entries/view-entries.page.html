@@ -22,8 +22,8 @@
     @for (entry of entries; track $index) {
     <ion-row>
       <ion-col>{{entry.name}}</ion-col>
-      <ion-col>{{entry.payment}}</ion-col>
-      <ion-col>{{entry.sevaName}}</ion-col>
+      <ion-col>{{entry.templeService.amount}}</ion-col>
+      <ion-col>{{entry.templeService.name}}</ion-col>
     </ion-row>
     } @empty {
     <ion-row class="no-entries-row">

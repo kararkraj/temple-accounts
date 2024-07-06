@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, numberAttribute } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonTextarea, IonInput, IonButtons, IonMenuButton, IonItem, IonIcon, LoadingController, IonLabel, IonItemDivider, IonItemGroup, IonGrid, IonRow, IonCol, IonBackButton } from '@ionic/angular/standalone';
 import { DataService } from 'src/app/services/data.service';
 import { Temple } from 'src/app/interfaces/temple';
@@ -27,19 +27,13 @@ export class AddTemplePage implements OnInit {
     public toaster: ToasterService
   ) {
     this.templeForm = this.formBuilder.group({
-      templeName: [null, [Validators.required, Validators.maxLength(100), Validators.pattern("[a-zA-Z0-9 ]+")]],
-      templeAddress: [null, [Validators.required, Validators.maxLength(500), Validators.pattern("^[a-zA-Z0-9 \n.,-]*$")]],
-      services: this.formBuilder.array([])
+      name: [null, [Validators.required, Validators.maxLength(100), Validators.pattern("[a-zA-Z0-9 ]+")]],
+      address: [null, [Validators.required, Validators.maxLength(500), Validators.pattern("^[a-zA-Z0-9 \n.,-]*$")]]
     });
-    this.addNewService();
   }
 
   ngOnInit(): void {
 
-  }
-
-  get services() {
-    return this.templeForm.get('services') as FormArray<FormGroup>;
   }
 
   async onSubmit() {
@@ -63,29 +57,8 @@ export class AddTemplePage implements OnInit {
     }
   }
 
-  addNewService() {
-    const servicesControl = this.services;
-    const nextId = servicesControl.length + 1;
-    servicesControl.push(this.getNewServiceFormGroup(nextId));
-  }
-
-  getNewServiceFormGroup(nextId: number) {
-    return this.formBuilder.group({
-      id: [nextId, [Validators.required]],
-      serviceName: [null, [Validators.required, Validators.maxLength(30), Validators.pattern("[a-zA-Z0-9 ]+")]],
-      amount: [null, [Validators.required, Validators.min(1)]]
-    });
-  }
-
-  removeLastService(index: number) {
-    this.services.removeAt(index);
-  }
-
-  resetForm() {
-    this.templeForm.reset({ services: [{ id: 1 }] });
-    for (let i = this.services.controls.length; i > 0; i--) {
-      this.removeLastService(i);
-    }
+  resetForm(temple?: Temple) {
+    this.templeForm.reset(temple ? temple : null);
   }
 
 }

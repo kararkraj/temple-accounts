@@ -40,9 +40,6 @@ export class EditTemplePage extends AddTemplePage implements OnInit {
         this.title = "Edit Temple";
         this.dataService.getTempleById(this.templeId).subscribe({
             next: temple => {
-                for (let i = 1; i < temple.services.length; i++) {
-                    this.addNewService();
-                }
                 this.temple = temple;
                 this.templeForm.patchValue(temple)
             },
@@ -60,21 +57,17 @@ export class EditTemplePage extends AddTemplePage implements OnInit {
 
             this.dataService.updateTemple({ id: this.templeId, ...this.templeForm.getRawValue() }).subscribe({
                 next: (temple) => {
+                    this.temple = temple;
                     this.toaster.presentToast({ message: 'Temple was updated successfully!', color: 'success' });
                     this.resetForm(temple);
                     loader.dismiss();
                 }
             })
-        } else {
+        } else if (!this.templeForm.valid) {
             this.templeForm.markAllAsTouched();
+        } else {
+            await this.toaster.presentToast({ message: "Nothing to update.", color: "success" });
         }
-    }
-
-    override resetForm(temple?: Temple) {
-        for (let i = this.services.length; i < this.temple.services.length; i++) {
-            this.addNewService();
-        }
-        this.templeForm.reset(temple ? temple : this.temple);
     }
 
 }

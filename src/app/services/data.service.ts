@@ -77,7 +77,6 @@ export class DataService {
         const index = temples.findIndex(temple => temple.id === id);
         temples.splice(index, 1);
         temples.splice(index, 0, temple);
-        console.log(temples);
         this.storage.set(STORAGE_KEYS.TEMPLE.temples, temples).then(() => {
           observer.next(temple);
           this.triggerTemplesUpdatedEvent();

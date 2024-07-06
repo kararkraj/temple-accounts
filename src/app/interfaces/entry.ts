@@ -1,6 +1,9 @@
+import { Temple, TempleService } from "./temple";
+
 export interface Entry {
     id: number;
+    title: string;
     name: string;
-    sevaName: string;
-    payment: number;
+    temple: Temple;
+    templeService: TempleService;
   }

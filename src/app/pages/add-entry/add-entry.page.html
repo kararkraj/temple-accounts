@@ -9,7 +9,7 @@
 
 <ion-content>
   <div class="container">
-    <form [formGroup]="addEntryForm" (ngSubmit)="onSubmit()">
+    <form [formGroup]="entryForm" (ngSubmit)="onSubmit()">
 
       <ion-item lines="full">
         <ion-select formControlName="title" label="Title *" label-placement="floating" placeholder="Select title"
@@ -27,10 +27,10 @@
       </ion-item>
 
       <ion-item lines="full">
-        <ion-select formControlName="service" label="Seva *" label-placement="floating" placeholder="Select sevas"
-          required name="seva">
-          @for (seva of sevas; track $index) {
-          <ion-select-option [value]="seva">{{seva.name}}</ion-select-option>
+        <ion-select formControlName="temple" label="Temple *" label-placement="floating" placeholder="Select temple"
+          required name="temple" (selectionChange)="onTempleSelection($event)">
+          @for (temple of temples; track $index) {
+          <ion-select-option [value]="temple">{{temple.name}}</ion-select-option>
           }
         </ion-select>
       </ion-item>

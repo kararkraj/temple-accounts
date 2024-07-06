@@ -16,10 +16,6 @@ export const TABS_ROUTES: Routes = [
                 loadComponent: () => import('./../add-entry/add-entry.page').then(m => m.AddEntryPage)
             },
             {
-                path: 'add-temple',
-                loadComponent: () => import('./../add-temple/add-temple.page').then(m => m.AddTemplePage)
-            },
-            {
                 path: 'temples',
                 children: [
                     {
@@ -44,6 +40,11 @@ export const TABS_ROUTES: Routes = [
                 path: 'entries',
                 loadComponent: () => import('./../view-entries/view-entries.page').then(m => m.ViewEntriesPage)
             },
+            {
+                path: '**',
+                pathMatch: "full",
+                redirectTo: 'temples'
+            }
         ]
     }
 ]

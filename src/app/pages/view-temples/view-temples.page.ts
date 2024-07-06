@@ -38,7 +38,7 @@ export class ViewTemplesPage implements OnInit {
     const alert = await this.alertController.create({
       header: 'Confirm delete',
       subHeader: 'Are you sure you want to delete the following record?',
-      message: 'Temple name: ' + temple.templeName,
+      message: 'Temple name: ' + temple.name,
       buttons: [
         {
           text: 'No, Cancel',
