@@ -21,7 +21,7 @@ const dataServiceStub: Partial<DataService> = {
 describe('EditTemplePage', () => {
     let component: EditTemplePage;
     let fixture: ComponentFixture<EditTemplePage>;
-    
+
     let router: Router;
     let toaster: ToasterService;
     let dataService: DataService;
@@ -68,7 +68,7 @@ describe('EditTemplePage', () => {
         beforeEach(() => {
             component.templeId = temple.id;
         });
-        
+
         it('should assign temple variable and patch the form with default temple values', () => {
             const getTempleByIdSpy = spyOn(dataService, 'getTempleById').and.callThrough();
             fixture.detectChanges();
@@ -128,10 +128,27 @@ describe('EditTemplePage', () => {
                     expect(updateTempleSpy).toHaveBeenCalledOnceWith(updatedTemple);
                     expect(component["temple"]).toEqual(updatedTemple);
                     expect(toasterSpy).toHaveBeenCalledOnceWith({ message: 'Temple was updated successfully!', color: 'success' });
-                    expect(resetFormSpy).toHaveBeenCalledOnceWith(updatedTemple);
+                    expect(resetFormSpy).toHaveBeenCalledTimes(1);
                     expect(fakeLoadingObject.dismiss).toHaveBeenCalledTimes(1);
                 }));
             });
+        });
+
+        it('OnReset should reset the form values', () => {
+            fixture.detectChanges();
+            const name = "updated name";
+            const address = "updated address";
+            component.templeForm.patchValue({ name, address });
+            component.templeForm.markAllAsTouched()
+            component.templeForm.markAsDirty();
+            expect(component.templeForm.get("name")?.value).toEqual(name);
+            expect(component.templeForm.get("address")?.value).toEqual(address);
+            component.resetForm();
+
+            expect(component.templeForm.get("name")?.value).toEqual(temple.name);
+            expect(component.templeForm.get("address")?.value).toEqual(temple.address);
+            expect(component.templeForm.dirty).toBeFalse();
+            expect(component.templeForm.touched).toBeFalse();
         });
     });
 });

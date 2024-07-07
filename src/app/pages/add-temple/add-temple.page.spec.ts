@@ -5,6 +5,7 @@ import { DataService } from 'src/app/services/data.service';
 import { LoadingController } from '@ionic/angular/standalone';
 import { of } from 'rxjs';
 import { ToasterService } from 'src/app/services/toaster.service';
+import { ChangeDetectorRef } from '@angular/core';
 
 const temple: Temple = {
   id: 1,
@@ -76,4 +77,20 @@ describe('AddTemplePage', () => {
     expect(resetFormSpy).toHaveBeenCalledTimes(1);
     expect(loadingObj.dismiss).toHaveBeenCalledTimes(1);
   }));
+
+  it('OnReset should reset the form values', () => {
+    component.templeForm.patchValue(temple);
+    component.templeForm.markAllAsTouched()
+    component.templeForm.markAsDirty();
+    expect(component.templeForm.get("name")?.value).toEqual(temple.name);
+    expect(component.templeForm.get("address")?.value).toEqual(temple.address);
+    const detectChangesSpy = spyOn(component["cdr"], 'detectChanges');
+    component.resetForm();
+    
+    expect(component.templeForm.get("name")?.value).toBeNull();
+    expect(component.templeForm.get("address")?.value).toBeNull();
+    expect(component.templeForm.dirty).toBeFalse();
+    expect(component.templeForm.touched).toBeFalse();
+    expect(detectChangesSpy).toHaveBeenCalledTimes(1);
+  });
 });

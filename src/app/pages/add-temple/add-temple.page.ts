@@ -49,12 +49,18 @@ export class AddTemplePage implements OnInit {
       })
     } else {
       this.templeForm.markAllAsTouched();
+
+      // detect changes is required because below issue: 
+      // https://github.com/kararkraj/temple-accounts/issues/1
       this.cdr.detectChanges();
     }
   }
 
   resetForm() {
     this.templeForm.reset();
+
+    // detect changes is required because below issue: 
+    // https://github.com/kararkraj/temple-accounts/issues/1
     this.cdr.detectChanges();
   }
 
