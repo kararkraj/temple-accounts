@@ -4,8 +4,9 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonSelect, IonSelectOption, IonInput, IonButtons, IonMenuButton, IonNote, IonItem, IonText } from '@ionic/angular/standalone';
 import { StorageService } from 'src/app/services/storage.service';
 import { DataService } from 'src/app/services/data.service';
-import { Temple, TempleService } from 'src/app/interfaces/temple';
+import { Temple } from 'src/app/interfaces/temple';
 import { PdfmakeService } from 'src/app/services/pdfmake.service';
+import { TempleService } from 'src/app/interfaces/templeService';
 
 
 @Component({

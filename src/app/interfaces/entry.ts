@@ -1,4 +1,5 @@
-import { Temple, TempleService } from "./temple";
+import { Temple } from "./temple";
+import { TempleService } from "./templeService";
 
 export interface Entry {
     id: number;

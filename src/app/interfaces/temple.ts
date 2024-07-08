@@ -3,9 +3,3 @@ export interface Temple {
     name: string;
     address: string;
 }
-
-export interface TempleService {
-    id: number;
-    name: string;
-    amount: number;
-}

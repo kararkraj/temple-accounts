@@ -1,0 +1,26 @@
+ion-row:first-child ion-col {
+    background-color: var(--ion-color-primary);
+    border: solid 1px #fff;
+    color: #fff;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+ion-col {
+    border-right: solid 1px var(--ion-color-light-shade);
+    border-bottom: solid 1px var(--ion-color-light-shade);
+}
+
+ion-col:first-child {
+    border-left: solid 1px var(--ion-color-light-shade);
+}
+
+.no-entries-row {
+    ion-col {
+        border: none;
+    }
+
+    border: 1px solid var(--ion-color-light-shade);
+}

@@ -37,13 +37,30 @@ export const TABS_ROUTES: Routes = [
                 ]
             },
             {
+              path: 'services',
+              children: [
+                {
+                    path: '',
+                    loadComponent: () => import('./../charity-types/charity-types.page').then( m => m.CharityTypesPage)
+                },
+                {
+                    path: 'add',
+                    loadComponent: () => import('./../charity-types/add-charity-type/add-charity-type.page').then(m => m.AddCharityTypePage)
+                },
+                {
+                    path: 'edit/:charityTypeId',
+                    loadComponent: () => import('./../charity-types/edit-charity-type/edit-charity-type.page').then(m => m.EditCharityTypePage)
+                }
+              ]
+            },
+            {
                 path: 'entries',
                 loadComponent: () => import('./../view-entries/view-entries.page').then(m => m.ViewEntriesPage)
             },
             {
                 path: '**',
                 pathMatch: "full",
-                redirectTo: 'temples'
+                redirectTo: 'add-entrys'
             }
         ]
     }

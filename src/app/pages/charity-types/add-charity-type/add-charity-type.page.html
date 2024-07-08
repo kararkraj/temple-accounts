@@ -1,0 +1,37 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="tabs/services"></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{title}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <form [formGroup]="charityTypeForm" (ngSubmit)="onSubmit()">
+
+    <ion-item-group>
+      <ion-item lines="none">
+        <ion-input formControlName="name" label="Service Name *" label-placement="floating"
+          placeholder="Enter service name" type="text" name="name" required maxlength="100"
+          helperText="Only a-z, A-Z and 0-9 characters allowed"
+          errorText="Only a-z, A-Z and 0-9 characters allowed"></ion-input>
+      </ion-item>
+
+      <ion-item lines="none">
+        <ion-input formControlName="amount" label="Service Amount *" label-placement="floating" placeholder="1001"
+          type="number" name="amount" required min="1"></ion-input>
+      </ion-item>
+    </ion-item-group>
+
+    <ion-grid class="ion-no-padding">
+      <ion-row>
+        <ion-col>
+          <ion-button expand="full" type="button" color="light" (click)="resetForm()">Reset</ion-button>
+        </ion-col>
+        <ion-col>
+          <ion-button expand="full" type="submit">Submit</ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </form>
+</ion-content>
