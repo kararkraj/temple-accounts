@@ -46,7 +46,7 @@ export class EntriesPage implements OnInit {
           text: 'Yes, Delete',
           role: 'confirm',
           handler: async () => {
-            const loader = await this.loader.create({ message: 'Deleting temple...' });
+            const loader = await this.loader.create({ message: 'Deleting entry...' });
             await loader.present();
             this.entryService.deleteEntry(entry.id).subscribe({ next: () => loader.dismiss() });
           },
