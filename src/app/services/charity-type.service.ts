@@ -7,7 +7,7 @@ import { STORAGE_KEYS } from 'src/app/storage.config';
 @Injectable({
   providedIn: 'root'
 })
-export class CharityTypesService {
+export class CharityTypeService {
 
   charityTypesUpdatedSignal: WritableSignal<number> = signal(0);
 

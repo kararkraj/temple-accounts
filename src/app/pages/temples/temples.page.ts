@@ -1,19 +1,17 @@
 import { Component, EffectRef, OnInit, effect } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
 import { IonContent, IonHeader, IonTitle, IonToolbar, IonButtons, IonMenuButton, IonGrid, IonRow, IonCol, IonIcon, IonButton, IonAlert, AlertController, LoadingController } from '@ionic/angular/standalone';
 import { Temple } from 'src/app/interfaces/temple';
 import { DataService } from 'src/app/services/data.service';
 import { RouterLink } from '@angular/router';
 
 @Component({
-  selector: 'app-view-temples',
-  templateUrl: './view-temples.page.html',
-  styleUrls: ['./view-temples.page.scss'],
+  selector: 'app-temples',
+  templateUrl: './temples.page.html',
+  styleUrls: ['./temples.page.scss'],
   standalone: true,
-  imports: [IonAlert, IonButton, IonRow, IonGrid, IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, IonButtons, IonMenuButton, IonCol, IonIcon, RouterLink]
+  imports: [IonAlert, IonButton, IonRow, IonGrid, IonContent, IonHeader, IonTitle, IonToolbar, IonButtons, IonMenuButton, IonCol, IonIcon, RouterLink]
 })
-export class ViewTemplesPage implements OnInit {
+export class TemplesPage implements OnInit {
 
   temples: Temple[] = [];
   updatedTemplesEffect: EffectRef = effect(() => {

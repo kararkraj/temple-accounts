@@ -2,7 +2,7 @@ import { Component, Input, numberAttribute, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { IonContent, IonHeader, IonTitle, IonToolbar, IonButtons, IonRow, IonBackButton, IonItemGroup, IonItem, IonGrid, IonCol, IonButton, LoadingController, IonInput } from '@ionic/angular/standalone';
 import { ToasterService } from 'src/app/services/toaster.service';
-import { CharityTypesService } from '../charity-types.service';
+import { CharityTypeService } from 'src/app/services/charity-type.service';
 
 @Component({
   selector: 'app-add-charity-type',
@@ -21,7 +21,7 @@ export class AddCharityTypePage implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder,
-    public charityTypeService: CharityTypesService,
+    public charityTypeService: CharityTypeService,
     public loading: LoadingController,
     public toaster: ToasterService
   ) {

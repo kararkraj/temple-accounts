@@ -13,18 +13,18 @@
   </ion-toolbar>
 </ion-header>
 <ion-content>
-  <ion-grid [fixed]="true" class="ion-no-padding ion-text-center">
-    <ion-row class="ion-justify-content-center">
-      <ion-col>Temple Name</ion-col>
-      <ion-col class="ion-hide-sm-down">Temple Address</ion-col>
-      <ion-col class="actions-col">Actions</ion-col>
+  <ion-grid class="ion-no-padding ion-text-center">
+    <ion-row>
+      <ion-col size-xs="8" size-sm="4" class="ion-padding">Temple Name</ion-col>
+      <ion-col class="ion-hide-sm-down ion-padding">Temple Address</ion-col>
+      <ion-col size-xs="4" size-sm="3" class="ion-padding">Actions</ion-col>
     </ion-row>
     @for (temple of temples; track $index) {
-    <ion-row class="ion-justify-content-center ion-nowrap">
-      <ion-col>{{temple.name}}</ion-col>
+    <ion-row class="ion-align-items-stretch">
+      <ion-col size-xs="8" size-sm="4">{{temple.name}}</ion-col>
       <ion-col class="ion-hide-sm-down">{{temple.address}}</ion-col>
-      <ion-col class="actions-col">
-        <ion-buttons>
+      <ion-col size-xs="4" size-sm="3">
+        <ion-buttons class="ion-justify-content-center">
           <ion-button routerLink="edit/{{temple.id}}">
             <ion-icon name="create-outline"></ion-icon>
           </ion-button>
@@ -38,7 +38,7 @@
       </ion-col>
     </ion-row>
     } @empty {
-    <ion-row class="no-entries-row">
+    <ion-row>
       <ion-col size="12" class="ion-text-center">No entries to show.</ion-col>
     </ion-row>
     }

@@ -3,8 +3,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonContent, IonHeader, IonTitle, IonToolbar, IonGrid, IonButtons, IonButton, IonIcon, IonRow, IonCol, AlertController, LoadingController, IonMenuButton } from '@ionic/angular/standalone';
 import { CharityType } from 'src/app/interfaces/charityType';
-import { CharityTypesService } from './charity-types.service';
 import { RouterLink } from '@angular/router';
+import { CharityTypeService } from 'src/app/services/charity-type.service';
 
 @Component({
   selector: 'app-charity-types',
@@ -17,12 +17,12 @@ export class CharityTypesPage implements OnInit {
 
   charityTypes!: CharityType[];
   charityTypesUpdatedEffect: EffectRef = effect(() => {
-    this.charityTypesService.charityTypesUpdatedSignal();
+    this.charityTypeService.charityTypesUpdatedSignal();
     this.getCharityTypes();
   });
 
   constructor(
-    private charityTypesService: CharityTypesService,
+    private charityTypeService: CharityTypeService,
     private alertController: AlertController,
     private loader: LoadingController
   ) { }
@@ -30,7 +30,7 @@ export class CharityTypesPage implements OnInit {
   ngOnInit() { }
 
   getCharityTypes() {
-    this.charityTypesService.getCharityTypes().then(charityTypes => this.charityTypes = charityTypes);
+    this.charityTypeService.getCharityTypes().then(charityTypes => this.charityTypes = charityTypes);
   }
 
   async presentDeleteCharityTypeAlert(charityType: CharityType) {
@@ -57,7 +57,7 @@ export class CharityTypesPage implements OnInit {
   async deletecharityType(charityTypeId: number) {
     const loader = await this.loader.create({ message: 'Deleting temple...' });
     await loader.present();
-    this.charityTypesService.deleteService(charityTypeId).subscribe({ next: () => loader.dismiss(), error: err => loader.dismiss() });
+    this.charityTypeService.deleteService(charityTypeId).subscribe({ next: () => loader.dismiss(), error: err => loader.dismiss() });
   }
 
 }

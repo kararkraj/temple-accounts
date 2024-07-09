@@ -2,14 +2,14 @@ import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonTextarea, IonInput, IonButtons, IonMenuButton, IonItem, IonIcon, IonLabel, IonItemDivider, IonItemGroup, IonGrid, IonRow, IonCol, IonBackButton } from '@ionic/angular/standalone';
-import { AddTemplePage } from './add-temple.page';
+import { AddTemplePage } from '../add-temple/add-temple.page';
 import { Temple } from 'src/app/interfaces/temple';
 import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-edit-temple',
-    templateUrl: './add-temple.page.html',
-    styleUrls: ['./add-temple.page.scss'],
+    templateUrl: './../add-temple/add-temple.page.html',
+    styleUrls: ['./../add-temple/add-temple.page.scss'],
     standalone: true,
     imports: [IonCol, IonRow, IonGrid,
         CommonModule,

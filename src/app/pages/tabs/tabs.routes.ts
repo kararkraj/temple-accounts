@@ -20,7 +20,7 @@ export const TABS_ROUTES: Routes = [
                 children: [
                     {
                         path: '',
-                        loadComponent: () => import('./../view-temples/view-temples.page').then(m => m.ViewTemplesPage),
+                        loadComponent: () => import('./../temples/temples.page').then(m => m.TemplesPage),
                     },
                     {
                         path: 'add',
@@ -28,11 +28,11 @@ export const TABS_ROUTES: Routes = [
                     },
                     {
                         path: 'edit/:templeId',
-                        loadComponent: () => import('./../add-temple/edit-temple.page').then(m => m.EditTemplePage)
+                        loadComponent: () => import('../edit-temple/edit-temple.page').then(m => m.EditTemplePage)
                     },
                     {
                         path: 'view/:templeId',
-                        loadComponent: () => import('./../add-temple/view-temple.page').then(m => m.ViewTemplePage)
+                        loadComponent: () => import('../view-temple/view-temple.page').then(m => m.ViewTemplePage)
                     }
                 ]
             },
@@ -45,11 +45,11 @@ export const TABS_ROUTES: Routes = [
                 },
                 {
                     path: 'add',
-                    loadComponent: () => import('./../charity-types/add-charity-type/add-charity-type.page').then(m => m.AddCharityTypePage)
+                    loadComponent: () => import('./../add-charity-type/add-charity-type.page').then(m => m.AddCharityTypePage)
                 },
                 {
                     path: 'edit/:charityTypeId',
-                    loadComponent: () => import('./../charity-types/edit-charity-type/edit-charity-type.page').then(m => m.EditCharityTypePage)
+                    loadComponent: () => import('./../edit-charity-type/edit-charity-type.page').then(m => m.EditCharityTypePage)
                 }
               ]
             },

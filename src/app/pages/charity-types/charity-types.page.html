@@ -14,17 +14,17 @@
 </ion-header>
 <ion-content>
   <ion-grid class="ion-no-padding ion-text-center">
-    <ion-row class="ion-justify-content-center">
-      <ion-col>Service Name</ion-col>
-      <ion-col size-xs="3" size-md="2">Amount</ion-col>
-      <ion-col size-xs="3" size-md="2" class="actions-col">Actions</ion-col>
+    <ion-row>
+      <ion-col class="ion-padding">Service Name</ion-col>
+      <ion-col size-xs="3" size-md="2" class="ion-padding">Amount</ion-col>
+      <ion-col size-xs="3" size-md="2" class="ion-padding">Actions</ion-col>
     </ion-row>
     @for (charityType of charityTypes; track $index) {
-    <ion-row class="ion-justify-content-center ion-nowrap">
+    <ion-row>
       <ion-col>{{charityType.name}}</ion-col>
       <ion-col size-xs="3" size-md="2">{{charityType.amount}}</ion-col>
-      <ion-col size-xs="3" size-md="2" class="actions-col">
-        <ion-buttons class="ion-justify-content-center ion-nowrap">
+      <ion-col size-xs="3" size-md="2">
+        <ion-buttons class="ion-justify-content-center">
           <ion-button routerLink="{{'edit/' + charityType.id}}">
             <ion-icon name="create-outline"></ion-icon>
           </ion-button>
