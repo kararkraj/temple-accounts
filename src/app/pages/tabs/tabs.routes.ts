@@ -55,7 +55,7 @@ export const TABS_ROUTES: Routes = [
             },
             {
                 path: 'entries',
-                loadComponent: () => import('./../view-entries/view-entries.page').then(m => m.ViewEntriesPage)
+                loadComponent: () => import('./../entries/entries.page').then(m => m.EntriesPage)
             },
             {
                 path: '**',

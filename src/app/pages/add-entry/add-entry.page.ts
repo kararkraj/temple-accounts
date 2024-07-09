@@ -6,8 +6,7 @@ import { StorageService } from 'src/app/services/storage.service';
 import { DataService } from 'src/app/services/data.service';
 import { Temple } from 'src/app/interfaces/temple';
 import { PdfmakeService } from 'src/app/services/pdfmake.service';
-import { TempleService } from 'src/app/interfaces/templeService';
-
+import { CharityType } from 'src/app/interfaces/charityType';
 
 @Component({
   selector: 'app-add-entry',
@@ -35,7 +34,7 @@ export class AddEntryPage implements OnInit {
 
   entryForm: FormGroup;
   temples!: Temple[];
-  templeServices!: TempleService[];
+  charityTypes!: CharityType[];
   updatedTemplesEffect: EffectRef = effect(() => {
     this.dataService.templesUpdatedSignal();
     this.getTemples();
