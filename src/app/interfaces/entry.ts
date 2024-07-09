@@ -7,4 +7,5 @@ export interface Entry {
     name: string;
     temple: Temple;
     charityType: CharityType;
+    createdOn: string;
   }

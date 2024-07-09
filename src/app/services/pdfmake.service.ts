@@ -5,6 +5,7 @@ import { Platform } from "@ionic/angular";
 import * as pdfMake from 'pdfmake/build/pdfmake';
 import * as pdfFonts from 'pdfmake/build/vfs_fonts';
 import { TDocumentDefinitions } from 'pdfmake/interfaces';
+import { Entry } from '../interfaces/entry';
 (pdfMake as any).vfs = pdfFonts.pdfMake.vfs;
 
 @Injectable({
@@ -16,7 +17,7 @@ export class PdfmakeService {
     public platform: Platform
   ) { }
 
-  generateAndDownloadPDF(data: any) {
+  generateAndDownloadPDF(data: Entry) {
     return new Promise((resolve, reject) => {
       if (this.platform.is('desktop') || this.platform.is('mobileweb')) {
         pdfMake.createPdf(this.getDocDefinition(data)).download(`${data.name}`);
@@ -45,7 +46,7 @@ export class PdfmakeService {
     });
   }
 
-  getDocDefinition(data: any): TDocumentDefinitions {
+  getDocDefinition(data: Entry): TDocumentDefinitions {
     return {
       header: {
         columns: [
@@ -54,7 +55,7 @@ export class PdfmakeService {
             margin: [10, 10, 0, 0],
           },
           {
-            text: `Date: ${this.getCurrentDate()}`,
+            text: `${this.getFormattedDate(data.createdOn)}`,
             margin: [0, 10, 10, 0],
             alignment: 'right'
           }
@@ -62,13 +63,13 @@ export class PdfmakeService {
       },
       content: [
         {
-          text: [`${data.temple.templeName}\n`, data.temple.templeAddress],
+          text: [`${data.temple.name}\n`, data.temple.address],
           margin: [0, 0, 0, 0],
           alignment: 'center',
           style: 'header'
         },
         {
-          text: `Received from Sri. ${data.name} a sum of Rs. ${data.templeService.amount} (Rs.) towards ${data.templeService.serviceName}.`,
+          text: `Received from Sri. ${data.name} a sum of Rs. ${data.charityType.amount} (Rs.${this.numberToWords(data.charityType.amount)}) towards ${data.charityType.name}.`,
           style: 'subheader',
           margin: [0, 20, 0, 0]
         }
@@ -94,15 +95,76 @@ export class PdfmakeService {
     }
   }
 
-  getCurrentDate() {
-    const today = new Date();
-    const yyyy = today.getFullYear();
-    let mm: number | string = today.getMonth() + 1; // Months start at 0!
-    let dd: number | string = today.getDate();
+  getFormattedDate(dateString: string) {
+    const createdDate = new Date(dateString);
+    const yyyy = createdDate.getFullYear();
+    let mm: number | string = createdDate.getMonth() + 1; // Months start at 0!
+    let dd: number | string = createdDate.getDate();
+    let hh: number | string = createdDate.getHours();
+    let mn: number | string = createdDate.getMinutes();
 
     if (dd < 10) dd = '0' + dd;
     if (mm < 10) mm = '0' + mm;
 
-    return dd + '-' + mm + '-' + yyyy;
+    return dd + '-' + mm + '-' + yyyy + ' ' + hh + ':' + mn;
+  }
+
+  numberToWords(number: number): string {
+
+    var NS = [
+      { value: 10000000, str: "Crore" },
+      { value: 100000, str: "Lakh" },
+      { value: 1000, str: "Thousand" },
+      { value: 100, str: "Hundred" },
+      { value: 90, str: "Ninety" },
+      { value: 80, str: "Eighty" },
+      { value: 70, str: "Seventy" },
+      { value: 60, str: "Sixty" },
+      { value: 50, str: "Fifty" },
+      { value: 40, str: "Forty" },
+      { value: 30, str: "Thirty" },
+      { value: 20, str: "Twenty" },
+      { value: 19, str: "Nineteen" },
+      { value: 18, str: "Eighteen" },
+      { value: 17, str: "Seventeen" },
+      { value: 16, str: "Sixteen" },
+      { value: 15, str: "Fifteen" },
+      { value: 14, str: "Fourteen" },
+      { value: 13, str: "Thirteen" },
+      { value: 12, str: "Twelve" },
+      { value: 11, str: "Eleven" },
+      { value: 10, str: "Ten" },
+      { value: 9, str: "Nine" },
+      { value: 8, str: "Eight" },
+      { value: 7, str: "Seven" },
+      { value: 6, str: "Six" },
+      { value: 5, str: "Five" },
+      { value: 4, str: "Four" },
+      { value: 3, str: "Three" },
+      { value: 2, str: "Two" },
+      { value: 1, str: "One" }
+    ];
+
+    var result = '';
+    for (var n of NS) {
+      if (number >= n.value) {
+        if (number <= 99) {
+          result += n.str;
+          number -= n.value;
+          if (number > 0) result += ' ';
+        } else {
+          var t = Math.floor(number / n.value);
+          // console.log(t);
+          var d = number % n.value;
+          if (d > 0) {
+            return this.numberToWords(t) + ' ' + n.str + ' ' + this.numberToWords(d);
+          } else {
+            return this.numberToWords(t) + ' ' + n.str;
+          }
+
+        }
+      }
+    }
+    return result;
   }
 }

@@ -1,19 +1,19 @@
 import { Component, EffectRef, OnInit, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonSelect, IonSelectOption, IonInput, IonButtons, IonMenuButton, IonNote, IonItem, IonText } from '@ionic/angular/standalone';
-import { StorageService } from 'src/app/services/storage.service';
-import { DataService } from 'src/app/services/data.service';
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { LoadingController, IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonSelect, IonSelectOption, IonInput, IonButtons, IonMenuButton, IonNote, IonItem, IonText, IonItemDivider, IonItemGroup, IonLabel, IonSegment, IonSegmentButton, IonIcon, IonTabButton, IonTabBar, IonTabs } from '@ionic/angular/standalone';
 import { Temple } from 'src/app/interfaces/temple';
 import { PdfmakeService } from 'src/app/services/pdfmake.service';
 import { CharityType } from 'src/app/interfaces/charityType';
+import { EntryService } from 'src/app/services/entry.service';
+import { Entry } from 'src/app/interfaces/entry';
 
 @Component({
   selector: 'app-add-entry',
   templateUrl: './add-entry.page.html',
   styleUrls: ['./add-entry.page.scss'],
   standalone: true,
-  imports: [IonText,
+  imports: [IonTabs, IonTabBar, IonTabButton, IonIcon, IonSegmentButton, IonSegment, IonLabel, IonItemGroup, IonItemDivider, IonText,
     CommonModule,
     ReactiveFormsModule,
     IonButton,
@@ -35,32 +35,33 @@ export class AddEntryPage implements OnInit {
   entryForm: FormGroup;
   temples!: Temple[];
   charityTypes!: CharityType[];
+  currentSegment: string = "preset";
   updatedTemplesEffect: EffectRef = effect(() => {
-    this.dataService.templesUpdatedSignal();
+    this.entryService.getTemplesUpdatedSignal();
     this.getTemples();
   });
 
   constructor(
-    private storage: StorageService,
-    private dataService: DataService,
+    private entryService: EntryService,
     private formBuilder: FormBuilder,
-    private pdfService: PdfmakeService
+    private pdfService: PdfmakeService,
+    public loader: LoadingController,
   ) {
     this.entryForm = this.formBuilder.group({
       title: [null, [Validators.required]],
       name: [null, [Validators.required, Validators.maxLength(100), Validators.pattern("[a-zA-Z0-9 ]+")]],
       temple: [null, [Validators.required]],
-      templeService: [null, [Validators.required]],
+      charityType: [null, [Validators.required]],
     });
   }
 
   ngOnInit() {
-    this.entryForm.controls["templeService"].disable();
     this.getTemples();
+    this.getCharityTypes();
   }
 
   getTemples() {
-    this.dataService.getTemples().then(temples => {
+    this.entryService.getTemples().then(temples => {
       this.temples = temples;
       if (this.temples.length === 1) {
         this.entryForm.patchValue({ temple: this.temples[0] });
@@ -68,21 +69,62 @@ export class AddEntryPage implements OnInit {
     });
   }
 
+  getCharityTypes() {
+    this.entryService.getCharityTypes().then(charityTypes => {
+      this.charityTypes = charityTypes;
+      if (this.charityTypes.length === 1) {
+        this.entryForm.patchValue({ charityType: this.charityTypes[0] });
+      }
+    });
+  }
+
   async onSubmit() {
-    this.entryForm.markAllAsTouched();
     if (this.entryForm.valid) {
-      console.log(this.entryForm.value);
-      const id = await this.storage.get('lastStoredId') + 1;
-      this.dataService.addEntry({ id, ...this.entryForm.getRawValue() }).subscribe(res => {
+      const loader = await this.loader.create({ message: 'Adding temple...' });
+      await loader.present();
+
+      const id = await this.entryService.getEntryNextId();
+      const createdOn = new Date().toISOString();
+      this.entryService.addEntry({ ...this.entryForm.getRawValue(), id, createdOn }).subscribe(res => {
         this.pdfService.generateAndDownloadPDF(res);
+        this.resetForm();
+        loader.dismiss();
       });
     } else {
-      console.log(this.entryForm.valid);
+      this.entryForm.markAllAsTouched();
     }
   }
 
   onTempleSelection(event: any) {
-    this.entryForm.controls["templeService"].enable();
+  }
+
+  onCharityTypeSelection(event: any) {
+  }
+
+  onSegmentChange(event: any) {
+    const currentSegment = event.target.value;
+    if (currentSegment === "custom") {
+      this.entryForm.removeControl("charityType");
+      this.entryForm.addControl("charityType", this.formBuilder.group({
+        name: [null, [Validators.required, Validators.min(1)]],
+        amount: [null, [Validators.required, Validators.min(1)]]
+      }));
+    } else {
+      this.entryForm.removeControl("charityType");
+      this.entryForm.addControl("charityType", new FormControl(null, [Validators.required]));
+      if (this.charityTypes.length === 1) {
+        this.entryForm.patchValue({ charityType: this.charityTypes[0] })
+      }
+    }
+    this.currentSegment = currentSegment;
+  }
+
+  resetForm() {
+    let defaultValue: Partial<Entry> = {};
+    if (this.temples.length === 1) {
+      defaultValue.temple = this.temples[0];
+    }
+    this.entryForm.reset(defaultValue);
   }
 
 }

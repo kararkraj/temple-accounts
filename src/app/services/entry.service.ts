@@ -3,6 +3,8 @@ import { Entry } from '../interfaces/entry';
 import { Observable } from 'rxjs';
 import { STORAGE_KEYS } from '../storage.config';
 import { StorageService } from './storage.service';
+import { TempleService } from './temple.service';
+import { CharityTypeService } from './charity-type.service';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +14,9 @@ export class EntryService {
   public entriesUpdatedSignal: WritableSignal<number> = signal(0);
 
   constructor(
-    private storage: StorageService
+    private storage: StorageService,
+    private templeService: TempleService,
+    private charityTypeService: CharityTypeService
   ) { }
 
   addEntry(entry: Entry): Observable<Entry> {
@@ -77,5 +81,21 @@ export class EntryService {
         });
       });
     });
+  }
+
+  getTemples() {
+    return this.templeService.getTemples();
+  }
+
+  getTemplesUpdatedSignal() {
+    return this.templeService.templesUpdatedSignal();
+  }
+
+  getCharityTypes() {
+    return this.charityTypeService.getCharityTypes();
+  }
+
+  getCharityTypeUpdatedSignal() {
+    return this.charityTypeService.charityTypesUpdatedSignal();
   }
 }
