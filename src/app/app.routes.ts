@@ -20,5 +20,10 @@ export const routes: Routes = [
     loadChildren: () => import('./pages/tabs/tabs.routes').then( m => m.TABS_ROUTES),
     canActivate: [canActivate],
     canActivateChild: [canActivateChild]
+  },
+  {
+    path: 'profile',
+    loadComponent: () => import('./pages/my-profile/my-profile.page').then(m => m.MyProfilePage),
+    canActivate: [canActivate]
   }
 ];
