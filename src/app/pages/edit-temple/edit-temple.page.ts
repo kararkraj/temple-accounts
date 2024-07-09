@@ -38,7 +38,7 @@ export class EditTemplePage extends AddTemplePage implements OnInit {
 
     override ngOnInit(): void {
         this.title = "Edit Temple";
-        this.dataService.getTempleById(this.templeId).subscribe({
+        this.templeService.getTempleById(this.templeId).subscribe({
             next: temple => {
                 this.temple = temple;
                 this.templeForm.patchValue(temple)
@@ -55,7 +55,7 @@ export class EditTemplePage extends AddTemplePage implements OnInit {
             const loader = await this.loader.create({ message: 'Updating temple...' });
             await loader.present();
 
-            this.dataService.updateTemple({ id: this.templeId, ...this.templeForm.getRawValue() }).subscribe({
+            this.templeService.updateTemple({ id: this.templeId, ...this.templeForm.getRawValue() }).subscribe({
                 next: (temple) => {
                     this.temple = temple;
                     this.toaster.presentToast({ message: 'Temple was updated successfully!', color: 'success' });

@@ -2,8 +2,8 @@ import { ChangeDetectorRef, Component, Input, OnInit, numberAttribute } from '@a
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonTextarea, IonInput, IonButtons, IonMenuButton, IonItem, IonIcon, LoadingController, IonLabel, IonItemDivider, IonItemGroup, IonGrid, IonRow, IonCol, IonBackButton } from '@ionic/angular/standalone';
-import { DataService } from 'src/app/services/data.service';
 import { ToasterService } from 'src/app/services/toaster.service';
+import { TempleService } from 'src/app/services/temple.service';
 
 @Component({
   selector: 'app-add-temple',
@@ -21,7 +21,7 @@ export class AddTemplePage implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder,
-    public dataService: DataService,
+    public templeService: TempleService,
     public loader: LoadingController,
     public toaster: ToasterService,
     private cdr: ChangeDetectorRef
@@ -40,7 +40,7 @@ export class AddTemplePage implements OnInit {
       const loader = await this.loader.create({ message: 'Adding temple...' });
       await loader.present();
 
-      this.dataService.addTemple({ ...this.templeForm.getRawValue(), id: 0 }).subscribe({
+      this.templeService.addTemple({ ...this.templeForm.getRawValue(), id: 0 }).subscribe({
         next: (temple) => {
           this.toaster.presentToast({ message: 'Temple was added successfully!', color: 'success' });
           this.resetForm();

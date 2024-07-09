@@ -1,11 +1,11 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { DataService } from 'src/app/services/data.service';
 import { of, throwError } from 'rxjs';
 import { Temple } from 'src/app/interfaces/temple';
 import { ToasterService } from 'src/app/services/toaster.service';
 import { Router } from '@angular/router';
 import { LoadingController } from '@ionic/angular/standalone';
 import { ViewTemplePage } from './view-temple.page';
+import { TempleService } from 'src/app/services/temple.service';
 
 const errorMessage = "invalid temple id";
 const temple: Temple = {
@@ -13,7 +13,7 @@ const temple: Temple = {
     address: "chamundi hills mysore",
     name: "sri chamundeshwari temple"
 }
-const dataServiceStub: Partial<DataService> = {
+const templeServiceStub: Partial<TempleService> = {
     getTempleById: (templeId: number) => templeId === temple.id ? of(temple) : throwError(() => errorMessage),
     updateTemple: (temple: Temple) => of(temple)
 }
@@ -24,14 +24,14 @@ describe('ViewTemplePage', () => {
 
     let router: Router;
     let toaster: ToasterService;
-    let dataService: DataService;
+    let templeService: TempleService;
 
     const loader = jasmine.createSpyObj('LoadingController', ['create']);
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             providers: [
-                { provide: DataService, useValue: dataServiceStub },
+                { provide: TempleService, useValue: templeServiceStub },
                 { provide: LoadingController, useValue: loader }
             ]
         });
@@ -40,7 +40,7 @@ describe('ViewTemplePage', () => {
 
         router = fixture.debugElement.injector.get(Router);
         toaster = fixture.debugElement.injector.get(ToasterService);
-        dataService = fixture.debugElement.injector.get(DataService);
+        templeService = fixture.debugElement.injector.get(TempleService);
     });
 
     it("should set title to View Temple and canEdit to false", () => {
@@ -69,7 +69,7 @@ describe('ViewTemplePage', () => {
         });
 
         it('should assign temple variable and patch the form with default temple values', () => {
-            const getTempleByIdSpy = spyOn<any, any>(dataService, 'getTempleById').and.callThrough();
+            const getTempleByIdSpy = spyOn<any, any>(templeService, 'getTempleById').and.callThrough();
             fixture.detectChanges();
 
             expect(getTempleByIdSpy).toHaveBeenCalledOnceWith(temple.id);

@@ -42,7 +42,7 @@ export class ViewTemplePage extends AddTemplePage implements OnInit {
     override ngOnInit(): void {
         this.title = "View Temple";
         this.canEdit = false;
-        this.dataService.getTempleById(this.templeId).subscribe({
+        this.templeService.getTempleById(this.templeId).subscribe({
             next: temple => {
                 this.templeForm.patchValue(temple);
                 this.templeForm.disable();

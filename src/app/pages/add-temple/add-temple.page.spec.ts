@@ -1,18 +1,17 @@
 import { ComponentFixture, fakeAsync, flush, TestBed } from '@angular/core/testing';
 import { AddTemplePage } from './add-temple.page';
 import { Temple } from 'src/app/interfaces/temple';
-import { DataService } from 'src/app/services/data.service';
 import { LoadingController } from '@ionic/angular/standalone';
 import { of } from 'rxjs';
 import { ToasterService } from 'src/app/services/toaster.service';
-import { ChangeDetectorRef } from '@angular/core';
+import { TempleService } from 'src/app/services/temple.service';
 
 const temple: Temple = {
   id: 1,
   address: "chamundi hills mysore",
   name: "sri chamundeshwari temple"
 }
-const dataServiceStub: Partial<DataService> = {
+const templeServiceStub: Partial<TempleService> = {
   addTemple: (temple) => of(temple)
 }
 
@@ -21,7 +20,7 @@ describe('AddTemplePage', () => {
   let fixture: ComponentFixture<AddTemplePage>;
 
   let loader: LoadingController;
-  let dataService: DataService;
+  let templeService: TempleService;
   let toaster: ToasterService;
 
   const loadingObj = jasmine.createSpyObj('LoadingObj', ['present', 'dismiss']);
@@ -32,7 +31,7 @@ describe('AddTemplePage', () => {
     
     await TestBed.configureTestingModule({
       providers: [
-        { provide: DataService, useValue: dataServiceStub },
+        { provide: TempleService, useValue: templeServiceStub },
         { provide: LoadingController, useValue: loadingController }
       ]
     });
@@ -41,7 +40,7 @@ describe('AddTemplePage', () => {
     component = fixture.componentInstance;
 
     loader = fixture.debugElement.injector.get(LoadingController);
-    dataService = fixture.debugElement.injector.get(DataService);
+    templeService = fixture.debugElement.injector.get(TempleService);
     toaster = fixture.debugElement.injector.get(ToasterService);
 
     fixture.detectChanges();
@@ -60,8 +59,8 @@ describe('AddTemplePage', () => {
     expect(markAllAsTouchedSpy).toHaveBeenCalledTimes(1);
   });
 
-  it('OnSubmit should present loader, call DataService.addTemple, present success toaster, reset the form and dismiss the loader', fakeAsync(() => {
-    const addTempleSpy = spyOn(dataService, 'addTemple').and.callThrough();
+  it('OnSubmit should present loader, call TempleService.addTemple, present success toaster, reset the form and dismiss the loader', fakeAsync(() => {
+    const addTempleSpy = spyOn(templeService, 'addTemple').and.callThrough();
     const presentToastSpy = spyOn(toaster, 'presentToast');
     const resetFormSpy = spyOn(component, 'resetForm');
     

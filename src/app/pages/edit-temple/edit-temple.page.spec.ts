@@ -1,11 +1,11 @@
 import { ComponentFixture, fakeAsync, flush, TestBed } from '@angular/core/testing';
 import { EditTemplePage } from './edit-temple.page';
-import { DataService } from 'src/app/services/data.service';
 import { of, throwError } from 'rxjs';
 import { Temple } from 'src/app/interfaces/temple';
 import { ToasterService } from 'src/app/services/toaster.service';
 import { Router } from '@angular/router';
 import { LoadingController } from '@ionic/angular/standalone';
+import { TempleService } from 'src/app/services/temple.service';
 
 const errorMessage = "invalid temple id";
 const temple: Temple = {
@@ -13,7 +13,7 @@ const temple: Temple = {
     address: "chamundi hills mysore",
     name: "sri chamundeshwari temple"
 }
-const dataServiceStub: Partial<DataService> = {
+const templeServiceStub: Partial<TempleService> = {
     getTempleById: (templeId: number) => templeId === temple.id ? of(temple) : throwError(() => errorMessage),
     updateTemple: (temple: Temple) => of(temple)
 }
@@ -24,7 +24,7 @@ describe('EditTemplePage', () => {
 
     let router: Router;
     let toaster: ToasterService;
-    let dataService: DataService;
+    let templeService: TempleService;
 
     const loader = jasmine.createSpyObj('LoadingController', ['create']);
     const fakeLoadingObject = jasmine.createSpyObj('FakeLoadingObject', ['present', 'dismiss']);
@@ -32,7 +32,7 @@ describe('EditTemplePage', () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             providers: [
-                { provide: DataService, useValue: dataServiceStub },
+                { provide: TempleService, useValue: templeServiceStub },
                 { provide: LoadingController, useValue: loader }
             ]
         });
@@ -41,7 +41,7 @@ describe('EditTemplePage', () => {
 
         router = fixture.debugElement.injector.get(Router);
         toaster = fixture.debugElement.injector.get(ToasterService);
-        dataService = fixture.debugElement.injector.get(DataService);
+        templeService = fixture.debugElement.injector.get(TempleService);
     });
 
     it("should set title to Edit Temple and canEdit to true", () => {
@@ -70,7 +70,7 @@ describe('EditTemplePage', () => {
         });
 
         it('should assign temple variable and patch the form with default temple values', () => {
-            const getTempleByIdSpy = spyOn(dataService, 'getTempleById').and.callThrough();
+            const getTempleByIdSpy = spyOn(templeService, 'getTempleById').and.callThrough();
             fixture.detectChanges();
 
             expect(getTempleByIdSpy).toHaveBeenCalledOnceWith(temple.id);
@@ -88,7 +88,7 @@ describe('EditTemplePage', () => {
             describe("When form is not modified and valid", () => {
                 it("should show a toaster with message - Nothing to update.", () => {
                     const toasterSpy = spyOn<any, any>(toaster, 'presentToast');
-                    const updateTempleSpy = spyOn<any, any>(dataService, 'updateTemple');
+                    const updateTempleSpy = spyOn<any, any>(templeService, 'updateTemple');
                     component.onSubmit();
 
                     expect(updateTempleSpy).toHaveBeenCalledTimes(0);
@@ -99,7 +99,7 @@ describe('EditTemplePage', () => {
             describe("When form is modified and invalid", () => {
                 it("should mark all form controls as touched.", () => {
                     component.templeForm.patchValue({ name: "" });
-                    const updateTempleSpy = spyOn<any, any>(dataService, 'updateTemple');
+                    const updateTempleSpy = spyOn<any, any>(templeService, 'updateTemple');
                     const formSpy = spyOn<any, any>(component.templeForm, 'markAllAsTouched');
                     component.onSubmit();
 
@@ -116,7 +116,7 @@ describe('EditTemplePage', () => {
 
                     const toasterSpy = spyOn<any, any>(toaster, 'presentToast');
                     const resetFormSpy = spyOn<any, any>(component, 'resetForm');
-                    const updateTempleSpy = spyOn<any, any>(dataService, 'updateTemple').and.callThrough();
+                    const updateTempleSpy = spyOn<any, any>(templeService, 'updateTemple').and.callThrough();
 
                     loader.create.and.returnValue(fakeLoadingObject);
 
