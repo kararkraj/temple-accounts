@@ -95,7 +95,7 @@ export class EntryService {
     return this.charityTypeService.getCharityTypes();
   }
 
-  getCharityTypeUpdatedSignal() {
+  getCharityTypesUpdatedSignal() {
     return this.charityTypeService.charityTypesUpdatedSignal();
   }
 }

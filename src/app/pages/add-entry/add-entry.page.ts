@@ -7,6 +7,7 @@ import { PdfmakeService } from 'src/app/services/pdfmake.service';
 import { CharityType } from 'src/app/interfaces/charityType';
 import { EntryService } from 'src/app/services/entry.service';
 import { Entry } from 'src/app/interfaces/entry';
+import { ToasterService } from 'src/app/services/toaster.service';
 
 @Component({
   selector: 'app-add-entry',
@@ -33,12 +34,16 @@ import { Entry } from 'src/app/interfaces/entry';
 export class AddEntryPage implements OnInit {
 
   entryForm: FormGroup;
-  temples!: Temple[];
-  charityTypes!: CharityType[];
+  temples: Temple[] = [];
+  charityTypes: CharityType[] = [];
   currentSegment: string = "preset";
   updatedTemplesEffect: EffectRef = effect(() => {
     this.entryService.getTemplesUpdatedSignal();
     this.getTemples();
+  });
+  updatedCharityTypesEffect: EffectRef = effect(() => {
+    this.entryService.getCharityTypesUpdatedSignal();
+    this.getCharityTypes();
   });
 
   constructor(
@@ -46,6 +51,7 @@ export class AddEntryPage implements OnInit {
     private formBuilder: FormBuilder,
     private pdfService: PdfmakeService,
     public loader: LoadingController,
+    private toaster: ToasterService
   ) {
     this.entryForm = this.formBuilder.group({
       title: [null, [Validators.required]],
@@ -110,6 +116,9 @@ export class AddEntryPage implements OnInit {
         amount: [null, [Validators.required, Validators.min(1)]]
       }));
     } else {
+      if (this.charityTypes.length === 0) {
+        this.toaster.presentToast({ message: "No preset services found. Go to Services => Add Service to add preset services.", color: "danger", duration: 5000 });
+      }
       this.entryForm.removeControl("charityType");
       this.entryForm.addControl("charityType", new FormControl(null, [Validators.required]));
       if (this.charityTypes.length === 1) {
