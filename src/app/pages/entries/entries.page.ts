@@ -3,6 +3,7 @@ import { RouterLink } from '@angular/router';
 import { IonContent, IonHeader, IonTitle, IonToolbar, IonButtons, IonRow, IonButton, IonIcon, IonGrid, IonCol, AlertController, LoadingController, IonMenuButton } from '@ionic/angular/standalone';
 import { Entry } from 'src/app/interfaces/entry';
 import { EntryService } from 'src/app/services/entry.service';
+import { PdfmakeService } from 'src/app/services/pdfmake.service';
 
 @Component({
   selector: 'app-entries',
@@ -22,14 +23,15 @@ export class EntriesPage implements OnInit {
   constructor(
     private entryService: EntryService,
     private alertController: AlertController,
-    private loader: LoadingController
+    private loader: LoadingController,
+    private pdfService: PdfmakeService
   ) { }
 
   ngOnInit() {
   }
 
   getEntries() {
-    this.entryService.getEntries().then(entries => this.entries = entries)
+    this.entryService.getEntries().then(entries => this.entries = entries);
   }
 
   async presentDeleteEntryAlert(entry: Entry) {
@@ -55,6 +57,10 @@ export class EntriesPage implements OnInit {
       ],
     });
     await alert.present();
+  }
+
+  downloadReceipt(entry: Entry) {
+    this.pdfService.generateAndDownloadPDF(entry);
   }
 
 }
