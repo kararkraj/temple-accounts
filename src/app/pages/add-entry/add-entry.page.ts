@@ -1,4 +1,4 @@
-import { Component, EffectRef, OnInit, effect } from '@angular/core';
+import { AfterViewInit, Component, EffectRef, OnInit, ViewChild, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { LoadingController, IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonSelect, IonSelectOption, IonInput, IonButtons, IonMenuButton, IonNote, IonItem, IonText, IonItemDivider, IonItemGroup, IonLabel, IonSegment, IonSegmentButton, IonIcon, IonTabButton, IonTabBar, IonTabs } from '@ionic/angular/standalone';
@@ -36,7 +36,6 @@ export class AddEntryPage implements OnInit {
   entryForm: FormGroup;
   temples: Temple[] = [];
   charityTypes: CharityType[] = [];
-  currentSegment: string = "preset";
   updatedTemplesEffect: EffectRef = effect(() => {
     this.entryService.getTemplesUpdatedSignal();
     this.getTemples();
@@ -45,6 +44,7 @@ export class AddEntryPage implements OnInit {
     this.entryService.getCharityTypesUpdatedSignal();
     this.getCharityTypes();
   });
+  @ViewChild('ionSegment') ionSegment!: IonSegment;
 
   constructor(
     private entryService: EntryService,
@@ -58,12 +58,12 @@ export class AddEntryPage implements OnInit {
       name: [null, [Validators.required, Validators.maxLength(100), Validators.pattern("[a-zA-Z0-9 ]+")]],
       temple: [null, [Validators.required]],
       charityType: [null, [Validators.required]],
+      charityTypeName: [null, [Validators.required, Validators.maxLength(50)]],
+      charityTypeAmount: [null, [Validators.required, Validators.min(1)]],
     });
   }
 
   ngOnInit() {
-    this.getTemples();
-    this.getCharityTypes();
   }
 
   getTemples() {
@@ -78,9 +78,13 @@ export class AddEntryPage implements OnInit {
   getCharityTypes() {
     this.entryService.getCharityTypes().then(charityTypes => {
       this.charityTypes = charityTypes;
-      if (this.charityTypes.length === 1) {
-        this.entryForm.patchValue({ charityType: this.charityTypes[0] });
-      }
+
+      // By default preset segment is selected. Hence the below function is called.
+      this.onPresetServiceSelection();
+
+      // If charity types is available, then select preset else select custom segment segment
+      this.charityTypes.length > 0 ? this.ionSegment.writeValue("preset") : this.ionSegment.writeValue("custom");
+      this.onSegmentChange(this.ionSegment.value);
     });
   }
 
@@ -89,9 +93,21 @@ export class AddEntryPage implements OnInit {
       const loader = await this.loader.create({ message: 'Adding temple...' });
       await loader.present();
 
-      const id = await this.entryService.getEntryNextId();
-      const createdOn = new Date().toISOString();
-      this.entryService.addEntry({ ...this.entryForm.getRawValue(), id, createdOn }).subscribe(res => {
+      const entryFormValue = this.entryForm.value;
+      if (this.ionSegment.value === "custom") {
+        entryFormValue.charityType = {
+          id: 0,
+          name: entryFormValue.charityTypeName,
+          amount: entryFormValue.charityTypeAmount
+        };
+      }
+
+      let entry: Entry = {
+        ...entryFormValue,
+        id : await this.entryService.getEntryNextId(),
+        createdOn: new Date().toISOString(),
+      }
+      this.entryService.addEntry(entry).subscribe(res => {
         this.pdfService.generateAndDownloadPDF(res);
         this.resetForm();
         loader.dismiss();
@@ -107,25 +123,33 @@ export class AddEntryPage implements OnInit {
   onCharityTypeSelection(event: any) {
   }
 
-  onSegmentChange(event: any) {
-    const currentSegment = event.target.value;
+  onSegmentChange(currentSegment: any) {
     if (currentSegment === "custom") {
-      this.entryForm.removeControl("charityType");
-      this.entryForm.addControl("charityType", this.formBuilder.group({
-        name: [null, [Validators.required, Validators.min(1)]],
-        amount: [null, [Validators.required, Validators.min(1)]]
-      }));
+      this.onCustomServiceSelection();
     } else {
-      if (this.charityTypes.length === 0) {
-        this.toaster.presentToast({ message: "No preset services found. Go to Services => Add Service to add preset services.", color: "danger", duration: 5000 });
-      }
-      this.entryForm.removeControl("charityType");
-      this.entryForm.addControl("charityType", new FormControl(null, [Validators.required]));
-      if (this.charityTypes.length === 1) {
-        this.entryForm.patchValue({ charityType: this.charityTypes[0] })
-      }
+      this.onPresetServiceSelection();
     }
-    this.currentSegment = currentSegment;
+  }
+
+  onPresetServiceSelection() {
+    if (this.charityTypes.length === 0) {
+      this.toaster.presentToast({ message: "No preset services found. Go to Services => Add Service to add preset services.", color: "danger", duration: 5000 });
+    }
+    this.entryForm.get("charityTypeName")?.disable();
+    this.entryForm.get("charityTypeAmount")?.disable();
+
+    this.entryForm.get("charityType")?.enable();
+
+    if (this.charityTypes.length === 1) {
+      this.entryForm.patchValue({ charityType: this.charityTypes[0] })
+    }
+  }
+
+  onCustomServiceSelection() {
+    this.entryForm.get('charityType')?.disable();
+
+    this.entryForm.get("charityTypeName")?.enable();
+    this.entryForm.get("charityTypeAmount")?.enable();
   }
 
   resetForm() {

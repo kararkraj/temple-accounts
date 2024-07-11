@@ -35,7 +35,7 @@
         </ion-select>
       </ion-item>
 
-      <ion-segment [value]="currentSegment" (ionChange)="onSegmentChange($event)">
+      <ion-segment #ionSegment value="preset" (ionChange)="onSegmentChange($event.target.value)">
         <ion-segment-button value="preset">
           <ion-label>Preset services</ion-label>
         </ion-segment-button>
@@ -44,7 +44,7 @@
         </ion-segment-button>
       </ion-segment>
 
-      @if (currentSegment === "preset") {
+      @if (ionSegment.value === "preset") {
       <ion-item lines="full">
         <ion-select formControlName="charityType" label="Service *" label-placement="floating"
           placeholder="Select service" required name="service" (selectionChange)="onCharityTypeSelection($event)">
@@ -55,17 +55,17 @@
         </ion-select>
       </ion-item>
       } @else {
-      <ng-container formGroupName="charityType">
+      <ng-container>
         <ion-item lines="none">
-          <ion-input formControlName="name" label="Service Name *" label-placement="floating"
-            placeholder="Enter service name" type="text" name="name" required maxlength="100"
+          <ion-input formControlName="charityTypeName" label="Service Name *" label-placement="floating"
+            placeholder="Enter service name" type="text" name="charityTypeName" required maxlength="50"
             helperText="Only a-z, A-Z and 0-9 characters allowed"
             errorText="Only a-z, A-Z and 0-9 characters allowed"></ion-input>
         </ion-item>
 
         <ion-item lines="none">
-          <ion-input formControlName="amount" label="Service Amount *" label-placement="floating" placeholder="1001"
-            type="number" name="amount" required min="1"></ion-input>
+          <ion-input formControlName="charityTypeAmount" label="Service Amount *" label-placement="floating" placeholder="1001"
+            type="number" name="charityTypeAmount" equired min="1"></ion-input>
         </ion-item>
       </ng-container>
       }
