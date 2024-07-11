@@ -9,7 +9,8 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "lint": "ng lint"
+    "lint": "ng lint",
+    "ghpages": "ionic build --prod -- --base-href=https://kararkraj.github.io/temple-accounts/ && npx angular-cli-ghpages --dir=www"
   },
   "private": true,
   "dependencies": {
