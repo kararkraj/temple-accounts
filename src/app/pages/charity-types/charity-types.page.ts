@@ -55,7 +55,7 @@ export class CharityTypesPage implements OnInit {
   }
 
   async deletecharityType(charityTypeId: number) {
-    const loader = await this.loader.create({ message: 'Deleting temple...' });
+    const loader = await this.loader.create({ message: 'Deleting service...' });
     await loader.present();
     this.charityTypeService.deleteService(charityTypeId).subscribe({ next: () => loader.dismiss(), error: err => loader.dismiss() });
   }

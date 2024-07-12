@@ -90,7 +90,7 @@ export class AddEntryPage implements OnInit {
 
   async onSubmit() {
     if (this.entryForm.valid) {
-      const loader = await this.loader.create({ message: 'Adding temple...' });
+      const loader = await this.loader.create({ message: 'Adding entry...' });
       await loader.present();
 
       const entryFormValue = this.entryForm.value;
@@ -108,6 +108,7 @@ export class AddEntryPage implements OnInit {
         createdOn: new Date().toISOString(),
       }
       this.entryService.addEntry(entry).subscribe(res => {
+        this.toaster.presentToast({ message: 'Entry was added successfully!', color: 'success' });
         this.pdfService.generateAndDownloadPDF(res);
         this.resetForm();
         loader.dismiss();
