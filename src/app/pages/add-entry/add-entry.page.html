@@ -35,7 +35,8 @@
         </ion-select>
       </ion-item>
 
-      <ion-segment #ionSegment value="preset" (ionChange)="onSegmentChange($event.target.value)">
+      <ion-segment #ionSegment value="preset" (ionChange)="onSegmentChange($event.target.value)"
+        class="ion-justify-content-start">
         <ion-segment-button value="preset">
           <ion-label>Preset services</ion-label>
         </ion-segment-button>
@@ -64,8 +65,8 @@
         </ion-item>
 
         <ion-item lines="none">
-          <ion-input formControlName="charityTypeAmount" label="Service Amount *" label-placement="floating" placeholder="1001"
-            type="number" name="charityTypeAmount" equired min="1"></ion-input>
+          <ion-input formControlName="charityTypeAmount" label="Service Amount *" label-placement="floating"
+            placeholder="1001" type="number" name="charityTypeAmount" equired min="1"></ion-input>
         </ion-item>
       </ng-container>
       }
