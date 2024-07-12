@@ -9,15 +9,15 @@ export const routes: Routes = [
   },
   {
     path: 'login',
-    loadComponent: () => import('./pages/login/login.page').then( m => m.LoginPage)
+    loadComponent: () => import('./pages/login/login.page').then(m => m.LoginPage)
   },
   {
     path: 'register',
-    loadComponent: () => import('./pages/register/register.page').then( m => m.RegisterPage)
+    loadComponent: () => import('./pages/register/register.page').then(m => m.RegisterPage)
   },
   {
     path: 'tabs',
-    loadChildren: () => import('./pages/tabs/tabs.routes').then( m => m.TABS_ROUTES),
+    loadChildren: () => import('./pages/tabs/tabs.routes').then(m => m.TABS_ROUTES),
     canActivate: [canActivate],
     canActivateChild: [canActivateChild]
   },
@@ -25,5 +25,10 @@ export const routes: Routes = [
     path: 'profile',
     loadComponent: () => import('./pages/my-profile/my-profile.page').then(m => m.MyProfilePage),
     canActivate: [canActivate]
+  },
+  {
+    path: '**',
+    pathMatch: 'full',
+    redirectTo: "tabs/add-entry",
   }
 ];
