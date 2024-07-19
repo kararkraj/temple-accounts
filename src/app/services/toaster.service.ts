@@ -13,7 +13,7 @@ export class ToasterService {
   async presentToast({
     message,
     color = undefined,
-    duration = 3000,
+    duration = 5000,
     position = 'bottom'
   }: ToasterArgs) {
     const toast = await this.toastController.create({

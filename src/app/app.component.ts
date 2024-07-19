@@ -1,14 +1,10 @@
-import { Component, ComponentRef, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
-import { IonApp, IonRouterOutlet, IonSplitPane, IonContent, IonMenu, IonList, IonListHeader, IonMenuToggle, IonItem, IonIcon, IonLabel, IonToggle, IonButton, IonAlert } from '@ionic/angular/standalone';
+import { IonApp, IonRouterOutlet, IonSplitPane, IonContent, IonMenu, IonList, IonListHeader, IonMenuToggle, IonItem, IonIcon, IonLabel, IonToggle, IonButton, IonAlert, LoadingController } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { prismOutline, happyOutline, logInOutline, personAddOutline, moonOutline, hammerOutline, logOutOutline, person, listCircleOutline, addCircleOutline, trashOutline, createOutline, eyeOutline, addOutline, settingsOutline, codeWorkingOutline, downloadOutline } from 'ionicons/icons';
-import { AuthService } from './auth/auth.service';
-import { StorageService } from './services/storage.service';
-import { LoginPage } from './pages/login/login.page';
-import { Subscription } from 'rxjs';
-import { STORAGE_KEYS } from './storage.config';
+import { prismOutline, happyOutline, logInOutline, personAddOutline, moonOutline, hammerOutline, logOutOutline, person, listCircleOutline, addCircleOutline, trashOutline, createOutline, eyeOutline, addOutline, settingsOutline, codeWorkingOutline, downloadOutline, alertCircleOutline } from 'ionicons/icons';
+import { Auth } from '@angular/fire/auth';
 
 @Component({
   selector: 'app-root',
@@ -37,7 +33,6 @@ export class AppComponent implements OnInit {
 
   public dark: boolean = false;
   public isAuthenticated: boolean = false;
-  private loginEventSubscription!: Subscription;
 
   appPages = [
     {
@@ -65,7 +60,7 @@ export class AppComponent implements OnInit {
   logoutAlertButtons = [{
     text: 'No, cancel',
     role: 'cancel',
-    handler: () => {},
+    handler: () => { },
   },
   {
     text: 'Yes, logout',
@@ -76,35 +71,28 @@ export class AppComponent implements OnInit {
   },]
 
   constructor(
-    private authService: AuthService,
-    private router: Router,
-    private storage: StorageService
+    private auth: Auth,
+    private loader: LoadingController,
+    private router: Router
   ) {
-    addIcons({ prismOutline, happyOutline, logInOutline, personAddOutline, moonOutline, hammerOutline, logOutOutline, person, listCircleOutline, addCircleOutline, trashOutline, createOutline, eyeOutline, addOutline, settingsOutline, codeWorkingOutline, downloadOutline });
+    addIcons({ prismOutline, happyOutline, logInOutline, personAddOutline, moonOutline, hammerOutline, logOutOutline, person, listCircleOutline, addCircleOutline, trashOutline, createOutline, eyeOutline, addOutline, settingsOutline, codeWorkingOutline, downloadOutline, alertCircleOutline });
   }
 
   async ngOnInit() {
-    this.isAuthenticated = await this.storage.get(STORAGE_KEYS.AUTH.isAuthenticated);
+    this.auth.onAuthStateChanged(user => {
+      console.log(user);
+      this.isAuthenticated = user ? true : false;
+    });
   }
 
-  logout() {
-    this.authService.logout().then((isAuthenticated: boolean) => {
-      this.isAuthenticated = isAuthenticated;
-      this.router.navigate(['login'], { replaceUrl: true })
+  async logout() {
+    const loader = await this.loader.create({ message: "Logging out.." });
+    await loader.present();
+    this.auth.signOut().then(() => {
+      this.router.navigate(['/login'], { replaceUrl: true });
+      this.loader.dismiss();
     });
   }
 
   openTutorial() { }
-
-  subscribeToChildEvents(componentRef: ComponentRef<any>) {
-    if (componentRef instanceof LoginPage) {
-      this.loginEventSubscription = componentRef.loginEvent.subscribe(isAuthenticated => this.isAuthenticated = isAuthenticated);
-    }
-  }
-
-  unsubscribeToChildEvents(componentRef: ComponentRef<any>) {
-    if (componentRef instanceof LoginPage) {
-      this.loginEventSubscription.unsubscribe();
-    }
-  }
 }

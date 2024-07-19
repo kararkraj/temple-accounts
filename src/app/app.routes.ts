@@ -27,8 +27,13 @@ export const routes: Routes = [
     canActivate: [canActivate]
   },
   {
+    path: 'email-verification',
+    loadComponent: () => import('./pages/email-verification/email-verification.page').then( m => m.EmailVerificationPage),
+    canActivate: [canActivate]
+  },
+  {
     path: '**',
     pathMatch: 'full',
     redirectTo: "tabs/add-entry",
-  }
+  },
 ];

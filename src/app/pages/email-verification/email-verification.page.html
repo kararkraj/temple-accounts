@@ -1,0 +1,32 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Email verification</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div class="ion-padding">
+    <ion-text color="danger">
+      <h1>Your Email is unverified.</h1>
+    </ion-text>
+    <ion-text color="primary">
+      <h2>Please verify your email by clicking on the email verification link sent to your email id - {{email}} and then
+        click on the below button.
+      </h2>
+    </ion-text>
+
+    <ion-button type="button" expand="full" color="primary" (click)="confirmEmailVerification()">Confirm email
+      verification</ion-button>
+
+    <ion-text color="primary">
+      <h2>Not received the email?</h2>
+      <h2>Click on the below button to resend the verification link email.</h2>
+    </ion-text>
+
+    <ion-button type="button" expand="full" color="primary" (click)="resendVerificationLinkEmail()">
+      Resend verification mail</ion-button>
+  </div>
+</ion-content>

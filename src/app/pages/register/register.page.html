@@ -8,10 +8,54 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <div class="example-container">
-    <div>
-      <ion-icon name="code-working-outline" size="large" color="primary"></ion-icon>
-    </div>
-    <h1>Development in progress.</h1>
+  <div class="login-logo">
+    <img src="assets/icons/icon-512.webp" alt="Ionic logo">
+  </div>
+
+  <div class="login-form">
+    <form [formGroup]="registerForm" #register novalidate (ngSubmit)="onSubmit()">
+
+      <ion-input formControlName="displayName" label="Display Name *" labelPlacement="stacked" fill="solid"
+        name="displayName" type="text" spellcheck="false" autocapitalize="off"
+        helperText="Only a-z, A-Z and 0-9 characters allowed" errorText="Only a-z, A-Z and 0-9 characters allowed"
+        required minlength="2" maxlength="99"></ion-input>
+
+      <ion-input formControlName="email" label="Email *" labelPlacement="stacked" fill="solid" name="email" type="text"
+        spellcheck="false" autocapitalize="off" errorText="Invalid Email" required maxlength="99"
+        placeholder="example@domain.com">
+      </ion-input>
+
+      <ion-input formControlName="password" label="Password *" labelPlacement="stacked" fill="solid" name="password"
+        type="password" errorText="Use 8 characters or more for your password" required maxlength="99" minlength="8">
+      </ion-input>
+
+      <ion-input formControlName="confirmPassword" label="Confirm password *" labelPlacement="stacked" fill="solid"
+        name="confirmPassword" type="password" maxlength="99" required errorText="Confirm password is required">
+      </ion-input>
+
+      @if (registerForm.hasError('isPasswordMisMatch')) {
+      <ion-note color="danger">Password and confirm password do not match</ion-note>
+      }
+
+      <ion-checkbox formControlName="rememberMe" labelPlacement="end">
+        Keep me signed in
+      </ion-checkbox>
+      <ion-icon color="danger" id="present-alert" name="alert-circle-outline" size="medium"
+        class="ion-margin-start"></ion-icon>
+
+      <ion-alert trigger="present-alert" header="Keep me signed in:"
+        message="When selected, this option will keep you signed in until you explicitly logout/signout.<br><br> When unselected, you will be automatically logged out when the tab/browser is closed."
+        [buttons]="['Ok']"></ion-alert>
+
+      <ion-row>
+        <ion-col>
+          <ion-button color="light" (click)="goToLogin()" expand="full"
+            [disabled]="register['submitted']">Login</ion-button>
+        </ion-col>
+        <ion-col>
+          <ion-button type="submit" color="primary" expand="full">Register</ion-button>
+        </ion-col>
+      </ion-row>
+    </form>
   </div>
 </ion-content>

@@ -1,12 +1,11 @@
-import { Component, EventEmitter, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { IonContent, IonHeader, IonTitle, IonToolbar, IonButtons, IonMenuButton, IonRow, IonCol, IonButton, IonInput } from '@ionic/angular/standalone';
 import { Router } from '@angular/router';
 import { LoadingController } from '@ionic/angular/standalone';
 import { LoginData } from 'src/app/interfaces/login-data';
-import { AuthService } from 'src/app/auth/auth.service';
 import { ToasterService } from 'src/app/services/toaster.service';
+import { Auth, signInWithEmailAndPassword } from '@angular/fire/auth';
 
 @Component({
   selector: 'app-login',
@@ -14,7 +13,6 @@ import { ToasterService } from 'src/app/services/toaster.service';
   styleUrls: ['./login.page.scss'],
   standalone: true,
   imports: [
-    CommonModule,
     FormsModule,
     IonButton,
     IonCol,
@@ -31,37 +29,38 @@ import { ToasterService } from 'src/app/services/toaster.service';
 export class LoginPage implements OnInit {
 
   login: LoginData = { username: '', password: '' };
-  isToastOpen: boolean = false;
-  loginEvent: EventEmitter<boolean> = new EventEmitter();
 
   constructor(
     private router: Router,
     private loader: LoadingController,
-    private authService: AuthService,
-    private toaster: ToasterService
+    private toaster: ToasterService,
+    private auth: Auth
   ) { }
 
-  ngOnInit() {
+  async ngOnInit() {
+    const loader = await this.loader.create();
+    await loader.present();
+    const unsubscribe = this.auth.onAuthStateChanged(user => {
+      unsubscribe();
+      if (user) {
+        this.router.navigate(['tabs']);
+      }
+      loader.dismiss();
+    });
   }
 
-  onLogin(form: NgForm) {
-    this.loader.create({ message: "Logging in..." }).then(loader => {
-      loader.present();
-      this.authService.login(this.login).subscribe({
-        next: (res: string) => {
-          this.toaster.presentToast({ message: res, color: "success" }).then(() => {
-            loader.dismiss();
-            this.loginEvent.emit(true);
-            this.router.navigate(['tabs'], { replaceUrl: true });
-          });
-        },
-        error: (err: string) => {
-          this.toaster.presentToast({ message: err, color: "danger" }).then(() => {
-            loader.dismiss();
-            form.resetForm();
-          });
-        }
-      });
+  async onLogin(form: NgForm) {
+    const loader = await this.loader.create({ message: "Logging in..." })
+    loader.present();
+    signInWithEmailAndPassword(this.auth, this.login.username, this.login.password).then(user => {
+      this.toaster.presentToast({ message: 'Login successful.', color: "success" })
+      this.router.navigate(['tabs'], { replaceUrl: true });
+      loader.dismiss();
+    }).catch(err => {
+      console.log(err);
+      this.toaster.presentToast({ message: `Error: ${err.code}`, color: 'danger' });
+      loader.dismiss();
+      form.resetForm();
     });
   }
 
