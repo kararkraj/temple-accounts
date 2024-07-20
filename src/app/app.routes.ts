@@ -16,6 +16,10 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/register/register.page').then(m => m.RegisterPage)
   },
   {
+    path: 'reset-password',
+    loadComponent: () => import('./pages/reset-password/reset-password.page').then(m => m.ResetPasswordPage)
+  },
+  {
     path: 'tabs',
     loadChildren: () => import('./pages/tabs/tabs.routes').then(m => m.TABS_ROUTES),
     canActivate: [canActivate],
@@ -28,7 +32,7 @@ export const routes: Routes = [
   },
   {
     path: 'email-verification',
-    loadComponent: () => import('./pages/email-verification/email-verification.page').then( m => m.EmailVerificationPage),
+    loadComponent: () => import('./pages/email-verification/email-verification.page').then(m => m.EmailVerificationPage),
     canActivate: [canActivate]
   },
   {

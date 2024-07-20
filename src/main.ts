@@ -35,13 +35,13 @@ bootstrapApplication(AppComponent, {
       deps: [StorageService],
     },
     provideFirebaseApp(() => initializeApp_alias({
-      "projectId": "temple-accounts-556e6",
-      "appId": "1:132896477598:web:41a427ff6f06c65857068f",
-      "storageBucket": "temple-accounts-556e6.appspot.com",
-      "apiKey": "AIzaSyDOdPtsrEafCXKOC5nwAXr9KvU7pNMxam8",
-      "authDomain": "temple-accounts-556e6.firebaseapp.com",
-      "messagingSenderId": "132896477598",
-      "measurementId": "G-JV6LKNZ5T3"
+      "projectId": environment.firebase.projectId,
+      "appId": environment.firebase.appId,
+      "storageBucket": environment.firebase.storageBucket,
+      "apiKey": environment.firebase.apiKey,
+      "authDomain": environment.firebase.authDomain,
+      "messagingSenderId": environment.firebase.messagingSenderId,
+      "measurementId": environment.firebase.measurementId
     })),
     provideAuth(() => getAuth()),
     provideFirestore(() => getFirestore()),
