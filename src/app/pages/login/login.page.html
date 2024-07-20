@@ -23,6 +23,17 @@
         type="password" #password="ngModel" errorText="Password is required" required maxlength="99">
       </ion-input>
 
+      <div class="ion-padding-top">
+        <ion-checkbox [(ngModel)]="login.rememberMe" labelPlacement="end" name="rememberMe">
+          Keep me signed in
+        </ion-checkbox>
+        <ion-icon color="danger" id="present-alert" name="alert-circle-outline" size="medium"
+          class="ion-margin-start"></ion-icon>
+        <ion-alert trigger="present-alert" header="Keep me signed in:"
+          message="When selected, this option will keep you signed in until you explicitly logout/signout.<br><br> When unselected, you will be automatically logged out when the tab/browser is closed."
+          [buttons]="['Ok']"></ion-alert>
+      </div>
+
       <ion-row>
         <ion-col>
           <ion-button type="submit" expand="full" [disabled]="loginForm.submitted">Login</ion-button>

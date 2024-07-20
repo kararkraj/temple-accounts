@@ -53,7 +53,7 @@ export class RegisterPage implements OnInit {
       loader.present();
       const registerData = this.registerForm.getRawValue();
       try {
-        this.auth.setPersistence(registerData.rememberMe ? browserLocalPersistence : browserSessionPersistence);
+        await this.auth.setPersistence(registerData.rememberMe ? browserLocalPersistence : browserSessionPersistence);
         const user = await createUserWithEmailAndPassword(this.auth, registerData.email, registerData.password);
         await updateProfile(user.user, { displayName: registerData.displayName });
         await sendEmailVerification(user.user);

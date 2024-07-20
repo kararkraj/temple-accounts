@@ -37,11 +37,13 @@
       <ion-note color="danger">Password and confirm password do not match</ion-note>
       }
 
-      <ion-checkbox formControlName="rememberMe" labelPlacement="end">
-        Keep me signed in
-      </ion-checkbox>
-      <ion-icon color="danger" id="present-alert" name="alert-circle-outline" size="medium"
-        class="ion-margin-start"></ion-icon>
+      <div class="ion-padding-top">
+        <ion-checkbox formControlName="rememberMe" labelPlacement="end">
+          Keep me signed in
+        </ion-checkbox>
+        <ion-icon color="danger" id="present-alert" name="alert-circle-outline" size="medium"
+          class="ion-margin-start"></ion-icon>
+      </div>
 
       <ion-alert trigger="present-alert" header="Keep me signed in:"
         message="When selected, this option will keep you signed in until you explicitly logout/signout.<br><br> When unselected, you will be automatically logged out when the tab/browser is closed."
