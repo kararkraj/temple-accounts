@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { canActivate, canActivateChild } from './auth/guard/auth.guard';
+import { canActivate, canActivateChild } from './guard/auth.guard';
 
 export const routes: Routes = [
   {

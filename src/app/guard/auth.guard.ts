@@ -1,6 +1,6 @@
 import { inject } from '@angular/core';
 import { CanActivateChildFn, CanActivateFn, Router } from '@angular/router';
-import { StorageService } from '../../services/storage.service';
+import { StorageService } from '../services/storage.service';
 import { STORAGE_KEYS } from 'src/app/storage.config';
 import { ToasterService } from 'src/app/services/toaster.service';
 import { Auth } from '@angular/fire/auth';
@@ -12,7 +12,6 @@ export const canActivate: CanActivateFn = async (route, state) => {
   return new Promise(resolve => {
     const unsubscribe = auth.onAuthStateChanged(user => {
       unsubscribe();
-      console.log(user);
       if (user) {
         const isEmailVerified = auth.currentUser?.emailVerified;
         if (!isEmailVerified) {

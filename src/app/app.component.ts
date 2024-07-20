@@ -79,10 +79,7 @@ export class AppComponent implements OnInit {
   }
 
   async ngOnInit() {
-    this.auth.onAuthStateChanged(user => {
-      console.log(user);
-      this.isAuthenticated = user ? true : false;
-    });
+    this.auth.onAuthStateChanged(user => this.isAuthenticated = user ? true : false);
   }
 
   async logout() {
