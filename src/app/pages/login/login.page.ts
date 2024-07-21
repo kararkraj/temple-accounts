@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, NgForm, ReactiveFormsModule, Validators } from '@angular/forms';
-import { IonContent, IonHeader, IonTitle, IonToolbar, IonButtons, IonMenuButton, IonRow, IonCol, IonButton, IonInput, IonIcon, IonCheckbox, IonAlert } from '@ionic/angular/standalone';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { IonContent, IonHeader, IonTitle, IonToolbar, IonButtons, IonMenuButton, IonRow, IonCol, IonButton, IonInput, IonIcon, IonCheckbox, IonAlert, IonGrid } from '@ionic/angular/standalone';
 import { Router } from '@angular/router';
 import { LoadingController } from '@ionic/angular/standalone';
 import { ToasterService } from 'src/app/services/toaster.service';
@@ -11,7 +11,7 @@ import { Auth, browserLocalPersistence, browserSessionPersistence, signInWithEma
   templateUrl: './login.page.html',
   styleUrls: ['./login.page.scss'],
   standalone: true,
-  imports: [IonAlert, IonCheckbox, IonIcon,
+  imports: [IonGrid, IonAlert, IonCheckbox, IonIcon,
     ReactiveFormsModule,
     IonButton,
     IonCol,

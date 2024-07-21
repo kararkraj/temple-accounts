@@ -49,14 +49,16 @@
       message="When selected, this option will keep you signed in until you explicitly logout/signout.<br><br> When unselected, you will be automatically logged out when the tab/browser is closed."
       [buttons]="['Ok']"></ion-alert>
 
-    <ion-row>
-      <ion-col class="ion-no-padding">
-        <ion-button color="light" (click)="goToLogin()" expand="full">Login</ion-button>
-      </ion-col>
-      <ion-col class="ion-no-padding">
-        <ion-button type="submit" color="primary" expand="full">Register</ion-button>
-      </ion-col>
-    </ion-row>
+    <ion-grid class="ion-no-padding">
+      <ion-row>
+        <ion-col class="ion-no-padding">
+          <ion-button color="light" (click)="goToLogin()" expand="full">Login</ion-button>
+        </ion-col>
+        <ion-col class="ion-no-padding">
+          <ion-button type="submit" color="primary" expand="full">Register</ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
 
   </form>
 </ion-content>

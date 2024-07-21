@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Auth, confirmPasswordReset } from '@angular/fire/auth';
 import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { IonContent, IonHeader, IonTitle, IonToolbar, LoadingController, IonInput, IonButtons, IonMenuButton, IonRow, IonCol, IonButton, IonNote } from '@ionic/angular/standalone';
+import { IonContent, IonHeader, IonTitle, IonToolbar, LoadingController, IonInput, IonButtons, IonMenuButton, IonRow, IonCol, IonButton, IonNote, IonGrid } from '@ionic/angular/standalone';
 import { ToasterService } from 'src/app/services/toaster.service';
 import { environment } from 'src/environments/environment';
 
@@ -11,7 +11,7 @@ import { environment } from 'src/environments/environment';
   templateUrl: './reset-password.page.html',
   styleUrls: ['./reset-password.page.scss'],
   standalone: true,
-  imports: [IonNote, IonButton, IonCol, IonRow, IonButtons, ReactiveFormsModule, IonContent, IonHeader, IonTitle, IonToolbar, IonInput, IonMenuButton]
+  imports: [IonGrid, IonNote, IonButton, IonCol, IonRow, IonButtons, ReactiveFormsModule, IonContent, IonHeader, IonTitle, IonToolbar, IonInput, IonMenuButton]
 })
 export class ResetPasswordPage implements OnInit {
 

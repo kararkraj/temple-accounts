@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Auth, browserLocalPersistence, browserSessionPersistence, createUserWithEmailAndPassword, sendEmailVerification, updateProfile } from '@angular/fire/auth';
 import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { IonContent, IonHeader, IonTitle, IonToolbar, IonIcon, IonButtons, IonMenuButton, IonInput, IonButton, IonCol, IonRow, IonItem, IonNote, IonList, IonText, LoadingController, IonCheckbox, IonAlert } from '@ionic/angular/standalone';
+import { IonContent, IonHeader, IonTitle, IonToolbar, IonIcon, IonButtons, IonMenuButton, IonInput, IonButton, IonCol, IonRow, IonItem, IonNote, IonList, IonText, LoadingController, IonCheckbox, IonAlert, IonGrid } from '@ionic/angular/standalone';
 import { ToasterService } from 'src/app/services/toaster.service';
 
 @Component({
@@ -10,7 +10,7 @@ import { ToasterService } from 'src/app/services/toaster.service';
   templateUrl: './register.page.html',
   styleUrls: ['./register.page.scss'],
   standalone: true,
-  imports: [IonAlert, IonCheckbox, IonText, IonList, IonNote, IonItem, IonRow, IonCol, IonButton, IonInput, IonButtons, IonIcon, IonContent, IonHeader, IonTitle, IonToolbar, IonMenuButton, ReactiveFormsModule]
+  imports: [IonGrid, IonAlert, IonCheckbox, IonText, IonList, IonNote, IonItem, IonRow, IonCol, IonButton, IonInput, IonButtons, IonIcon, IonContent, IonHeader, IonTitle, IonToolbar, IonMenuButton, ReactiveFormsModule]
 })
 export class RegisterPage implements OnInit {
 

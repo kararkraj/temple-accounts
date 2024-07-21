@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Auth, sendPasswordResetEmail } from '@angular/fire/auth';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { IonContent, IonHeader, IonTitle, IonToolbar, IonRow, IonCol, IonButton, LoadingController, IonInput } from '@ionic/angular/standalone';
+import { IonContent, IonHeader, IonTitle, IonToolbar, IonRow, IonCol, IonButton, LoadingController, IonInput, IonButtons, IonMenuButton, IonGrid } from '@ionic/angular/standalone';
 import { ToasterService } from 'src/app/services/toaster.service';
 
 @Component({
@@ -9,7 +9,7 @@ import { ToasterService } from 'src/app/services/toaster.service';
   templateUrl: './forgot-password.page.html',
   styleUrls: ['./forgot-password.page.scss'],
   standalone: true,
-  imports: [ReactiveFormsModule, IonButton, IonCol, IonRow, IonContent, IonHeader, IonTitle, IonToolbar, IonInput]
+  imports: [IonGrid, IonButtons, ReactiveFormsModule, IonButton, IonCol, IonRow, IonContent, IonHeader, IonTitle, IonToolbar, IonInput, IonMenuButton]
 })
 export class ForgotPasswordPage implements OnInit {
 
