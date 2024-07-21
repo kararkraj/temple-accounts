@@ -12,36 +12,34 @@
     <img src="assets/icons/icon-512.webp" alt="Ionic logo">
   </div>
 
-  <div class="login-form">
-    <form #loginForm="ngForm" novalidate (ngSubmit)="onLogin(loginForm)">
-      <ion-input label="Username" labelPlacement="stacked" fill="solid" [(ngModel)]="login.username" name="username"
-        type="text" #username="ngModel" spellcheck="false" autocapitalize="off" errorText="Username is required"
-        required maxlength="99">
-      </ion-input>
+  <form [formGroup]="loginForm" novalidate (ngSubmit)="onLogin()" class="ion-padding">
+    <ion-input label="Username" labelPlacement="stacked" fill="solid" formControlName="username" name="username"
+      type="text" spellcheck="false" autocapitalize="off" errorText="Username is required" required maxlength="99"
+      class="ion-margin-bottom">
+    </ion-input>
 
-      <ion-input label="Password" labelPlacement="stacked" fill="solid" [(ngModel)]="login.password" name="password"
-        type="password" #password="ngModel" errorText="Password is required" required maxlength="99">
-      </ion-input>
+    <ion-input label="Password" labelPlacement="stacked" fill="solid" formControlName="password" name="password"
+      type="password" errorText="Password is required" required maxlength="99" class="ion-margin-bottom">
+    </ion-input>
 
-      <div class="ion-padding-top">
-        <ion-checkbox [(ngModel)]="login.rememberMe" labelPlacement="end" name="rememberMe">
-          Keep me signed in
-        </ion-checkbox>
-        <ion-icon color="danger" id="present-alert" name="alert-circle-outline" size="medium"
-          class="ion-margin-start"></ion-icon>
-        <ion-alert trigger="present-alert" header="Keep me signed in:"
-          message="When selected, this option will keep you signed in until you explicitly logout/signout.<br><br> When unselected, you will be automatically logged out when the tab/browser is closed."
-          [buttons]="['Ok']"></ion-alert>
-      </div>
+    <div class="ion-margin-bottom">
+      <ion-checkbox formControlName="rememberMe" labelPlacement="end" name="rememberMe">
+        Keep me signed in
+      </ion-checkbox>
+      <ion-icon color="danger" id="present-alert" name="alert-circle-outline" size="medium"
+        class="ion-margin-start"></ion-icon>
+      <ion-alert trigger="present-alert" header="Keep me signed in:"
+        message="When selected, this option will keep you signed in until you explicitly logout/signout.<br><br> When unselected, you will be automatically logged out when the tab/browser is closed."
+        [buttons]="['Ok']"></ion-alert>
+    </div>
 
-      <ion-row>
-        <ion-col>
-          <ion-button type="submit" expand="full" [disabled]="loginForm.submitted">Login</ion-button>
-        </ion-col>
-        <ion-col>
-          <ion-button (click)="onSignup()" color="light" expand="full">Register</ion-button>
-        </ion-col>
-      </ion-row>
-    </form>
-  </div>
+    <ion-row>
+      <ion-col class="ion-no-padding">
+        <ion-button (click)="goToRegister()" color="light" expand="full">Register</ion-button>
+      </ion-col>
+      <ion-col class="ion-no-padding">
+        <ion-button type="submit" expand="full">Login</ion-button>
+      </ion-col>
+    </ion-row>
+  </form>
 </ion-content>

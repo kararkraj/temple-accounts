@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { FormsModule, NgForm } from '@angular/forms';
+import { FormControl, FormGroup, NgForm, ReactiveFormsModule, Validators } from '@angular/forms';
 import { IonContent, IonHeader, IonTitle, IonToolbar, IonButtons, IonMenuButton, IonRow, IonCol, IonButton, IonInput, IonIcon, IonCheckbox, IonAlert } from '@ionic/angular/standalone';
 import { Router } from '@angular/router';
 import { LoadingController } from '@ionic/angular/standalone';
-import { LoginData } from 'src/app/interfaces/login-data';
 import { ToasterService } from 'src/app/services/toaster.service';
 import { Auth, browserLocalPersistence, browserSessionPersistence, signInWithEmailAndPassword } from '@angular/fire/auth';
 
@@ -12,8 +11,8 @@ import { Auth, browserLocalPersistence, browserSessionPersistence, signInWithEma
   templateUrl: './login.page.html',
   styleUrls: ['./login.page.scss'],
   standalone: true,
-  imports: [IonAlert, IonCheckbox, IonIcon, 
-    FormsModule,
+  imports: [IonAlert, IonCheckbox, IonIcon,
+    ReactiveFormsModule,
     IonButton,
     IonCol,
     IonRow,
@@ -28,35 +27,46 @@ import { Auth, browserLocalPersistence, browserSessionPersistence, signInWithEma
 })
 export class LoginPage implements OnInit {
 
-  login: LoginData = { username: '', password: '', rememberMe: false };
+  loginForm: FormGroup;
 
   constructor(
     private router: Router,
     private loader: LoadingController,
     private toaster: ToasterService,
     private auth: Auth
-  ) { }
+  ) {
+    this.loginForm = new FormGroup({
+      username: new FormControl(null, [Validators.required, Validators.maxLength(99)]),
+      password: new FormControl(null, [Validators.required, Validators.maxLength(99)]),
+      rememberMe: new FormControl(false)
+    });
+  }
 
   ngOnInit() {
   }
 
-  async onLogin(form: NgForm) {
-    const loader = await this.loader.create({ message: "Logging in..." })
-    loader.present();
-    await this.auth.setPersistence(this.login.rememberMe ? browserLocalPersistence : browserSessionPersistence);
-    signInWithEmailAndPassword(this.auth, this.login.username, this.login.password).then(user => {
-      this.toaster.presentToast({ message: 'Login successful.', color: "success" })
-      this.router.navigate(['tabs'], { replaceUrl: true });
-      loader.dismiss();
-    }).catch(err => {
-      console.log(err);
-      this.toaster.presentToast({ message: `Error: ${err.code}`, color: 'danger' });
-      loader.dismiss();
-      form.resetForm();
-    });
+  async onLogin() {
+    if (this.loginForm.valid) {
+      const loader = await this.loader.create({ message: "Logging in..." });
+      loader.present();
+      const loginForm = this.loginForm.getRawValue();
+      await this.auth.setPersistence(loginForm.rememberMe ? browserLocalPersistence : browserSessionPersistence);
+      signInWithEmailAndPassword(this.auth, loginForm.username, loginForm.password).then(user => {
+        this.toaster.presentToast({ message: 'Login successful.', color: "success" })
+        this.router.navigate(['tabs'], { replaceUrl: true });
+      }).catch(err => {
+        console.log(err);
+        this.toaster.presentToast({ message: `Error: ${err.code}`, color: 'danger' });
+      }).finally(() => {
+        loader.dismiss();
+        this.loginForm.reset();
+      });
+    } else {
+      this.loginForm.markAllAsTouched();
+    }
   }
 
-  onSignup() {
+  goToRegister() {
     this.router.navigateByUrl('/register');
   }
 
