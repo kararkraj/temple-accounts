@@ -31,16 +31,7 @@ export class RegisterPage implements OnInit {
     }, { validators: this.checkPasswordMatch });
   }
 
-  async ngOnInit() {
-    const loader = await this.loader.create();
-    await loader.present();
-    const unsubscribe = this.auth.onAuthStateChanged(user => {
-      unsubscribe();
-      if (user) {
-        this.router.navigate(['tabs']);
-      }
-      loader.dismiss();
-    });
+  ngOnInit() {
   }
 
   get() {

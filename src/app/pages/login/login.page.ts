@@ -37,16 +37,7 @@ export class LoginPage implements OnInit {
     private auth: Auth
   ) { }
 
-  async ngOnInit() {
-    const loader = await this.loader.create();
-    await loader.present();
-    const unsubscribe = this.auth.onAuthStateChanged(user => {
-      unsubscribe();
-      if (user) {
-        this.router.navigate(['tabs']);
-      }
-      loader.dismiss();
-    });
+  ngOnInit() {
   }
 
   async onLogin(form: NgForm) {

@@ -5,7 +5,7 @@ import { STORAGE_KEYS } from 'src/app/storage.config';
 import { ToasterService } from 'src/app/services/toaster.service';
 import { Auth } from '@angular/fire/auth';
 
-export const canActivate: CanActivateFn = async (route, state) => {
+export const canActivateAuthenticatedRoutes: CanActivateFn = async (route, state) => {
   const router = inject(Router);
   const auth = inject(Auth);
 
@@ -39,4 +39,17 @@ export const canActivateChild: CanActivateChildFn = async (route, state) => {
     await toaster.presentToast({ message: "Please add a temple to proceed!", color: "danger" });
     return router.parseUrl('tabs/temples/add');
   }
+};
+
+export const canActivateUnAuthenticatedRoutes: CanActivateFn = async (route, state) => {
+  const router = inject(Router);
+  const auth = inject(Auth);
+
+  return new Promise(resolve => {
+    const unsubscribe = auth.onAuthStateChanged(user => {
+      unsubscribe();
+      user ? resolve(router.parseUrl('tabs')) : resolve(true);
+    });
+  });
+
 };
