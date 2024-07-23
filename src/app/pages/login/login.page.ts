@@ -4,7 +4,7 @@ import { IonContent, IonHeader, IonTitle, IonToolbar, IonButtons, IonMenuButton,
 import { Router } from '@angular/router';
 import { LoadingController } from '@ionic/angular/standalone';
 import { ToasterService } from 'src/app/services/toaster.service';
-import { Auth, browserLocalPersistence, browserSessionPersistence, signInWithEmailAndPassword } from '@angular/fire/auth';
+import { Auth, browserLocalPersistence, browserSessionPersistence, FacebookAuthProvider, GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup } from '@angular/fire/auth';
 
 @Component({
   selector: 'app-login',
@@ -48,7 +48,7 @@ export class LoginPage implements OnInit {
   async onLogin() {
     if (this.loginForm.valid) {
       const loader = await this.loader.create({ message: "Logging in..." });
-      loader.present();
+      await loader.present();
       const loginForm = this.loginForm.getRawValue();
       await this.auth.setPersistence(loginForm.rememberMe ? browserLocalPersistence : browserSessionPersistence);
       signInWithEmailAndPassword(this.auth, loginForm.username, loginForm.password).then(user => {
@@ -68,6 +68,50 @@ export class LoginPage implements OnInit {
 
   goToRegister() {
     this.router.navigateByUrl('/register');
+  }
+
+  async signInWithGoogle() {
+    const loader = await this.loader.create({ message: 'Signing in with google...' });
+    await loader.present();
+    await this.auth.setPersistence(this.loginForm.value.rememberMe ? browserLocalPersistence : browserSessionPersistence);
+    const provider = new GoogleAuthProvider();
+    signInWithPopup(this.auth, provider)
+      .then((result) => {
+        this.router.navigate(['tabs'], { replaceUrl: true });
+      }).catch((error) => {
+        this.toaster.presentToast({ message: `Error: ${error.code}`, color: 'danger' });
+      }).finally(() => {
+        loader.dismiss();
+      });
+  }
+
+  signInWithFacebook() {
+    const provider = new FacebookAuthProvider();
+    signInWithPopup(this.auth, provider)
+      .then((result) => {
+        console.log(result);
+        // The signed-in user info.
+        const user = result.user;
+
+        // This gives you a Facebook Access Token. You can use it to access the Facebook API.
+        const credential = FacebookAuthProvider.credentialFromResult(result);
+        const accessToken = credential?.accessToken;
+
+        // IdP data available using getAdditionalUserInfo(result)
+        // ...
+      })
+      .catch((error) => {
+        console.log(error);
+        // Handle Errors here.
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        // The email of the user's account used.
+        const email = error.customData.email;
+        // The AuthCredential type that was used.
+        const credential = FacebookAuthProvider.credentialFromError(error);
+
+        // ...
+      });
   }
 
 }

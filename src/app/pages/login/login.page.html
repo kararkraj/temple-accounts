@@ -15,11 +15,12 @@
   <form [formGroup]="loginForm" novalidate (ngSubmit)="onLogin()" class="ion-padding">
     <ion-input label="Username" labelPlacement="stacked" fill="solid" formControlName="username" name="username"
       type="text" spellcheck="false" autocapitalize="off" errorText="Username is required" required maxlength="99"
-      class="ion-margin-bottom">
+      class="ion-margin-bottom" placeholder="example@domain.com">
     </ion-input>
 
     <ion-input label="Password" labelPlacement="stacked" fill="solid" formControlName="password" name="password"
-      type="password" errorText="Password is required" required maxlength="99" class="ion-margin-bottom">
+      type="password" errorText="Password is required" required maxlength="99" class="ion-margin-bottom"
+      placeholder="********">
     </ion-input>
 
     <ion-grid class="ion-margin-bottom ion-no-padding">
@@ -46,6 +47,24 @@
         </ion-col>
         <ion-col>
           <ion-button type="submit" expand="full">Login</ion-button>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col>
+          <ion-button (click)="signInWithGoogle()" color="light" expand="full">
+            <ion-icon slot="start" src="./../../../assets/icon/google.svg" class="ion-margin-end"></ion-icon>
+            <span>Login with Google</span>
+          </ion-button>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col>
+          <ion-button (click)="signInWithFacebook()" color="light" expand="full">
+            <ion-icon slot="start" src="./../../../assets/icon/facebook.svg" class="ion-margin-end"></ion-icon>
+            <span>Login with Facebook</span>
+          </ion-button>
         </ion-col>
       </ion-row>
     </ion-grid>
