@@ -1,7 +1,7 @@
-.example-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
+ion-avatar {
+    --border-radius: 4px;
+}
+
+.action-buttons ion-button {
+    min-height: 44px;
 }

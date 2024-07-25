@@ -18,14 +18,18 @@ export const routes: Routes = [
     canActivate: [canActivateUnAuthenticatedRoutes]
   },
   {
+    path: 'forgot-password',
+    loadComponent: () => import('./pages/forgot-password/forgot-password.page').then(m => m.ForgotPasswordPage),
+    canActivate: [canActivateUnAuthenticatedRoutes]
+  },
+  {
     path: 'reset-password',
     loadComponent: () => import('./pages/reset-password/reset-password.page').then(m => m.ResetPasswordPage),
     canActivate: [canActivateUnAuthenticatedRoutes]
   },
   {
-    path: 'forgot-password',
-    loadComponent: () => import('./pages/forgot-password/forgot-password.page').then(m => m.ForgotPasswordPage),
-    canActivate: [canActivateUnAuthenticatedRoutes]
+    path: 'account-actions',
+    loadComponent: () => import('./pages/account-actions/account-actions.page').then( m => m.AccountActionsPage)
   },
   {
     path: 'tabs',
@@ -47,5 +51,5 @@ export const routes: Routes = [
     path: '**',
     pathMatch: 'full',
     redirectTo: "tabs/add-entry",
-  },
+  }
 ];

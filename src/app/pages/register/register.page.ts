@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Auth, browserLocalPersistence, browserSessionPersistence, createUserWithEmailAndPassword, sendEmailVerification, updateProfile } from '@angular/fire/auth';
+import { Auth, browserLocalPersistence, browserSessionPersistence, createUserWithEmailAndPassword, sendEmailVerification, signOut, updateProfile } from '@angular/fire/auth';
 import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { IonContent, IonHeader, IonTitle, IonToolbar, IonIcon, IonButtons, IonMenuButton, IonInput, IonButton, IonCol, IonRow, IonItem, IonNote, IonList, IonText, LoadingController, IonCheckbox, IonAlert, IonGrid } from '@ionic/angular/standalone';
@@ -48,8 +48,10 @@ export class RegisterPage implements OnInit {
         const user = await createUserWithEmailAndPassword(this.auth, registerData.email, registerData.password);
         await updateProfile(user.user, { displayName: registerData.displayName });
         await sendEmailVerification(user.user);
+        await signOut(this.auth);
         await this.toaster.presentToast({ message: `Please click on the verification link sent to your email: ${registerData.email}`, color: 'success' });
         this.registerForm.reset();
+        this.router.navigate(['login'], { replaceUrl: true });
       } catch (e: any) {
         console.log(e);
         this.toaster.presentToast({ message: `Error: ${e.code}`, color: 'danger' });

@@ -4,7 +4,6 @@ import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, Validatio
 import { ActivatedRoute, Router } from '@angular/router';
 import { IonContent, IonHeader, IonTitle, IonToolbar, LoadingController, IonInput, IonButtons, IonMenuButton, IonRow, IonCol, IonButton, IonNote, IonGrid } from '@ionic/angular/standalone';
 import { ToasterService } from 'src/app/services/toaster.service';
-import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-reset-password',
@@ -34,10 +33,7 @@ export class ResetPasswordPage implements OnInit {
     // if query parameters are valid then proceed
     // else navigate to login page because the query parameters are invalid
     const queryParams = this.activatedRoute.snapshot.queryParams;
-    if (Object.keys(queryParams).length > 0 &&
-      queryParams['mode'] === "resetPassword" &&
-      queryParams['apiKey'] === environment.firebase.apiKey &&
-      queryParams['oobCode']) {
+    if (Object.keys(queryParams).length > 0 && queryParams['oobCode']) {
     } else {
       this.router.navigate(['login'], { replaceUrl: true });
     }
