@@ -37,11 +37,25 @@
             placeholder="example@domain.com" class="ion-margin-bottom">
           </ion-input>
         </ion-col>
+
+        <!-- <ion-col size="auto">
+          @if (myProfileForm.get('email')?.disabled) {
+            <ion-button type="button" size="large" (click)="enableEmailEdit()">
+              <ion-icon slot="icon-only" name="create-outline"></ion-icon>
+            </ion-button>
+          } @else {
+            <ion-button type="button" size="large" (click)="disableEmailEdit()">
+              <ion-icon slot="icon-only" name="lock-closed-outline"></ion-icon>
+            </ion-button>
+          }
+        </ion-col> -->
+
       </ion-row>
 
       <ion-row class="ion-margin-bottom action-buttons">
         <ion-col>
-          <ion-button type="button" color="danger" id="open-modal" expand="full">Delete account</ion-button>
+          <ion-button type="button" color="danger" (click)="openModal('delete', 'Please re-authenticate to confirm deletion of your account.')" expand="full">Delete
+            account</ion-button>
         </ion-col>
         <ion-col>
           <ion-button type="button" color="light" (click)="resetForm()" expand="full">Reset</ion-button>
@@ -51,11 +65,61 @@
         </ion-col>
       </ion-row>
 
+      <ion-row class="divider"></ion-row>
     </ion-grid>
 
   </form>
 
-  <ion-modal trigger="open-modal" (willDismiss)="onWillDismiss($event)">
+  <form [formGroup]="updatePasswordForm" (ngSubmit)="onUpdatePasswordFormSubmit()">
+
+    <ion-grid class="ion-no-padding">
+
+      <ion-row>
+        <ion-col>
+          <h4 class="ion-text-center">
+            Update Password
+          </h4>
+        </ion-col>
+      </ion-row>
+
+      <ion-row class="ion-margin-bottom">
+        <ion-col>
+          <ion-input formControlName="newPassword" label="New password *" labelPlacement="stacked" fill="solid"
+            name="newPassword" type="password" errorText="Use 8 characters or more for your new password" required
+            maxlength="99" minlength="8">
+          </ion-input>
+        </ion-col>
+      </ion-row>
+
+      <ion-row class="ion-margin-bottom">
+        <ion-col>
+          <ion-input formControlName="confirmNewPassword" label="Confirm new password *" labelPlacement="stacked"
+            fill="solid" name="confirmNewPassword" type="password" maxlength="99" required
+            errorText="Confirm new password is required">
+          </ion-input>
+        </ion-col>
+      </ion-row>
+
+      @if (updatePasswordForm.hasError('isPasswordMisMatch')) {
+      <ion-row class="ion-margin-bottom">
+        <ion-col>
+          <ion-note color="danger">Password and confirm password do not match</ion-note>
+        </ion-col>
+      </ion-row>
+      }
+
+      <ion-row>
+        <ion-col>
+          <ion-button type="submit" color="primary" expand="full">Submit</ion-button>
+        </ion-col>
+      </ion-row>
+
+    </ion-grid>
+
+  </form>
+
+
+  <ion-modal #modal (willDismiss)="onWillDismiss($event)" backdropDismiss="false">
     <ng-template>
       <ion-header>
         <ion-toolbar>
@@ -66,14 +130,14 @@
         </ion-toolbar>
       </ion-header>
       <ion-content class="ion-padding">
-        <h4 class="ion-no-margin ion-margin-bottom">Please re-authenticate to confirm deletion of your account.</h4>
+        <h4 class="ion-no-margin ion-margin-bottom">{{modalMessage}}</h4>
         <form (ngSubmit)="reAuthWithPassword()">
           <ion-grid class="ion-no-padding">
             <ion-row>
               <ion-col>
                 <ion-input label="Password" labelPlacement="stacked" fill="solid" [(ngModel)]="reAuthPassword"
                   name="password" type="password" errorText="Password is required" required maxlength="99"
-                  class="ion-margin-bottom" placeholder="********">
+                  class="ion-margin-bottom" placeholder="********" required>
                 </ion-input>
               </ion-col>
             </ion-row>
@@ -81,24 +145,6 @@
             <ion-row>
               <ion-col>
                 <ion-button type="submit" color="primary" expand="full">Submit</ion-button>
-              </ion-col>
-            </ion-row>
-
-            <ion-row>
-              <ion-col>
-                <ion-button type="button" (click)="reAuthWithGoogle()" color="light" expand="full">
-                  <ion-icon slot="start" src="./../../../assets/icon/google.svg" class="ion-margin-end"></ion-icon>
-                  <span>Authenticate with Google</span>
-                </ion-button>
-              </ion-col>
-            </ion-row>
-
-            <ion-row>
-              <ion-col>
-                <ion-button type="button" (click)="reAuthWithFacebook()" color="light" expand="full">
-                  <ion-icon slot="start" src="./../../../assets/icon/facebook.svg" class="ion-margin-end"></ion-icon>
-                  <span>Authenticate with Facebook</span>
-                </ion-button>
               </ion-col>
             </ion-row>
           </ion-grid>

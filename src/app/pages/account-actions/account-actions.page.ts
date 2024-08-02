@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { IonContent, IonHeader, IonTitle, IonToolbar, IonButtons, IonRouterOutlet, LoadingController, IonMenuButton } from '@ionic/angular/standalone';
 import { ActivatedRoute, Router } from '@angular/router';
-import { applyActionCode, Auth, reload } from '@angular/fire/auth';
+import { applyActionCode, Auth, reload, signOut } from '@angular/fire/auth';
 import { ToasterService } from 'src/app/services/toaster.service';
 import { environment } from 'src/environments/environment';
 
@@ -39,6 +39,7 @@ export class AccountActionsPage implements OnInit {
           loader.dismiss();
           this.router.navigateByUrl(`reset-password?oobCode=${queryParams['oobCode']}`);
           break;
+
         case "verifyEmail":
           loader.message = 'Verifying email...';
           try {
@@ -56,6 +57,19 @@ export class AccountActionsPage implements OnInit {
             loader.dismiss();
           }
           break;
+
+        case "verifyAndChangeEmail":
+          loader.message = 'Verifying new email...';
+          try {
+            await applyActionCode(this.auth, queryParams['oobCode']);
+            await signOut(this.auth);
+            this.toaster.presentToast({ message: 'Email is verified successfully. Please login to continue.', color: 'success' });
+          } catch (err: any) {
+            this.toaster.presentToast({ message: err.code, color: 'danger' });
+          } finally {
+            this.router.navigate(['login'], { replaceUrl: true });
+            loader.dismiss();
+          }
       }
 
     } else {

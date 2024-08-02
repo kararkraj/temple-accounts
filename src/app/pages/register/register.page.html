@@ -37,24 +37,6 @@
     </div>
     }
 
-    <ion-grid class="ion-margin-bottom ion-no-padding">
-      <ion-row class="ion-align-items-center">
-        <ion-col size="auto">
-          <ion-checkbox formControlName="rememberMe" labelPlacement="end">
-            Keep me signed in
-          </ion-checkbox>
-        </ion-col>
-        <ion-col size="auto">
-          <ion-icon color="danger" id="present-alert" name="alert-circle-outline" size="medium"
-            class="ion-margin-start remember-me-alert-icon"></ion-icon>
-          <ion-alert trigger="present-alert" header="Keep me signed in:"
-            message="When selected, this option will keep you signed in until you explicitly logout/signout.<br><br> When unselected, you will be automatically logged out when the tab/browser is closed."
-            [buttons]="['Ok']"></ion-alert>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
-
-
     <ion-grid class="ion-no-padding">
       <ion-row>
         <ion-col>

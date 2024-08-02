@@ -5,3 +5,7 @@ ion-avatar {
 .action-buttons ion-button {
     min-height: 44px;
 }
+
+ion-row.divider {
+    border: 1px solid var(--ion-color-primary);
+}

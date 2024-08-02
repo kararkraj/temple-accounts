@@ -80,8 +80,4 @@ export class RegisterPage implements OnInit {
 
     return isValid ? null : { isPasswordMisMatch: true };
   }
-
-  openAlert() {
-
-  }
 }
