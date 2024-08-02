@@ -42,37 +42,43 @@ export class AccountActionsPage implements OnInit {
 
         case "verifyEmail":
           loader.message = 'Verifying email...';
-          try {
-            await applyActionCode(this.auth, queryParams['oobCode']);
-            if (this.auth.currentUser) {
-              await reload(this.auth.currentUser);
-              this.toaster.presentToast({ message: 'Email is verified successfully.', color: 'success' });
-            } else {
-              this.toaster.presentToast({ message: 'Email is verified successfully. Please login to continue.', color: 'success' });
-            }
-          } catch (err: any) {
-            this.toaster.presentToast({ message: err.code, color: 'danger' });
-          } finally {
-            this.router.navigate(['login'], { replaceUrl: true });
-            loader.dismiss();
-          }
+          this.verifyEmail(queryParams['oobCode']).finally(() => loader.dismiss());
           break;
 
         case "verifyAndChangeEmail":
           loader.message = 'Verifying new email...';
-          try {
-            await applyActionCode(this.auth, queryParams['oobCode']);
-            await signOut(this.auth);
-            this.toaster.presentToast({ message: 'Email is verified successfully. Please login to continue.', color: 'success' });
-          } catch (err: any) {
-            this.toaster.presentToast({ message: err.code, color: 'danger' });
-          } finally {
-            this.router.navigate(['login'], { replaceUrl: true });
-            loader.dismiss();
-          }
+          this.verifyAndChangeEmail(queryParams['oobCode']).finally(() => loader.dismiss());
       }
 
     } else {
+      this.router.navigate(['login'], { replaceUrl: true });
+    }
+  }
+
+  async verifyEmail(oobCode: string) {
+    try {
+      await applyActionCode(this.auth, oobCode);
+      if (this.auth.currentUser) {
+        await reload(this.auth.currentUser);
+        this.toaster.presentToast({ message: 'Email is verified successfully.', color: 'success' });
+      } else {
+        this.toaster.presentToast({ message: 'Email is verified successfully. Please login to continue.', color: 'success' });
+      }
+    } catch (err: any) {
+      this.toaster.presentToast({ message: `Error: ${err.code}`, color: 'danger' });
+    } finally {
+      this.router.navigate(['login'], { replaceUrl: true });
+    }
+  }
+
+  async verifyAndChangeEmail(oobCode: string) {
+    try {
+      await applyActionCode(this.auth, oobCode);
+      await signOut(this.auth);
+      this.toaster.presentToast({ message: 'Email is verified successfully. Please login to continue.', color: 'success' });
+    } catch (err: any) {
+      this.toaster.presentToast({ message: err.code, color: 'danger' });
+    } finally {
       this.router.navigate(['login'], { replaceUrl: true });
     }
   }
