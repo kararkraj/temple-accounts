@@ -37,16 +37,20 @@ export class AddTemplePage implements OnInit {
 
   async onSubmit() {
     if (this.templeForm.valid) {
-      const loader = await this.loader.create({ message: 'Adding temple...' });
-      await loader.present();
+      const loader = await this.loader.create({ message: "Adding temple..." });
+      loader.present();
 
-      this.templeService.addTemple({ ...this.templeForm.getRawValue(), id: 0 }).subscribe({
-        next: (temple) => {
-          this.toaster.presentToast({ message: 'Temple was added successfully!', color: 'success' });
-          this.resetForm();
-          loader.dismiss();
-        }
-      })
+      try {
+        await this.templeService.addTemple(this.templeForm.getRawValue());
+        this.toaster.presentToast({ message: 'Temple was added successfully!', color: 'success' });
+      } catch (e: any) {
+        this.toaster.presentToast({ message: `Error: ${e.code}`, color: 'danger' });
+        console.error("Error adding document: ", e);
+      } finally {
+        this.resetForm();
+        loader.dismiss();
+      }
+
     } else {
       this.templeForm.markAllAsTouched();
 

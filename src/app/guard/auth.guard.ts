@@ -1,9 +1,8 @@
 import { inject } from '@angular/core';
 import { CanActivateChildFn, CanActivateFn, Router } from '@angular/router';
-import { StorageService } from '../services/storage.service';
-import { STORAGE_KEYS } from 'src/app/storage.config';
 import { ToasterService } from 'src/app/services/toaster.service';
 import { Auth } from '@angular/fire/auth';
+import { TempleService } from '../services/temple.service';
 
 export const canActivateAuthenticatedRoutes: CanActivateFn = async (route, state) => {
   const router = inject(Router);
@@ -28,11 +27,11 @@ export const canActivateAuthenticatedRoutes: CanActivateFn = async (route, state
 };
 
 export const canActivateChild: CanActivateChildFn = async (route, state) => {
-  const storage = inject(StorageService);
+  const templeService = inject(TempleService);
   const router = inject(Router);
   const toaster = inject(ToasterService);
 
-  const temples = await storage.get(STORAGE_KEYS.TEMPLE.temples);
+  const temples = await templeService.getAllTemples();
   if (temples.length > 0 || state.url === '/tabs/temples/add') {
     return true;
   } else {

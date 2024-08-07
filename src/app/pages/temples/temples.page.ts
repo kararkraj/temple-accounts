@@ -1,4 +1,4 @@
-import { Component, EffectRef, OnInit, effect } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { IonContent, IonHeader, IonTitle, IonToolbar, IonButtons, IonMenuButton, IonGrid, IonRow, IonCol, IonIcon, IonButton, IonAlert, AlertController, LoadingController } from '@ionic/angular/standalone';
 import { Temple } from 'src/app/interfaces/temple';
 import { RouterLink } from '@angular/router';
@@ -14,10 +14,6 @@ import { TempleService } from 'src/app/services/temple.service';
 export class TemplesPage implements OnInit {
 
   temples: Temple[] = [];
-  updatedTemplesEffect: EffectRef = effect(() => {
-    this.templeService.templesUpdatedSignal();
-    this.getTemples();
-  });
 
   constructor(
     private templeService: TempleService,
@@ -26,10 +22,10 @@ export class TemplesPage implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.getAllTemples();
   }
-
-  getTemples() {
-    this.templeService.getTemples().then(temples => this.temples = temples)
+  getAllTemples() {
+    this.templeService.getAllTemples().then(temples => this.temples = temples)
   }
 
   async presentDeleteTempleAlert(temple: Temple) {
@@ -49,7 +45,9 @@ export class TemplesPage implements OnInit {
           handler: async () => {
             const loader = await this.loader.create({ message: 'Deleting temple...' });
             await loader.present();
-            this.templeService.deleteTemple(temple.id).subscribe({ next: () => loader.dismiss() });
+            await this.templeService.deleteTemple(temple.id)
+            loader.dismiss();
+            this.getAllTemples();
           },
         },
       ],

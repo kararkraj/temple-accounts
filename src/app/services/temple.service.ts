@@ -3,6 +3,8 @@ import { StorageService } from './storage.service';
 import { Temple } from '../interfaces/temple';
 import { Observable } from 'rxjs';
 import { STORAGE_KEYS } from '../storage.config';
+import { addDoc, collection, deleteDoc, doc, DocumentReference, Firestore, getDocs, query, where } from '@angular/fire/firestore';
+import { Auth } from '@angular/fire/auth';
 
 @Injectable({
   providedIn: 'root'
@@ -12,35 +14,35 @@ export class TempleService {
   public templesUpdatedSignal: WritableSignal<number> = signal(0);
 
   constructor(
-    private storage: StorageService
+    private storage: StorageService,
+    private fireStore: Firestore,
+    private auth: Auth
   ) { }
 
-  addTemple(temple: Temple): Observable<Temple> {
-    return new Observable(observer => {
-      this.getTempleNextId().then(templeId => {
-        temple.id = templeId
-        this.storage.get(STORAGE_KEYS.TEMPLE.temples).then(temples => {
-          temples.push(temple);
-          this.storage.set(STORAGE_KEYS.TEMPLE.temples, temples);
-          this.storage.set(STORAGE_KEYS.TEMPLE.lastStoredId, temple.id).then(() => {
-            observer.next(temple);
-            this.triggerTemplesUpdatedEvent();
-            observer.complete();
-          });
-        });
-      });
-    });
+  async addTemple(temple: { name: string, address: string }): Promise<DocumentReference> {
+    const isoDateTime = new Date().toISOString();
+    const templeReq: Partial<Temple> = {
+      name: temple.name,
+      address: temple.address,
+      createdAt: isoDateTime,
+      createdBy: this.auth.currentUser?.uid as string,
+      updatedAt: isoDateTime
+    }
+    return await addDoc(collection(this.fireStore, "temples"), templeReq);
   }
 
-  getTemples(): Promise<Temple[]> {
-    return this.storage.get(STORAGE_KEYS.TEMPLE.temples);
+  async getAllTemples(): Promise<Temple[]> {
+    const q = query(collection(this.fireStore, "temples"), where("createdBy", "==", this.auth.currentUser?.uid));
+    const querySnapshot = await getDocs(q)
+    const temples = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    await this.storage.set(STORAGE_KEYS.TEMPLE.temples, temples);
+
+    return await this.storage.get(STORAGE_KEYS.TEMPLE.temples);
   }
 
   getTempleById(templeId: number): Observable<Temple> {
     return new Observable(observer => {
       this.storage.get(STORAGE_KEYS.TEMPLE.temples).then((temples: Temple[]) => {
-        const temple = temples.find(temple => temple.id === templeId);
-        temple ? observer.next(temple) : observer.error('Temple Id not found.');
         observer.complete();
       });
     });
@@ -66,18 +68,8 @@ export class TempleService {
     });
   }
 
-  deleteTemple(templeId: number): Observable<Temple> {
-    return new Observable(observer => {
-      this.storage.get(STORAGE_KEYS.TEMPLE.temples).then(temples => {
-        const index = temples.findIndex((temple: Temple) => temple.id === templeId);
-        const deletedTemple = temples.splice(index, 1)[0];
-        this.storage.set(STORAGE_KEYS.TEMPLE.temples, temples).then(() => {
-          observer.next(deletedTemple);
-          this.triggerTemplesUpdatedEvent();
-          observer.complete();
-        });
-      });
-    });
+  async deleteTemple(templeId: string): Promise<void> {
+    return await deleteDoc(doc(this.fireStore, "temples", templeId));
   }
 
   triggerTemplesUpdatedEvent() {

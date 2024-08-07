@@ -84,7 +84,7 @@ export class EntryService {
   }
 
   getTemples() {
-    return this.templeService.getTemples();
+    return this.templeService.getAllTemples();
   }
 
   getTemplesUpdatedSignal() {
