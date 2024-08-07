@@ -36,18 +36,17 @@ export class EditTemplePage extends AddTemplePage implements OnInit {
     private temple!: Temple;
     router = inject(Router);
 
-    override ngOnInit(): void {
+    override async ngOnInit() {
         this.title = "Edit Temple";
-        this.templeService.getTempleById(this.templeId).subscribe({
-            next: temple => {
-                this.temple = temple;
-                this.templeForm.patchValue(temple)
-            },
-            error: err => {
-                this.toaster.presentToast({ message: err, color: "danger" });
-                this.router.navigate(['tabs/temples']);
-            }
-        });
+        try {
+            const temple = await this.templeService.getTempleById(this.templeId)
+            this.templeForm.patchValue(temple)
+            this.temple = temple;
+        } catch (err: any) {
+            this.toaster.presentToast({ message: err.code, color: "danger" });
+            this.router.navigate(['tabs'], { replaceUrl: true });
+        }
+
     }
 
     override async onSubmit() {
@@ -55,14 +54,23 @@ export class EditTemplePage extends AddTemplePage implements OnInit {
             const loader = await this.loader.create({ message: 'Updating temple...' });
             await loader.present();
 
-            this.templeService.updateTemple({ id: this.templeId, ...this.templeForm.getRawValue() }).subscribe({
-                next: (temple) => {
-                    this.temple = temple;
-                    this.toaster.presentToast({ message: 'Temple was updated successfully!', color: 'success' });
-                    this.resetForm();
-                    loader.dismiss();
-                }
-            })
+            const updatedTempleFields: Partial<Temple> = {}
+            this.templeForm.get('name')?.dirty ? updatedTempleFields.name = this.templeForm.get('name')?.value : null;
+            this.templeForm.get('address')?.dirty ? updatedTempleFields.address = this.templeForm.get('address')?.value : null;
+
+            try {
+                const temple = await this.templeService.updateTemple(this.templeId, updatedTempleFields);
+                this.temple = { ...this.temple, ...temple };
+                this.toaster.presentToast({ message: 'Temple was updated successfully!', color: 'success' });
+            } catch (e: any) {
+                this.toaster.presentToast({ message: `Error: ${e.code}`, color: 'danger' });
+                console.error("Error updating document: ", e);
+              } finally {
+                this.resetForm();
+                loader.dismiss();
+              }
+
+
         } else if (!this.templeForm.valid) {
             this.templeForm.markAllAsTouched();
         } else {

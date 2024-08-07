@@ -14,7 +14,7 @@ import { TempleService } from 'src/app/services/temple.service';
 })
 export class AddTemplePage implements OnInit {
 
-  @Input({ transform: numberAttribute }) templeId!: number;
+  @Input() templeId!: string;
   canEdit: boolean = true;
   title: string = "Add Temple"
   templeForm: FormGroup;

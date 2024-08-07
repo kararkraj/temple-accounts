@@ -1,9 +1,6 @@
 import { Injectable, signal, WritableSignal } from '@angular/core';
-import { StorageService } from './storage.service';
 import { Temple } from '../interfaces/temple';
-import { Observable } from 'rxjs';
-import { STORAGE_KEYS } from '../storage.config';
-import { addDoc, collection, deleteDoc, doc, DocumentReference, Firestore, getDocs, query, where } from '@angular/fire/firestore';
+import { addDoc, collection, deleteDoc, doc, DocumentReference, Firestore, getDoc, getDocs, query, updateDoc, where } from '@angular/fire/firestore';
 import { Auth } from '@angular/fire/auth';
 
 @Injectable({
@@ -14,7 +11,6 @@ export class TempleService {
   public templesUpdatedSignal: WritableSignal<number> = signal(0);
 
   constructor(
-    private storage: StorageService,
     private fireStore: Firestore,
     private auth: Auth
   ) { }
@@ -34,37 +30,23 @@ export class TempleService {
   async getAllTemples(): Promise<Temple[]> {
     const q = query(collection(this.fireStore, "temples"), where("createdBy", "==", this.auth.currentUser?.uid));
     const querySnapshot = await getDocs(q)
-    const temples = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-    await this.storage.set(STORAGE_KEYS.TEMPLE.temples, temples);
-
-    return await this.storage.get(STORAGE_KEYS.TEMPLE.temples);
+    const temples = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as Temple[];
+    return temples;
   }
 
-  getTempleById(templeId: number): Observable<Temple> {
-    return new Observable(observer => {
-      this.storage.get(STORAGE_KEYS.TEMPLE.temples).then((temples: Temple[]) => {
-        observer.complete();
-      });
-    });
+  async getTempleById(templeId: string): Promise<Temple> {
+    return (await getDoc(doc(this.fireStore, 'temples', templeId))).data() as Temple;
   }
 
-  async getTempleNextId() {
-    return await this.storage.get(STORAGE_KEYS.TEMPLE.lastStoredId) + 1;
-  }
-
-  updateTemple(temple: Temple): Observable<Temple> {
-    const id = temple.id;
-    return new Observable(observer => {
-      this.storage.get(STORAGE_KEYS.TEMPLE.temples).then((temples: Temple[]) => {
-        const index = temples.findIndex(temple => temple.id === id);
-        temples.splice(index, 1);
-        temples.splice(index, 0, temple);
-        this.storage.set(STORAGE_KEYS.TEMPLE.temples, temples).then(() => {
-          observer.next(temple);
-          this.triggerTemplesUpdatedEvent();
-          observer.complete();
-        });
-      });
+  async updateTemple(templeId: string, temple: Partial<Temple>): Promise<Partial<Temple>> {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const templeRef = doc(this.fireStore, 'temples', templeId);
+        await updateDoc(templeRef, temple);
+        resolve(temple);
+      } catch (err) {
+        reject(err);
+      }
     });
   }
 

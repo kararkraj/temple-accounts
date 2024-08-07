@@ -39,18 +39,16 @@ export class ViewTemplePage extends AddTemplePage implements OnInit {
 
     router = inject(Router);
 
-    override ngOnInit(): void {
+    override async ngOnInit() {
         this.title = "View Temple";
         this.canEdit = false;
-        this.templeService.getTempleById(this.templeId).subscribe({
-            next: temple => {
-                this.templeForm.patchValue(temple);
-                this.templeForm.disable();
-            },
-            error: err => {
-                this.toaster.presentToast({ message: err, color: "danger" });
-                this.router.navigate(['tabs/temples']);
-            }
-        });
+        try {
+            const temple = await this.templeService.getTempleById(this.templeId)
+            this.templeForm.patchValue(temple);
+            this.templeForm.disable();
+        } catch (err: any) {
+            this.toaster.presentToast({ message: err.code, color: "danger" });
+            this.router.navigate(['tabs/temples']);
+        }
     }
 }
