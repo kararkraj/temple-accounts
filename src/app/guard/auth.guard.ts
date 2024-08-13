@@ -31,8 +31,8 @@ export const canActivateChild: CanActivateChildFn = async (route, state) => {
   const router = inject(Router);
   const toaster = inject(ToasterService);
 
-  const temples = await templeService.getAllTemples();
-  if (temples.length > 0 || state.url === '/tabs/temples/add') {
+  const templesCount = await templeService.getTemplesCount();
+  if (templesCount > 0 || state.url === '/tabs/temples/add') {
     return true;
   } else {
     await toaster.presentToast({ message: "Please add a temple to proceed!", color: "danger" });

@@ -1,6 +1,6 @@
 import { Injectable, signal, WritableSignal } from '@angular/core';
 import { Temple } from '../interfaces/temple';
-import { addDoc, collection, deleteDoc, doc, DocumentReference, Firestore, getDoc, getDocs, query, updateDoc, where } from '@angular/fire/firestore';
+import { addDoc, collection, deleteDoc, doc, DocumentReference, Firestore, getCountFromServer, getDoc, getDocs, query, updateDoc, where } from '@angular/fire/firestore';
 import { Auth } from '@angular/fire/auth';
 
 @Injectable({
@@ -29,9 +29,15 @@ export class TempleService {
 
   async getAllTemples(): Promise<Temple[]> {
     const q = query(collection(this.fireStore, "temples"), where("createdBy", "==", this.auth.currentUser?.uid));
-    const querySnapshot = await getDocs(q)
+    const querySnapshot = await getDocs(q);
     const temples = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as Temple[];
     return temples;
+  }
+
+  async getTemplesCount() {
+    const q = query(collection(this.fireStore, "temples"), where("createdBy", "==", this.auth.currentUser?.uid));
+    const snapshot = await getCountFromServer(q);
+    return snapshot.data().count;
   }
 
   async getTempleById(templeId: string): Promise<Temple> {
