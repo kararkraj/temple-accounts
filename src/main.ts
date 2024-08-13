@@ -11,8 +11,6 @@ import { StorageService } from './app/services/storage.service';
 import { initializeApp as initializeApp_alias, provideFirebaseApp } from '@angular/fire/app';
 import { getAuth, provideAuth } from '@angular/fire/auth';
 import { getFirestore, provideFirestore } from '@angular/fire/firestore';
-import { getPerformance, providePerformance } from '@angular/fire/performance';
-import { getRemoteConfig, provideRemoteConfig } from '@angular/fire/remote-config';
 
 if (environment.production) {
   enableProdMode();
@@ -44,8 +42,6 @@ bootstrapApplication(AppComponent, {
       "measurementId": environment.firebase.measurementId
     })),
     provideAuth(() => getAuth()),
-    provideFirestore(() => getFirestore()),
-    providePerformance(() => getPerformance()),
-    provideRemoteConfig(() => getRemoteConfig())
+    provideFirestore(() => getFirestore())
   ],
 });
