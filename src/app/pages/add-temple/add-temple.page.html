@@ -28,17 +28,17 @@
       </ion-item>
     </ion-item-group>
 
-    <ng-container *ngIf="canEdit">
-      <ion-grid class="ion-no-padding">
-        <ion-row>
-          <ion-col>
-            <ion-button expand="full" type="button" color="light" (click)="resetForm()">Reset</ion-button>
-          </ion-col>
-          <ion-col>
-            <ion-button expand="full" type="submit">Submit</ion-button>
-          </ion-col>
-        </ion-row>
-      </ion-grid>
-    </ng-container>
+    @if (canEdit) {
+    <ion-grid class="ion-no-padding">
+      <ion-row>
+        <ion-col>
+          <ion-button expand="full" type="button" color="light" (click)="resetForm()">Reset</ion-button>
+        </ion-col>
+        <ion-col>
+          <ion-button expand="full" type="submit">Submit</ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+    }
   </form>
 </ion-content>

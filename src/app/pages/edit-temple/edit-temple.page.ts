@@ -1,5 +1,4 @@
 import { Component, OnInit, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonTextarea, IonInput, IonButtons, IonMenuButton, IonItem, IonIcon, IonLabel, IonItemDivider, IonItemGroup, IonGrid, IonRow, IonCol, IonBackButton } from '@ionic/angular/standalone';
 import { AddTemplePage } from '../add-temple/add-temple.page';
@@ -11,25 +10,7 @@ import { Router } from '@angular/router';
     templateUrl: './../add-temple/add-temple.page.html',
     styleUrls: ['./../add-temple/add-temple.page.scss'],
     standalone: true,
-    imports: [IonCol, IonRow, IonGrid,
-        CommonModule,
-        ReactiveFormsModule,
-        IonContent,
-        IonHeader,
-        IonTitle,
-        IonToolbar,
-        IonButton,
-        IonTextarea,
-        IonInput,
-        IonButtons,
-        IonMenuButton,
-        IonIcon,
-        IonItem,
-        IonItemGroup,
-        IonItemDivider,
-        IonLabel,
-        IonBackButton
-    ]
+    imports: [IonCol, IonRow, IonGrid, ReactiveFormsModule, IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonTextarea, IonInput, IonButtons, IonMenuButton, IonIcon, IonItem, IonItemGroup, IonItemDivider, IonLabel, IonBackButton]
 })
 export class EditTemplePage extends AddTemplePage implements OnInit {
 
@@ -65,12 +46,10 @@ export class EditTemplePage extends AddTemplePage implements OnInit {
             } catch (e: any) {
                 this.toaster.presentToast({ message: `Error: ${e.code}`, color: 'danger' });
                 console.error("Error updating document: ", e);
-              } finally {
+            } finally {
                 this.resetForm();
                 loader.dismiss();
-              }
-
-
+            }
         } else if (!this.templeForm.valid) {
             this.templeForm.markAllAsTouched();
         } else {

@@ -1,5 +1,4 @@
-import { ChangeDetectorRef, Component, Input, OnInit, numberAttribute } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonTextarea, IonInput, IonButtons, IonMenuButton, IonItem, IonIcon, LoadingController, IonLabel, IonItemDivider, IonItemGroup, IonGrid, IonRow, IonCol, IonBackButton } from '@ionic/angular/standalone';
 import { ToasterService } from 'src/app/services/toaster.service';
@@ -10,7 +9,7 @@ import { TempleService } from 'src/app/services/temple.service';
   templateUrl: './add-temple.page.html',
   styleUrls: ['./add-temple.page.scss'],
   standalone: true,
-  imports: [IonBackButton, IonCol, IonRow, IonGrid, CommonModule, ReactiveFormsModule, IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonTextarea, IonInput, IonButtons, IonMenuButton, IonIcon, IonItem, IonItemGroup, IonItemDivider, IonLabel]
+  imports: [IonBackButton, IonCol, IonRow, IonGrid, ReactiveFormsModule, IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonTextarea, IonInput, IonButtons, IonMenuButton, IonIcon, IonItem, IonItemGroup, IonItemDivider, IonLabel]
 })
 export class AddTemplePage implements OnInit {
 
