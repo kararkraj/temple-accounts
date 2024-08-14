@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { LoadingController } from '@ionic/angular/standalone';
 import { ToasterService } from 'src/app/services/toaster.service';
 import { Auth, browserLocalPersistence, browserSessionPersistence, signInWithEmailAndPassword } from '@angular/fire/auth';
+import { StorageService } from 'src/app/services/storage.service';
 
 @Component({
   selector: 'app-login',
@@ -33,7 +34,8 @@ export class LoginPage implements OnInit {
     private router: Router,
     private loader: LoadingController,
     private toaster: ToasterService,
-    private auth: Auth
+    private auth: Auth,
+    private storage: StorageService
   ) {
     this.loginForm = new FormGroup({
       username: new FormControl(null, [Validators.required, Validators.maxLength(99)]),
@@ -51,8 +53,12 @@ export class LoginPage implements OnInit {
       await loader.present();
       const loginForm = this.loginForm.getRawValue();
       await this.auth.setPersistence(loginForm.rememberMe ? browserLocalPersistence : browserSessionPersistence);
-      signInWithEmailAndPassword(this.auth, loginForm.username, loginForm.password).then(user => {
-        this.toaster.presentToast({ message: 'Login successful.', color: "success" })
+      signInWithEmailAndPassword(this.auth, loginForm.username, loginForm.password).then(async user => {
+        // When user A does not check keep me signed in during login, then session ends when user A closes the tab but storage is not cleared.
+        // Hence, Storage needs to be reset during sign in, so that correct data is dislpayed in case another user B logs in.
+        // If not cleared, then user B will be displayed with data of user A.
+        await this.storage.resetStorage();
+        this.toaster.presentToast({ message: 'Login successful.', color: "success" });
         this.router.navigate(['tabs'], { replaceUrl: true });
       }).catch(err => {
         console.log(err);
