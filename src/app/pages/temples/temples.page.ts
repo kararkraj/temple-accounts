@@ -22,8 +22,12 @@ export class TemplesPage implements OnInit {
   ) { }
 
   ngOnInit() {
+  }
+
+  ionViewWillEnter() {
     this.getAllTemples();
   }
+
   getAllTemples() {
     this.templeService.getAllTemples().then(temples => this.temples = temples)
   }

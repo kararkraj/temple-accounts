@@ -5,28 +5,13 @@ import { IonApp, IonRouterOutlet, IonSplitPane, IonContent, IonMenu, IonList, Io
 import { addIcons } from 'ionicons';
 import { prismOutline, happyOutline, logInOutline, personAddOutline, moonOutline, hammerOutline, logOutOutline, person, listCircleOutline, addCircleOutline, trashOutline, createOutline, eyeOutline, addOutline, settingsOutline, codeWorkingOutline, downloadOutline, alertCircleOutline, refreshOutline, logoFacebook, logoGoogle, lockClosedOutline } from 'ionicons/icons';
 import { Auth } from '@angular/fire/auth';
+import { StorageService } from './services/storage.service';
 
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
   standalone: true,
-  imports: [IonAlert, IonButton,
-    FormsModule,
-    RouterLink,
-    RouterLinkActive,
-    IonContent,
-    IonSplitPane,
-    IonApp,
-    IonRouterOutlet,
-    IonMenu,
-    IonList,
-    IonListHeader,
-    IonMenuToggle,
-    IonItem,
-    IonIcon,
-    IonLabel,
-    IonToggle,
-  ],
+  imports: [IonAlert, IonButton, FormsModule, RouterLink, RouterLinkActive, IonContent, IonSplitPane, IonApp, IonRouterOutlet, IonMenu, IonList, IonListHeader, IonMenuToggle, IonItem, IonIcon, IonLabel, IonToggle],
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit {
@@ -73,7 +58,8 @@ export class AppComponent implements OnInit {
   constructor(
     private auth: Auth,
     private loader: LoadingController,
-    private router: Router
+    private router: Router,
+    private storage: StorageService
   ) {
     addIcons({ prismOutline, happyOutline, logInOutline, personAddOutline, moonOutline, hammerOutline, logOutOutline, person, listCircleOutline, addCircleOutline, trashOutline, createOutline, eyeOutline, addOutline, settingsOutline, codeWorkingOutline, downloadOutline, alertCircleOutline, refreshOutline, logoFacebook, logoGoogle, lockClosedOutline });
   }
@@ -86,6 +72,7 @@ export class AppComponent implements OnInit {
     const loader = await this.loader.create({ message: "Logging out.." });
     await loader.present();
     this.auth.signOut().then(() => {
+      this.storage.resetStorage();
       this.router.navigate(['/login'], { replaceUrl: true });
       this.loader.dismiss();
     });

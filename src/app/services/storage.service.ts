@@ -19,7 +19,7 @@ export class StorageService {
     // When the storage is instantiated for the first time, entries will be null and null value can cause errors.
     // Hence instantiate with initial values
     if (await this._storage.get('entries') === null) {
-      this.resetStorage();
+      await this.resetStorage();
     }
   }
 

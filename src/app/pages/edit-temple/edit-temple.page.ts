@@ -2,7 +2,7 @@ import { Component, OnInit, inject } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonTextarea, IonInput, IonButtons, IonMenuButton, IonItem, IonIcon, IonLabel, IonItemDivider, IonItemGroup, IonGrid, IonRow, IonCol, IonBackButton } from '@ionic/angular/standalone';
 import { AddTemplePage } from '../add-temple/add-temple.page';
-import { Temple } from 'src/app/interfaces/temple';
+import { Temple, TempleRequest } from 'src/app/interfaces/temple';
 import { Router } from '@angular/router';
 
 @Component({
@@ -35,7 +35,7 @@ export class EditTemplePage extends AddTemplePage implements OnInit {
             const loader = await this.loader.create({ message: 'Updating temple...' });
             await loader.present();
 
-            const updatedTempleFields: Partial<Temple> = {}
+            const updatedTempleFields: Partial<TempleRequest> = {}
             this.templeForm.get('name')?.dirty ? updatedTempleFields.name = this.templeForm.get('name')?.value : null;
             this.templeForm.get('address')?.dirty ? updatedTempleFields.address = this.templeForm.get('address')?.value : null;
 
