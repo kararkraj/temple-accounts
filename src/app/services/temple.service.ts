@@ -46,7 +46,7 @@ export class TempleService {
     if (temple) {
       return temple;
     } else {
-      // Firestore throws permission-denied error when unknown temple id is queried.K
+      // Firestore throws permission-denied error when unknown temple id is queried
       throw({ code: 'permission-denied' });
     }
   }
