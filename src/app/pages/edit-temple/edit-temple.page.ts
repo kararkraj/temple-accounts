@@ -40,8 +40,7 @@ export class EditTemplePage extends AddTemplePage implements OnInit {
             this.templeForm.get('address')?.dirty ? updatedTempleFields.address = this.templeForm.get('address')?.value : null;
 
             try {
-                const temple = await this.templeService.updateTemple(this.templeId, updatedTempleFields);
-                this.temple = { ...this.temple, ...temple };
+                this.temple = await this.templeService.updateTemple(this.templeId, updatedTempleFields);
                 this.toaster.presentToast({ message: 'Temple was updated successfully!', color: 'success' });
             } catch (e: any) {
                 this.toaster.presentToast({ message: `Error: ${e.code}`, color: 'danger' });

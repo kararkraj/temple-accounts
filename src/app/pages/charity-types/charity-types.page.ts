@@ -16,10 +16,6 @@ import { CharityTypeService } from 'src/app/services/charity-type.service';
 export class CharityTypesPage implements OnInit {
 
   charityTypes!: CharityType[];
-  charityTypesUpdatedEffect: EffectRef = effect(() => {
-    this.charityTypeService.charityTypesUpdatedSignal();
-    this.getCharityTypes();
-  });
 
   constructor(
     private charityTypeService: CharityTypeService,
@@ -29,8 +25,12 @@ export class CharityTypesPage implements OnInit {
 
   ngOnInit() { }
 
-  getCharityTypes() {
-    this.charityTypeService.getCharityTypes().then(charityTypes => this.charityTypes = charityTypes);
+  ionViewWillEnter() {
+    this.getCharityTypes();
+  }
+
+  async getCharityTypes() {
+    this.charityTypes = await this.charityTypeService.getCharityTypes();
   }
 
   async presentDeleteCharityTypeAlert(charityType: CharityType) {
@@ -47,17 +47,19 @@ export class CharityTypesPage implements OnInit {
         {
           text: 'Yes, Delete',
           role: 'confirm',
-          handler: () => this.deletecharityType(charityType.id),
+          handler: () => this.deleteCharityType(charityType.id),
         },
       ],
     });
     await alert.present();
   }
 
-  async deletecharityType(charityTypeId: number) {
+  async deleteCharityType(charityTypeId: string) {
     const loader = await this.loader.create({ message: 'Deleting service...' });
     await loader.present();
-    this.charityTypeService.deleteService(charityTypeId).subscribe({ next: () => loader.dismiss(), error: err => loader.dismiss() });
+    await this.charityTypeService.deleteCharityType(charityTypeId);
+    await loader.dismiss();
+    this.getCharityTypes();
   }
 
 }

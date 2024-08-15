@@ -14,7 +14,7 @@ import { CharityTypeService } from 'src/app/services/charity-type.service';
 export class AddCharityTypePage implements OnInit {
 
   // Below variable is used in EditCharityTypePage
-  @Input({ transform: numberAttribute }) charityTypeId!: number;
+  @Input({ required: true }) charityTypeId!: string;
 
   title: string = "Add Service";
   charityTypeForm: FormGroup;
@@ -38,14 +38,17 @@ export class AddCharityTypePage implements OnInit {
     if (this.charityTypeForm.valid) {
       const loading = await this.loading.create({ message: "Adding service..." });
       await loading.present();
-      this.charityTypeService.addCharityType(this.charityTypeForm.getRawValue()).subscribe({
-        next: charityType => {
-          this.resetForm();
-          loading.dismiss();
-          this.toaster.presentToast({ message: "Service added successfully", color: "success" })
-        },
-        error: err => loading.dismiss()
-      });
+
+      try {
+        await this.charityTypeService.addCharityType(this.charityTypeForm.getRawValue());
+        this.toaster.presentToast({ message: 'Service was added successfully.', color: 'success' });
+      } catch (e: any) {
+        this.toaster.presentToast({ message: `Error: ${e.code}`, color: 'danger' });
+        console.error("Error adding document: ", e);
+      } finally {
+        this.resetForm();
+        loading.dismiss();
+      }
     } else {
       this.charityTypeForm.markAllAsTouched();
     }

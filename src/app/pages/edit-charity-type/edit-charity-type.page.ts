@@ -2,7 +2,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { IonContent, IonHeader, IonTitle, IonToolbar, IonButtons, IonRow, IonBackButton, IonItemGroup, IonItem, IonGrid, IonCol, IonButton, LoadingController, IonInput } from '@ionic/angular/standalone';
 import { AddCharityTypePage } from '../add-charity-type/add-charity-type.page';
-import { CharityType } from 'src/app/interfaces/charityType';
+import { CharityType, CharityTypeRequest } from 'src/app/interfaces/charityType';
 import { Router } from '@angular/router';
 
 @Component({
@@ -17,33 +17,36 @@ export class EditCharityTypePage extends AddCharityTypePage implements OnInit {
   router = inject(Router);
   charityType!: CharityType;
 
-  override ngOnInit() {
+  override async ngOnInit() {
     this.title = "Edit Service";
-    this.charityTypeService.getCharityTypeById(this.charityTypeId).subscribe({
-      next: charityType => {
-        this.charityType = charityType;
-        this.resetForm();
-      },
-      error: err => {
-        this.toaster.presentToast({ message: err, color: "danger" });
-        this.router.navigate(['tabs/services'], { replaceUrl: true });
-      }
-    });
+    try {
+      this.charityType = await this.charityTypeService.getCharityTypeById(this.charityTypeId);
+      this.resetForm();
+    } catch (err: any) {
+      this.toaster.presentToast({ message: err.code, color: "danger" });
+      this.router.navigate(['tabs'], { replaceUrl: true });
+    }
   }
 
   override async onSubmit(): Promise<void> {
     if (this.charityTypeForm.valid && this.charityTypeForm.dirty) {
       const loading = await this.loading.create({ message: "Updating service..." });
       await loading.present();
-      this.charityTypeService.updateCharityType({ ...this.charityTypeForm.getRawValue(), id: this.charityTypeId }).subscribe({
-        next: charityType => {
-          this.charityType = charityType;
-          this.resetForm();
-          loading.dismiss();
-          this.toaster.presentToast({ message: "Service updated successfully.", color: "success" });
-        },
-        error: err => loading.dismiss()
-      });
+
+      const updatedFields: Partial<CharityTypeRequest> = {};
+      this.charityTypeForm.get('name')?.dirty ? updatedFields.name = this.charityTypeForm.get('name')?.value : null;
+      this.charityTypeForm.get('amount')?.dirty ? updatedFields.amount = this.charityTypeForm.get('amount')?.value : null;
+
+      try {
+        this.charityType = await this.charityTypeService.updateCharityType(this.charityTypeId, updatedFields);
+        this.toaster.presentToast({ message: "Service was updated successfully.", color: "success" });
+      } catch (e: any) {
+        this.toaster.presentToast({ message: `Error: ${e.code}`, color: 'danger' });
+        console.error("Error updating document: ", e);
+      } finally {
+        this.resetForm();
+        loading.dismiss();
+      }
     } else if (this.charityTypeForm.valid) {
       this.toaster.presentToast({ message: "Nothing to update." });
     } else {
