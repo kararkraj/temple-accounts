@@ -23,6 +23,8 @@ export class CharityTypeService {
   async getCharityTypes(): Promise<CharityType[]> {
     const charityTypes = await this.storage.get(STORAGE_KEYS.CHARITY_TYPES.charityTypes);
 
+    // If charityTypes is null then it is not yet fetched from server.
+    //  Hence, fetch charityTypes from server and store it locally. This will happen only one time during the session.
     if (charityTypes === null) {
       const q = query(collection(this.fireStore, "charityTypes"), where("createdBy", "==", this.auth.currentUser?.uid));
       const querySnapshot = await getDocs(q);
@@ -71,11 +73,11 @@ export class CharityTypeService {
     }
   }
 
-
   async updateCharityType(charityTypeId: string, updatedFields: Partial<CharityTypeRequest>): Promise<CharityType> {
     try {
       await this.network.isNetworkConnected();
       const charityTypeRef = doc(this.fireStore, 'charityTypes', charityTypeId);
+      updatedFields.updatedAt = new Date().toISOString();
       await updateDoc(charityTypeRef, updatedFields);
 
       const charityTypes = await this.storage.get(STORAGE_KEYS.CHARITY_TYPES.charityTypes) as CharityType[];

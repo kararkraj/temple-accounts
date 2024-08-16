@@ -26,15 +26,12 @@ export class TempleService {
     // If temples is null then it is not yet fetched from server.
     //  Hence, fetch temples from server and store it locally. This will happen only one time during the session.
     if (temples === null) {
-
       const q = query(collection(this.fireStore, "temples"), where("createdBy", "==", this.auth.currentUser?.uid));
       const querySnapshot = await getDocs(q);
       const templesFromServer = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as Temple[];
 
       await this.storage.set(STORAGE_KEYS.TEMPLE.temples, templesFromServer);
-      console.log(templesFromServer);
       return templesFromServer;
-
     } else {
       return temples;
     }
@@ -80,6 +77,7 @@ export class TempleService {
     try {
       await this.network.isNetworkConnected();
       const templeRef = doc(this.fireStore, 'temples', templeId);
+      updatedFields.updatedAt = new Date().toISOString();
       await updateDoc(templeRef, updatedFields);
 
       const temples = await this.storage.get(STORAGE_KEYS.TEMPLE.temples);
