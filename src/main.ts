@@ -8,9 +8,10 @@ import { AppComponent } from './app/app.component';
 import { environment } from './environments/environment';
 import { Storage } from '@ionic/storage-angular';
 import { StorageService } from './app/services/storage.service';
-import { initializeApp as initializeApp_alias, provideFirebaseApp } from '@angular/fire/app';
+import { getApp, initializeApp as initializeApp_alias, provideFirebaseApp } from '@angular/fire/app';
 import { getAuth, provideAuth } from '@angular/fire/auth';
-import { getFirestore, provideFirestore } from '@angular/fire/firestore';
+import { getFirestore, initializeFirestore, persistentLocalCache, provideFirestore } from '@angular/fire/firestore';
+import { provideAppCheck, initializeAppCheck, ReCaptchaEnterpriseProvider } from '@angular/fire/app-check';
 
 if (environment.production) {
   enableProdMode();
@@ -42,6 +43,12 @@ bootstrapApplication(AppComponent, {
       "measurementId": environment.firebase.measurementId
     })),
     provideAuth(() => getAuth()),
-    provideFirestore(() => getFirestore())
+    provideAppCheck(() => (initializeAppCheck(getApp(), {
+      provider: new ReCaptchaEnterpriseProvider('6Lc1UygqAAAAAMTofSdpYhD6mzw7kokYHuvZ5tCr'),
+      isTokenAutoRefreshEnabled: true
+    }))),
+    provideFirestore(() => (initializeFirestore(getApp(), {
+      localCache: persistentLocalCache()
+    }))),
   ],
 });
