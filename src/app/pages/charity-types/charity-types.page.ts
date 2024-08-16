@@ -1,10 +1,11 @@
-import { Component, effect, EffectRef, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonContent, IonHeader, IonTitle, IonToolbar, IonGrid, IonButtons, IonButton, IonIcon, IonRow, IonCol, AlertController, LoadingController, IonMenuButton } from '@ionic/angular/standalone';
 import { CharityType } from 'src/app/interfaces/charityType';
 import { RouterLink } from '@angular/router';
 import { CharityTypeService } from 'src/app/services/charity-type.service';
+import { ToasterService } from 'src/app/services/toaster.service';
 
 @Component({
   selector: 'app-charity-types',
@@ -20,7 +21,8 @@ export class CharityTypesPage implements OnInit {
   constructor(
     private charityTypeService: CharityTypeService,
     private alertController: AlertController,
-    private loader: LoadingController
+    private loader: LoadingController,
+    private toaster: ToasterService
   ) { }
 
   ngOnInit() { }
@@ -58,6 +60,7 @@ export class CharityTypesPage implements OnInit {
     const loader = await this.loader.create({ message: 'Deleting service...' });
     await loader.present();
     await this.charityTypeService.deleteCharityType(charityTypeId);
+    await this.toaster.presentToast({ message: 'Service was deleted successfully.', color: 'success' });
     await loader.dismiss();
     this.getCharityTypes();
   }

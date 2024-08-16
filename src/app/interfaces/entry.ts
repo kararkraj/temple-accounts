@@ -1,19 +1,16 @@
-import { CharityType } from "./charityType";
-import { Temple } from "./temple";
-
-export interface Entry {
-  id: number;
-  title: string;
-  name: string;
-  temple: Temple;
-  charityType: CharityType;
-  createdOn: string;
+export interface Entry extends EntryRequest {
+  id: string;
 }
 
-export interface EntryReq {
+export interface EntryRequest extends EntryAdd {
+  createdAt: string;
+  createdBy: string;
+  updatedAt: string;
+}
+
+export interface EntryAdd {
   title: string;
   name: string;
-  createdOn: string;
 
   templeName: string;
   templeAddress: string;

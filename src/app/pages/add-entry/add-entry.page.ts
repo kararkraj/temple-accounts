@@ -1,12 +1,11 @@
-import { Component, EffectRef, OnInit, ViewChild, effect } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { LoadingController, IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonSelect, IonSelectOption, IonInput, IonButtons, IonMenuButton, IonNote, IonItem, IonText, IonItemDivider, IonItemGroup, IonLabel, IonSegment, IonSegmentButton, IonIcon, IonTabButton, IonTabBar, IonTabs } from '@ionic/angular/standalone';
 import { Temple } from 'src/app/interfaces/temple';
 import { PdfmakeService } from 'src/app/services/pdfmake.service';
 import { CharityType } from 'src/app/interfaces/charityType';
 import { EntryService } from 'src/app/services/entry.service';
-import { Entry } from 'src/app/interfaces/entry';
+import { Entry, EntryAdd } from 'src/app/interfaces/entry';
 import { ToasterService } from 'src/app/services/toaster.service';
 
 @Component({
@@ -14,36 +13,13 @@ import { ToasterService } from 'src/app/services/toaster.service';
   templateUrl: './add-entry.page.html',
   styleUrls: ['./add-entry.page.scss'],
   standalone: true,
-  imports: [IonTabs, IonTabBar, IonTabButton, IonIcon, IonSegmentButton, IonSegment, IonLabel, IonItemGroup, IonItemDivider, IonText,
-    CommonModule,
-    ReactiveFormsModule,
-    IonButton,
-    IonContent,
-    IonHeader,
-    IonTitle,
-    IonToolbar,
-    IonSelect,
-    IonSelectOption,
-    IonInput,
-    IonButtons,
-    IonMenuButton,
-    IonNote,
-    IonItem
-  ]
+  imports: [IonTabs, IonTabBar, IonTabButton, IonIcon, IonSegmentButton, IonSegment, IonLabel, IonItemGroup, IonItemDivider, IonText, ReactiveFormsModule, IonButton, IonContent, IonHeader, IonTitle, IonToolbar, IonSelect, IonSelectOption, IonInput, IonButtons, IonMenuButton, IonNote, IonItem]
 })
 export class AddEntryPage implements OnInit {
 
   entryForm: FormGroup;
   temples: Temple[] = [];
   charityTypes: CharityType[] = [];
-  updatedTemplesEffect: EffectRef = effect(() => {
-    this.entryService.getTemplesUpdatedSignal();
-    this.getTemples();
-  });
-  updatedCharityTypesEffect: EffectRef = effect(() => {
-    this.entryService.getCharityTypesUpdatedSignal();
-    this.getCharityTypes();
-  });
   @ViewChild('ionSegment') ionSegment!: IonSegment;
 
   constructor(
@@ -66,6 +42,11 @@ export class AddEntryPage implements OnInit {
   ngOnInit() {
   }
 
+  ionViewWillEnter() {
+    this.getTemples();
+    this.getCharityTypes();
+  }
+
   getTemples() {
     this.entryService.getTemples().then(temples => {
       this.temples = temples;
@@ -79,7 +60,8 @@ export class AddEntryPage implements OnInit {
     this.entryService.getCharityTypes().then(charityTypes => {
       this.charityTypes = charityTypes;
 
-      // By default preset segment is selected. Hence the below function is called.
+      // By default, preset segment is selected and if no preset service exists then error toaster should be shown.
+      // Hence the below function is called.
       this.onPresetServiceSelection();
 
       // If charity types is available, then select preset else select custom segment segment
@@ -93,26 +75,33 @@ export class AddEntryPage implements OnInit {
       const loader = await this.loader.create({ message: 'Adding entry...' });
       await loader.present();
 
-      const entryFormValue = this.entryForm.value;
-      if (this.ionSegment.value === "custom") {
-        entryFormValue.charityType = {
-          id: 0,
-          name: entryFormValue.charityTypeName,
-          amount: entryFormValue.charityTypeAmount
-        };
+      const charityType = this.entryForm.get('charityType')?.value;
+      const temple = this.entryForm.get('temple')?.value;
+
+      let entry: EntryAdd = {
+        title: this.entryForm.get('title')?.value,
+        name: this.entryForm.get('name')?.value,
+
+        templeName: temple.name,
+        templeAddress: temple.address,
+        templeId: temple.id,
+
+        charityTypeId: this.ionSegment.value === "custom" ? '' : charityType.id,
+        charityTypeAmount: this.ionSegment.value === "custom" ? this.entryForm.get('charityTypeAmount')?.value : charityType.amount,
+        charityTypeName: this.ionSegment.value === "custom" ? this.entryForm.get('charityTypeName')?.value : charityType.name,
       }
 
-      let entry: Entry = {
-        ...entryFormValue,
-        id : await this.entryService.getEntryNextId(),
-        createdOn: new Date().toISOString(),
-      }
-      this.entryService.addEntry(entry).subscribe(res => {
-        this.toaster.presentToast({ message: 'Entry was added successfully!', color: 'success' });
-        this.pdfService.generateAndDownloadPDF(res);
+      try {
+        const entryRes = await this.entryService.addEntry(entry);
+        this.toaster.presentToast({ message: 'Entry was added successfully.', color: 'success' });
+        this.pdfService.generateAndDownloadPDF(entryRes);
+      } catch (e: any) {
+        this.toaster.presentToast({ message: `Error: ${e.code}`, color: 'danger' });
+        console.error("Error adding document: ", e);
+      } finally {
         this.resetForm();
         loader.dismiss();
-      });
+      }
     } else {
       this.entryForm.markAllAsTouched();
     }
@@ -140,6 +129,7 @@ export class AddEntryPage implements OnInit {
     this.entryForm.get("charityTypeAmount")?.disable();
 
     this.entryForm.get("charityType")?.enable();
+    this.entryForm.get('charityType')?.reset();
 
     if (this.charityTypes.length === 1) {
       this.entryForm.patchValue({ charityType: this.charityTypes[0] })
@@ -154,10 +144,11 @@ export class AddEntryPage implements OnInit {
   }
 
   resetForm() {
-    let defaultValue: Partial<Entry> = {};
-    if (this.temples.length === 1) {
-      defaultValue.temple = this.temples[0];
-    }
+    let defaultValue: { temple?: any, charityType?: any } = {};
+
+    this.temples.length === 1 ? defaultValue.temple = this.temples[0] : null;
+    this.charityTypes.length === 1 ? defaultValue.charityType = this.charityTypes[0] : null;
+
     this.entryForm.reset(defaultValue);
   }
 

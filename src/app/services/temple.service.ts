@@ -1,4 +1,4 @@
-import { Injectable, signal, WritableSignal } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Temple, TempleRequest } from '../interfaces/temple';
 import { addDoc, collection, deleteDoc, doc, Firestore, getDocs, query, updateDoc, where } from '@angular/fire/firestore';
 import { Auth } from '@angular/fire/auth';
@@ -10,8 +10,6 @@ import { STORAGE_KEYS } from '../storage.config';
   providedIn: 'root'
 })
 export class TempleService {
-
-  public templesUpdatedSignal: WritableSignal<number> = signal(0);
 
   constructor(
     private fireStore: Firestore,
@@ -45,7 +43,7 @@ export class TempleService {
     } else {
       // Firestore throws permission-denied error when unknown temple id is queried.
       // Hence, implemented the same in custom flow.
-      throw({ code: 'permission-denied' });
+      throw ({ code: 'permission-denied' });
     }
   }
 
@@ -105,9 +103,5 @@ export class TempleService {
     } catch (err) {
       throw (err);
     }
-  }
-
-  triggerTemplesUpdatedEvent() {
-    this.templesUpdatedSignal.update((value: number) => ++value);
   }
 }

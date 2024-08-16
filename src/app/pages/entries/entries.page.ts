@@ -1,9 +1,10 @@
-import { Component, effect, EffectRef, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { IonContent, IonHeader, IonTitle, IonToolbar, IonButtons, IonRow, IonButton, IonIcon, IonGrid, IonCol, AlertController, LoadingController, IonMenuButton } from '@ionic/angular/standalone';
 import { Entry } from 'src/app/interfaces/entry';
 import { EntryService } from 'src/app/services/entry.service';
 import { PdfmakeService } from 'src/app/services/pdfmake.service';
+import { ToasterService } from 'src/app/services/toaster.service';
 
 @Component({
   selector: 'app-entries',
@@ -15,19 +16,20 @@ import { PdfmakeService } from 'src/app/services/pdfmake.service';
 export class EntriesPage implements OnInit {
 
   entries: Entry[] = [];
-  updatedEntriesEffect: EffectRef = effect(() => {
-    this.entryService.entriesUpdatedSignal();
-    this.getEntries();
-  });
 
   constructor(
     private entryService: EntryService,
     private alertController: AlertController,
     private loader: LoadingController,
-    private pdfService: PdfmakeService
+    private pdfService: PdfmakeService,
+    private toaster: ToasterService
   ) { }
 
   ngOnInit() {
+  }
+
+  ionViewWillEnter() {
+    this.getEntries();
   }
 
   getEntries() {
@@ -51,7 +53,10 @@ export class EntriesPage implements OnInit {
           handler: async () => {
             const loader = await this.loader.create({ message: 'Deleting entry...' });
             await loader.present();
-            this.entryService.deleteEntry(entry.id).subscribe({ next: () => loader.dismiss() });
+            await this.entryService.deleteEntry(entry.id);
+            await this.toaster.presentToast({ message: 'Entry was deleted successfully.', color: 'success' });
+            await loader.dismiss();
+            this.getEntries();
           },
         },
       ],

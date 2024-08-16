@@ -51,11 +51,11 @@ export class PdfmakeService {
       header: {
         columns: [
           {
-            text: 'Receipt No: 1',
+            text: data.id,
             margin: [10, 10, 0, 0],
           },
           {
-            text: `${this.getFormattedDate(data.createdOn)}`,
+            text: `${this.getFormattedDate(data.createdAt)}`,
             margin: [0, 10, 10, 0],
             alignment: 'right'
           }
@@ -63,13 +63,13 @@ export class PdfmakeService {
       },
       content: [
         {
-          text: [`${data.temple.name}\n`, data.temple.address],
+          text: [`${data.templeName}\n`, data.templeAddress],
           margin: [0, 0, 0, 0],
           alignment: 'center',
           style: 'header'
         },
         {
-          text: `Received from Sri. ${data.name} a sum of Rs. ${data.charityType.amount} (Rs.${this.numberToWords(data.charityType.amount)}) towards ${data.charityType.name}.`,
+          text: `Received from ${data.title} ${data.name} a sum of Rs. ${data.charityTypeAmount} (Rs.${this.numberToWords(data.charityTypeAmount)}) towards ${data.charityTypeName}.`,
           style: 'subheader',
           margin: [0, 20, 0, 0]
         }

@@ -3,6 +3,7 @@ import { IonContent, IonHeader, IonTitle, IonToolbar, IonButtons, IonMenuButton,
 import { Temple } from 'src/app/interfaces/temple';
 import { RouterLink } from '@angular/router';
 import { TempleService } from 'src/app/services/temple.service';
+import { ToasterService } from 'src/app/services/toaster.service';
 
 @Component({
   selector: 'app-temples',
@@ -18,7 +19,8 @@ export class TemplesPage implements OnInit {
   constructor(
     private templeService: TempleService,
     private alertController: AlertController,
-    private loader: LoadingController
+    private loader: LoadingController,
+    private toaster: ToasterService
   ) { }
 
   ngOnInit() {
@@ -49,8 +51,9 @@ export class TemplesPage implements OnInit {
           handler: async () => {
             const loader = await this.loader.create({ message: 'Deleting temple...' });
             await loader.present();
-            await this.templeService.deleteTemple(temple.id)
-            loader.dismiss();
+            await this.templeService.deleteTemple(temple.id);
+            await this.toaster.presentToast({ message: 'Temple was deleted successfully.', color: 'success' });
+            await loader.dismiss();
             this.getAllTemples();
           },
         },

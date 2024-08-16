@@ -26,16 +26,16 @@
     @for (entry of entries; track $index) {
     <ion-row>
       <ion-col>{{entry.title + " " + entry.name}}</ion-col>
-      <ion-col size="2">{{entry.charityType.amount}}</ion-col>
-      <ion-col class="ion-hide-sm-down">{{entry.charityType.name}}</ion-col>
+      <ion-col size="2">{{entry.charityTypeAmount}}</ion-col>
+      <ion-col class="ion-hide-sm-down">{{entry.charityTypeName}}</ion-col>
       <ion-col size-xs="3" size-sm="2">
         <ion-buttons class="ion-justify-content-center">
           <ion-button (click)="downloadReceipt(entry)">
             <ion-icon name="download-outline"></ion-icon>
           </ion-button>
-          <ion-button (click)="presentDeleteEntryAlert(entry)">
+          <!-- <ion-button (click)="presentDeleteEntryAlert(entry)">
             <ion-icon name="trash-outline"></ion-icon>
-          </ion-button>
+          </ion-button> -->
         </ion-buttons>
       </ion-col>
     </ion-row>

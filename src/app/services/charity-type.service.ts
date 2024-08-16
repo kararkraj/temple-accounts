@@ -11,8 +11,6 @@ import { NetworkService } from './network.service';
 })
 export class CharityTypeService {
 
-  charityTypesUpdatedSignal: WritableSignal<number> = signal(0);
-
   constructor(
     private storage: StorageService,
     private fireStore: Firestore,
@@ -105,9 +103,5 @@ export class CharityTypeService {
     } catch (err) {
       throw (err);
     }
-  }
-
-  triggerCharityTypesUpdatedSignal() {
-    this.charityTypesUpdatedSignal.update(count => ++count);
   }
 }
