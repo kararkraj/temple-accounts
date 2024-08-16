@@ -44,7 +44,7 @@ bootstrapApplication(AppComponent, {
     })),
     provideAuth(() => getAuth()),
     provideAppCheck(() => (initializeAppCheck(getApp(), {
-      provider: new ReCaptchaEnterpriseProvider('6Lc1UygqAAAAAMTofSdpYhD6mzw7kokYHuvZ5tCr'),
+      provider: new ReCaptchaEnterpriseProvider(environment.appCheck.siteKey),
       isTokenAutoRefreshEnabled: true
     }))),
     provideFirestore(() => (initializeFirestore(getApp(), {

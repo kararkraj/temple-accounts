@@ -12,6 +12,9 @@ export const environment = {
     authDomain: "temple-accounts-556e6.firebaseapp.com",
     messagingSenderId: "132896477598",
     measurementId: "G-JV6LKNZ5T3"
+  },
+  appCheck: {
+    siteKey: '6Lc1UygqAAAAAMTofSdpYhD6mzw7kokYHuvZ5tCr'
   }
 };
 
