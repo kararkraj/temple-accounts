@@ -1,9 +1,17 @@
-ion-row:first-child {
-    background-color: var(--ion-color-primary);
-    color: #fff;
-}
+ion-grid {
+    --ion-grid-padding: 0;
 
-ion-col {
-    border-right: solid 1px var(--ion-color-light-shade);
-    border-bottom: solid 1px var(--ion-color-light-shade);
+    ion-row:first-child {
+        background-color: var(--ion-color-primary);
+        color: #fff;
+    }
+
+    ion-col {
+        border-right: solid 1px var(--ion-color-light-shade);
+        border-bottom: solid 1px var(--ion-color-light-shade);
+
+        &:first-child {
+            border-left: solid 1px var(--ion-color-light-shade);
+        }
+    }
 }
