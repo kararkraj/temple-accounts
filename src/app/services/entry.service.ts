@@ -40,7 +40,7 @@ export class EntryService {
   }
 
   async getEntryById(entryId: string): Promise<Entry> {
-    const entries = await this.storage.get(STORAGE_KEYS.ENTRY.entries) as Entry[];
+    const entries = await this.getEntries() as Entry[];
     const entry = entries.find(entry => entry.id === entryId);
     if (entry) {
       return entry;
@@ -62,7 +62,7 @@ export class EntryService {
     const doc = await addDoc(collection(this.fireStore, 'entries'), entryReq);
 
     const newEntry: Entry = { id: doc.id, ...entryReq };
-    const entries = await this.storage.get(STORAGE_KEYS.ENTRY.entries);
+    const entries = await this.getEntries();
     entries.push(newEntry);
     await this.storage.set(STORAGE_KEYS.ENTRY.entries, entries);
 
@@ -74,7 +74,7 @@ export class EntryService {
     updatedFields.updatedAt = new Date().toISOString();
     await updateDoc(entryRef, updatedFields);
 
-    const entries = await this.storage.get(STORAGE_KEYS.ENTRY.entries) as Entry[];
+    const entries = await this.getEntries() as Entry[];
     const index = entries.findIndex(entry => entry.id === entryId);
     entries[index] = { ...entries[index], ...updatedFields };
     this.storage.set(STORAGE_KEYS.ENTRY.entries, entries);
@@ -85,7 +85,7 @@ export class EntryService {
   async deleteEntry(entryId: string): Promise<Entry> {
     await deleteDoc(doc(this.fireStore, 'entries', entryId));
 
-    const entries = await this.storage.get(STORAGE_KEYS.ENTRY.entries);
+    const entries = await this.getEntries();
     const index = entries.findIndex((entry: Entry) => entry.id === entryId);
     const deletedEntry = entries.splice(index, 1)[0];
     this.storage.set(STORAGE_KEYS.ENTRY.entries, entries);
