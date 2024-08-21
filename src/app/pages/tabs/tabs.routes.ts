@@ -47,10 +47,10 @@ export const TABS_ROUTES: Routes = [
                         path: 'add',
                         loadComponent: () => import('./../add-charity-type/add-charity-type.page').then(m => m.AddCharityTypePage)
                     },
-                    // {
-                    //     path: 'edit/:charityTypeId',
-                    //     loadComponent: () => import('./../edit-charity-type/edit-charity-type.page').then(m => m.EditCharityTypePage)
-                    // }
+                    {
+                        path: 'edit/:charityTypeId',
+                        loadComponent: () => import('./../edit-charity-type/edit-charity-type.page').then(m => m.EditCharityTypePage)
+                    }
                 ]
             },
             {

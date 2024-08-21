@@ -1,0 +1,60 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-back-button defaultHref="tabs/entries"></ion-back-button>
+        </ion-buttons>
+        <ion-title>{{title}}</ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <div class="container">
+        <form [formGroup]="entryForm" (ngSubmit)="onSubmit()">
+
+            <ion-item lines="full">
+                <ion-select formControlName="title" label="Title *" label-placement="floating"
+                    placeholder="Select title" required name="title">
+                    <ion-select-option value="Sri.">Sri. (Shriman)</ion-select-option>
+                    <ion-select-option value="Smt.">Smt. (Shrimati)</ion-select-option>
+                    <ion-select-option value="Kum.">Kum. (Kumar/Kumari)</ion-select-option>
+                </ion-select>
+            </ion-item>
+
+            <ion-item lines="full">
+                <ion-input formControlName="name" label="Name *" label-placement="floating" placeholder="Enter name"
+                    type="text" name="name" required helperText="Only a-z, A-Z and 0-9 characters allowed"
+                    errorText="Only a-z, A-Z and 0-9 characters allowed"></ion-input>
+            </ion-item>
+
+            @if (entry) {
+            <ion-item lines="full">
+                <ion-input label="Temple name *" label-placement="floating" [value]="entry.templeName" type="text"
+                    name="templeName" disabled></ion-input>
+            </ion-item>
+            <ion-item lines="full">
+                <ion-input label="Temple address *" label-placement="floating" [value]="entry.templeAddress" type="text"
+                    name="templeAddress" disabled></ion-input>
+            </ion-item>
+            <ion-item lines="full">
+                <ion-input label="Service name *" label-placement="floating" [value]="entry.charityTypeName" type="text"
+                    name="charityTypeName" disabled></ion-input>
+            </ion-item>
+            <ion-item lines="full">
+                <ion-input label="Service amount *" label-placement="floating" [value]="entry.charityTypeAmount" type="number"
+                    name="charityTypeAmount" disabled></ion-input>
+            </ion-item>
+            }
+
+            <ion-grid class="ion-no-padding">
+                <ion-row>
+                    <ion-col>
+                        <ion-button expand="full" type="button" color="light" (click)="resetForm()">Reset</ion-button>
+                    </ion-col>
+                    <ion-col>
+                        <ion-button expand="full" type="submit">Submit</ion-button>
+                    </ion-col>
+                </ion-row>
+            </ion-grid>
+        </form>
+    </div>
+</ion-content>

@@ -51,20 +51,16 @@ export class PdfmakeService {
       header: {
         columns: [
           {
-            text: data.id,
+            text: `${data.id}\n ${this.getFormattedDate(data.createdAt)}`,
             margin: [10, 10, 0, 0],
-          },
-          {
-            text: `${this.getFormattedDate(data.createdAt)}`,
-            margin: [0, 10, 10, 0],
-            alignment: 'right'
+            alignment: 'center'
           }
         ]
       },
       content: [
         {
           text: [`${data.templeName}\n`, data.templeAddress],
-          margin: [0, 0, 0, 0],
+          margin: [0, 10, 0, 0],
           alignment: 'center',
           style: 'header'
         },
@@ -76,11 +72,11 @@ export class PdfmakeService {
       ],
       styles: {
         header: {
-          fontSize: 18,
+          fontSize: 14,
           bold: true
         },
         subheader: {
-          fontSize: 14
+          fontSize: 12
         }
       },
       footer: {

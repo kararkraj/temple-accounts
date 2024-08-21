@@ -21,18 +21,18 @@
         <span class="ion-hide-sm-up">₹</span>
       </ion-col>
       <ion-col class="ion-padding ion-hide-sm-down">Service</ion-col>
-      <ion-col class="ion-padding" size-xs="3" size-sm="2" size-lg="2">Actions</ion-col>
+      <ion-col class="ion-padding" size-xs="4" size-sm="3" size-lg="2">Actions</ion-col>
     </ion-row>
     @for (entry of entries; track $index) {
     <ion-row>
       <ion-col>{{entry.title + " " + entry.name}}</ion-col>
       <ion-col size="2">{{entry.charityTypeAmount}}</ion-col>
       <ion-col class="ion-hide-sm-down">{{entry.charityTypeName}}</ion-col>
-      <ion-col size-xs="3" size-sm="2" size-lg="2">
+      <ion-col size-xs="4" size-sm="3" size-lg="2">
         <ion-buttons class="ion-justify-content-center">
-          <!-- <ion-button routerLink="edit-entry/{{entry.id}}">
+          <ion-button routerLink="edit-entry/{{entry.id}}">
             <ion-icon name="create-outline"></ion-icon>
-          </ion-button> -->
+          </ion-button>
           <ion-button (click)="downloadReceipt(entry)">
             <ion-icon name="download-outline"></ion-icon>
           </ion-button>
