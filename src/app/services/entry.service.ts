@@ -69,10 +69,13 @@ export class EntryService {
     return newEntry;
   }
 
-  async updateEntry(entryId: string, updatedFields: Partial<Entry>): Promise<Entry> {
+  async updateEntry(entryId: string, updatedFields: Partial<EntryAdd>): Promise<Entry> {
     const entryRef = doc(this.fireStore, 'entries', entryId);
-    updatedFields.updatedAt = new Date().toISOString();
-    await updateDoc(entryRef, updatedFields);
+    const entryReq: Partial<EntryRequest> = {
+      updatedAt: new Date().toISOString(),
+      ...updatedFields
+    }
+    await updateDoc(entryRef, entryReq);
 
     const entries = await this.getEntries() as Entry[];
     const index = entries.findIndex(entry => entry.id === entryId);

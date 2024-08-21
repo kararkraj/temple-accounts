@@ -1,11 +1,11 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { LoadingController, IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonSelect, IonSelectOption, IonInput, IonButtons, IonMenuButton, IonNote, IonItem, IonText, IonItemDivider, IonItemGroup, IonLabel, IonSegment, IonSegmentButton, IonIcon, IonTabButton, IonTabBar, IonTabs } from '@ionic/angular/standalone';
+import { LoadingController, IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonSelect, IonSelectOption, IonInput, IonButtons, IonMenuButton, IonNote, IonItem, IonText, IonItemDivider, IonItemGroup, IonLabel, IonSegment, IonSegmentButton, IonIcon, IonTabButton, IonTabBar, IonTabs, IonBackButton, IonGrid, IonRow, IonCol } from '@ionic/angular/standalone';
 import { Temple } from 'src/app/interfaces/temple';
 import { PdfmakeService } from 'src/app/services/pdfmake.service';
 import { CharityType } from 'src/app/interfaces/charityType';
 import { EntryService } from 'src/app/services/entry.service';
-import { Entry, EntryAdd } from 'src/app/interfaces/entry';
+import { EntryAdd } from 'src/app/interfaces/entry';
 import { ToasterService } from 'src/app/services/toaster.service';
 
 @Component({
@@ -13,9 +13,12 @@ import { ToasterService } from 'src/app/services/toaster.service';
   templateUrl: './add-entry.page.html',
   styleUrls: ['./add-entry.page.scss'],
   standalone: true,
-  imports: [IonTabs, IonTabBar, IonTabButton, IonIcon, IonSegmentButton, IonSegment, IonLabel, IonItemGroup, IonItemDivider, IonText, ReactiveFormsModule, IonButton, IonContent, IonHeader, IonTitle, IonToolbar, IonSelect, IonSelectOption, IonInput, IonButtons, IonMenuButton, IonNote, IonItem]
+  imports: [IonCol, IonRow, IonGrid, IonBackButton, IonTabs, IonTabBar, IonTabButton, IonIcon, IonSegmentButton, IonSegment, IonLabel, IonItemGroup, IonItemDivider, IonText, ReactiveFormsModule, IonButton, IonContent, IonHeader, IonTitle, IonToolbar, IonSelect, IonSelectOption, IonInput, IonButtons, IonMenuButton, IonNote, IonItem]
 })
 export class AddEntryPage implements OnInit {
+
+  title: string = 'Add entry';
+  isEdit: boolean = false;
 
   entryForm: FormGroup;
   temples: Temple[] = [];
@@ -23,11 +26,11 @@ export class AddEntryPage implements OnInit {
   @ViewChild('ionSegment') ionSegment!: IonSegment;
 
   constructor(
-    private entryService: EntryService,
+    public entryService: EntryService,
     private formBuilder: FormBuilder,
-    private pdfService: PdfmakeService,
+    public pdfService: PdfmakeService,
     public loader: LoadingController,
-    private toaster: ToasterService
+    public toaster: ToasterService
   ) {
     this.entryForm = this.formBuilder.group({
       title: [null, [Validators.required]],
@@ -47,27 +50,23 @@ export class AddEntryPage implements OnInit {
     this.getCharityTypes();
   }
 
-  getTemples() {
-    this.entryService.getTemples().then(temples => {
-      this.temples = temples;
-      if (this.temples.length === 1) {
-        this.entryForm.patchValue({ temple: this.temples[0] });
-      }
-    });
+  async getTemples() {
+    this.temples = await this.entryService.getTemples()
+    if (this.temples.length === 1) {
+      this.entryForm.patchValue({ temple: this.temples[0] });
+    }
   }
 
-  getCharityTypes() {
-    this.entryService.getCharityTypes().then(charityTypes => {
-      this.charityTypes = charityTypes;
+  async getCharityTypes() {
+    this.charityTypes = await this.entryService.getCharityTypes();
 
-      // By default, preset segment is selected and if no preset service exists then error toaster should be shown.
-      // Hence the below function is called.
-      this.onPresetServiceSelection();
+    // By default, preset segment is selected and if no preset service exists then error toaster should be shown.
+    // Hence the below function is called.
+    this.onPresetServiceSelection();
 
-      // If charity types is available, then select preset else select custom segment segment
-      this.charityTypes.length > 0 ? this.ionSegment.writeValue("preset") : this.ionSegment.writeValue("custom");
-      this.onSegmentChange(this.ionSegment.value);
-    });
+    // If charity types is available, then select preset else select custom segment segment
+    this.charityTypes.length > 0 ? this.ionSegment.writeValue("preset") : this.ionSegment.writeValue("custom");
+    this.onSegmentChange(this.ionSegment.value);
   }
 
   async onSubmit() {

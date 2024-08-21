@@ -37,25 +37,34 @@ export const TABS_ROUTES: Routes = [
                 ]
             },
             {
-              path: 'services',
-              children: [
-                {
-                    path: '',
-                    loadComponent: () => import('./../charity-types/charity-types.page').then( m => m.CharityTypesPage)
-                },
-                {
-                    path: 'add',
-                    loadComponent: () => import('./../add-charity-type/add-charity-type.page').then(m => m.AddCharityTypePage)
-                },
-                {
-                    path: 'edit/:charityTypeId',
-                    loadComponent: () => import('./../edit-charity-type/edit-charity-type.page').then(m => m.EditCharityTypePage)
-                }
-              ]
+                path: 'services',
+                children: [
+                    {
+                        path: '',
+                        loadComponent: () => import('./../charity-types/charity-types.page').then(m => m.CharityTypesPage)
+                    },
+                    {
+                        path: 'add',
+                        loadComponent: () => import('./../add-charity-type/add-charity-type.page').then(m => m.AddCharityTypePage)
+                    },
+                    // {
+                    //     path: 'edit/:charityTypeId',
+                    //     loadComponent: () => import('./../edit-charity-type/edit-charity-type.page').then(m => m.EditCharityTypePage)
+                    // }
+                ]
             },
             {
                 path: 'entries',
-                loadComponent: () => import('./../entries/entries.page').then(m => m.EntriesPage)
+                children: [
+                    {
+                        path: '',
+                        loadComponent: () => import('./../entries/entries.page').then(m => m.EntriesPage)
+                    },
+                    {
+                        path: 'edit-entry/:entryId',
+                        loadComponent: () => import('./../edit-entry/edit-entry.page').then(m => m.EditEntryPage)
+                    },
+                ]
             },
             {
                 path: '**',
