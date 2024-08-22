@@ -15,12 +15,6 @@ export class StorageService {
     // If using, define drivers here: await this.storage.defineDriver(/*...*/);
     const storage = await this.storage.create();
     this._storage = storage;
-
-    // When the storage is instantiated for the first time, entries will be null and null value can cause errors.
-    // Hence instantiate with initial values
-    if (await this._storage.get('entries') === null) {
-      await this.resetStorage();
-    }
   }
 
   public async set(key: string, value: any) {

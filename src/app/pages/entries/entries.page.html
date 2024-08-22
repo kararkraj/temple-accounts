@@ -15,6 +15,7 @@
 <ion-content>
   <ion-grid class="ion-text-center">
     <ion-row>
+      <ion-col class="ion-padding ion-hide-sm-down" size="1">Sr. No.</ion-col>
       <ion-col class="ion-padding">Name</ion-col>
       <ion-col class="ion-padding" size="2">
         <span class="ion-hide-sm-down">Amount</span>
@@ -25,6 +26,7 @@
     </ion-row>
     @for (entry of entries; track $index) {
     <ion-row>
+      <ion-col class="ion-hide-sm-down" size="1">{{$index + 1}}</ion-col>
       <ion-col>{{entry.title + " " + entry.name}}</ion-col>
       <ion-col size="2">{{entry.charityTypeAmount}}</ion-col>
       <ion-col class="ion-hide-sm-down">{{entry.charityTypeName}}</ion-col>
