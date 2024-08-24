@@ -145,6 +145,9 @@ OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
+@firebase/analytics
+Apache-2.0
+
 @firebase/app
 Apache-2.0
 
@@ -158,6 +161,9 @@ Apache-2.0
 Apache-2.0
 
 @firebase/firestore
+Apache-2.0
+
+@firebase/installations
 Apache-2.0
 
 @firebase/logger
@@ -185,6 +191,8 @@ MIT
 @stencil/core/internal/app-data
 
 @stencil/core/internal/client
+
+firebase/analytics
 
 firebase/app
 
