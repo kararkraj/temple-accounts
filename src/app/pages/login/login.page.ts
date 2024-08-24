@@ -2,29 +2,18 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { IonContent, IonHeader, IonTitle, IonToolbar, IonButtons, IonMenuButton, IonRow, IonCol, IonButton, IonInput, IonIcon, IonCheckbox, IonAlert, IonGrid } from '@ionic/angular/standalone';
 import { Router } from '@angular/router';
-import { LoadingController } from '@ionic/angular/standalone';
+import { LoadingController, Platform } from '@ionic/angular/standalone';
 import { ToasterService } from 'src/app/services/toaster.service';
 import { Auth, browserLocalPersistence, browserSessionPersistence, signInWithEmailAndPassword } from '@angular/fire/auth';
 import { StorageService } from 'src/app/services/storage.service';
+
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.page.html',
   styleUrls: ['./login.page.scss'],
   standalone: true,
-  imports: [IonGrid, IonAlert, IonCheckbox, IonIcon,
-    ReactiveFormsModule,
-    IonButton,
-    IonCol,
-    IonRow,
-    IonContent,
-    IonHeader,
-    IonTitle,
-    IonToolbar,
-    IonButtons,
-    IonMenuButton,
-    IonInput
-  ]
+  imports: [IonGrid, IonAlert, IonCheckbox, IonIcon, ReactiveFormsModule, IonButton, IonCol, IonRow, IonContent, IonHeader, IonTitle, IonToolbar, IonButtons, IonMenuButton, IonInput]
 })
 export class LoginPage implements OnInit {
 
@@ -35,12 +24,13 @@ export class LoginPage implements OnInit {
     private loader: LoadingController,
     private toaster: ToasterService,
     private auth: Auth,
-    private storage: StorageService
+    private storage: StorageService,
+    private platform: Platform
   ) {
     this.loginForm = new FormGroup({
       username: new FormControl(null, [Validators.required, Validators.maxLength(99)]),
       password: new FormControl(null, [Validators.required, Validators.maxLength(99)]),
-      rememberMe: new FormControl(false)
+      rememberMe: new FormControl(this.platform.is('desktop') ? false : true)
     });
   }
 
