@@ -55,7 +55,9 @@ export class LoginPage implements OnInit {
         this.toaster.presentToast({ message: `Error: ${err.code}`, color: 'danger' });
       }).finally(() => {
         loader.dismiss();
-        this.loginForm.reset();
+        this.loginForm.reset({
+          rememberMe: this.platform.is('desktop') ? false : true
+        });
       });
     } else {
       this.loginForm.markAllAsTouched();
