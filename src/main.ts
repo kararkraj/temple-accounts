@@ -12,6 +12,7 @@ import { getApp, initializeApp as initializeApp_alias, provideFirebaseApp } from
 import { getAuth, provideAuth } from '@angular/fire/auth';
 import { initializeFirestore, persistentLocalCache, provideFirestore } from '@angular/fire/firestore';
 import { provideAppCheck, initializeAppCheck, ReCaptchaEnterpriseProvider } from '@angular/fire/app-check';
+import { getAnalytics, provideAnalytics } from '@angular/fire/analytics';
 
 if (environment.production) {
   enableProdMode();
@@ -46,6 +47,7 @@ bootstrapApplication(AppComponent, {
       provider: new ReCaptchaEnterpriseProvider(environment.appCheck.siteKey),
       isTokenAutoRefreshEnabled: true
     }))),
+    provideAnalytics(() => getAnalytics()),
     provideAuth(() => getAuth()),
     provideFirestore(() => (initializeFirestore(getApp(), { localCache: persistentLocalCache() }))),
   ],

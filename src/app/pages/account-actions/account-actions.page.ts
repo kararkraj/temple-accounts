@@ -36,23 +36,24 @@ export class AccountActionsPage implements OnInit {
       this.enableRouterOutlet = true;
       switch (queryParams['mode']) {
         case "resetPassword":
-          loader.dismiss();
-          this.router.navigateByUrl(`reset-password?oobCode=${queryParams['oobCode']}`);
+          await this.router.navigateByUrl(`reset-password?oobCode=${queryParams['oobCode']}`);
           break;
 
         case "verifyEmail":
           loader.message = 'Verifying email...';
-          this.verifyEmail(queryParams['oobCode']).finally(() => loader.dismiss());
+          await this.verifyEmail(queryParams['oobCode']).finally(() => loader.dismiss());
           break;
 
         case "verifyAndChangeEmail":
           loader.message = 'Verifying new email...';
-          this.verifyAndChangeEmail(queryParams['oobCode']).finally(() => loader.dismiss());
+          await this.verifyAndChangeEmail(queryParams['oobCode']).finally(() => loader.dismiss());
+          break;
       }
 
     } else {
       this.router.navigate(['login'], { replaceUrl: true });
     }
+    loader.dismiss();
   }
 
   async verifyEmail(oobCode: string) {
