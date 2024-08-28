@@ -6,5 +6,5 @@
 **Application is hosted at:**
 https://kararkraj.github.io/temple-accounts
 
-**Aboyt application:**
+**About application:**
 https://kararkraj.github.io/temple-accounts/tutorial
