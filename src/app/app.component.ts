@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
-import { IonApp, IonRouterOutlet, IonSplitPane, IonContent, IonMenu, IonList, IonListHeader, IonMenuToggle, IonItem, IonIcon, IonLabel, IonToggle, IonButton, IonAlert, LoadingController } from '@ionic/angular/standalone';
+import { IonApp, IonRouterOutlet, IonSplitPane, IonContent, IonMenu, IonList, IonListHeader, IonMenuToggle, IonItem, IonIcon, IonLabel, IonToggle, IonButton, IonAlert, LoadingController, MenuController } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { prismOutline, happyOutline, logInOutline, personAddOutline, moonOutline, hammerOutline, logOutOutline, person, listCircleOutline, addCircleOutline, trashOutline, createOutline, eyeOutline, addOutline, settingsOutline, codeWorkingOutline, downloadOutline, alertCircleOutline, refreshOutline, logoFacebook, logoGoogle, lockClosedOutline } from 'ionicons/icons';
+import { prismOutline, happyOutline, logInOutline, personAddOutline, moonOutline, hammerOutline, logOutOutline, person, listCircleOutline, addCircleOutline, trashOutline, createOutline, eyeOutline, addOutline, settingsOutline, codeWorkingOutline, downloadOutline, alertCircleOutline, refreshOutline, logoFacebook, logoGoogle, lockClosedOutline, arrowForward } from 'ionicons/icons';
 import { Auth } from '@angular/fire/auth';
 import { StorageService } from './services/storage.service';
 
@@ -59,9 +59,10 @@ export class AppComponent implements OnInit {
     private auth: Auth,
     private loader: LoadingController,
     private router: Router,
-    private storage: StorageService
+    private storage: StorageService,
+    private menu: MenuController
   ) {
-    addIcons({ prismOutline, happyOutline, logInOutline, personAddOutline, moonOutline, hammerOutline, logOutOutline, person, listCircleOutline, addCircleOutline, trashOutline, createOutline, eyeOutline, addOutline, settingsOutline, codeWorkingOutline, downloadOutline, alertCircleOutline, refreshOutline, logoFacebook, logoGoogle, lockClosedOutline });
+    addIcons({ prismOutline, happyOutline, logInOutline, personAddOutline, moonOutline, hammerOutline, logOutOutline, person, listCircleOutline, addCircleOutline, trashOutline, createOutline, eyeOutline, addOutline, settingsOutline, codeWorkingOutline, downloadOutline, alertCircleOutline, refreshOutline, logoFacebook, logoGoogle, lockClosedOutline, arrowForward });
   }
 
   async ngOnInit() {
@@ -78,5 +79,9 @@ export class AppComponent implements OnInit {
     });
   }
 
-  openTutorial() { }
+  openTutorial() {
+    this.menu.enable(false);
+    this.storage.set('ion_did_tutorial', false);
+    this.router.navigateByUrl('/tutorial');
+  }
 }

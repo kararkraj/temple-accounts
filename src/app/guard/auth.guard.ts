@@ -3,6 +3,7 @@ import { CanActivateChildFn, CanActivateFn, Router } from '@angular/router';
 import { ToasterService } from 'src/app/services/toaster.service';
 import { Auth } from '@angular/fire/auth';
 import { TempleService } from '../services/temple.service';
+import { Storage } from '@ionic/storage-angular';
 
 export const canActivateAuthenticatedRoutes: CanActivateFn = async (route, state) => {
   const router = inject(Router);
@@ -51,4 +52,12 @@ export const canActivateUnAuthenticatedRoutes: CanActivateFn = async (route, sta
     });
   });
 
+};
+
+export const canActivateTutorial = async () => {
+  const storage = inject(Storage);
+  const router = inject(Router);
+
+  const didTutorial = await storage.get('ion_did_tutorial');
+  return didTutorial ? router.parseUrl('tabs/add-entry') : true;
 };

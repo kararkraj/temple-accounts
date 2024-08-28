@@ -1,0 +1,61 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="end">
+      <ion-button color='primary' (click)="startApp()" [hidden]="!showSkip">Skip</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content fullscreen="true">
+  <div class="slide-container" [ngClass]="isDesktop ? 'slide-container-desktop' : 'slide-container-mobile'">
+    <section class="slide">
+      <img src="assets/icons/icon-96.webp" class="slide-image" />
+      <h2 class="slide-title">
+        Welcome to
+        <b>TA</b>
+      </h2>
+      <p>
+        The <b>temple accounts</b> is an app where temple executives can manage donations received by their temple.
+      </p>
+      <p>
+        They can make entry for every donation and keep track of them.
+      </p>
+      <p>
+        They can also generate receipts in PDF format and share the same with donation givers.
+      </p>
+    </section>
+
+    <section class="slide">
+      <img src="assets/icons/icon-96.webp" class="slide-image" />
+      <h2 class="slide-title">Step 1 - Registration:</h2>
+      <ol>
+        <li>Register to the application by navigating to <a routerLink="/register">register</a> page.</li>
+        <li>After registering, you will receive a verification email.</li>
+        <li>Click on the link in the email to verify your email Id.</li>
+        <li>Login with your credentials.</li>
+      </ol>
+    </section>
+
+    <section class="slide">
+      <img src="assets/icons/icon-96.webp" class="slide-image" />
+      <h2 class="slide-title">Step 2 - Add Temple and Services:</h2>
+      <ol>
+        <li>When you login for the first time, you will be redirected to add temple page.</li>
+        <li>Add your temple by filling up the temple details.</li>
+        <p>At least one temple needs to be added to proceed.</p>
+        <li>Add frequently received donation amount as services.</li>
+      </ol>
+    </section>
+
+    <section class="slide">
+      <img src="assets/icons/icon-96.webp" class="slide-image" />
+      <h2 class="slide-title">Final step:</h2>
+      <p>Navigate to add entry page and start entering donation details.</p>
+      <p>On submit, PDF receipt will be downloaded and opened by default PDF opener.</p>
+      <ion-button fill="clear" (click)="startApp()">
+        Continue
+        <ion-icon slot="end" name="arrow-forward"></ion-icon>
+      </ion-button>
+    </section>
+  </div>
+</ion-content>

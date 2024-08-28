@@ -1,10 +1,10 @@
 import { Routes } from '@angular/router';
-import { canActivateAuthenticatedRoutes, canActivateChild, canActivateUnAuthenticatedRoutes } from './guard/auth.guard';
+import { canActivateAuthenticatedRoutes, canActivateChild, canActivateTutorial, canActivateUnAuthenticatedRoutes } from './guard/auth.guard';
 
 export const routes: Routes = [
   {
     path: '',
-    redirectTo: 'tabs',
+    redirectTo: 'tutorial',
     pathMatch: 'full',
   },
   {
@@ -46,6 +46,11 @@ export const routes: Routes = [
     path: 'email-verification',
     loadComponent: () => import('./pages/email-verification/email-verification.page').then(m => m.EmailVerificationPage),
     canActivate: [canActivateAuthenticatedRoutes]
+  },
+  {
+    path: 'tutorial',
+    loadComponent: () => import('./pages/tutorial/tutorial.page').then( m => m.TutorialPage),
+    canActivate: [canActivateTutorial]
   },
   {
     path: '**',
