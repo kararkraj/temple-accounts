@@ -27,7 +27,7 @@ export const canActivateAuthenticatedRoutes: CanActivateFn = async (route, state
 
 };
 
-export const canActivateChild: CanActivateChildFn = async (route, state) => {
+export const canActivateTabs: CanActivateChildFn = async (route, state) => {
   const templeService = inject(TempleService);
   const router = inject(Router);
   const toaster = inject(ToasterService);

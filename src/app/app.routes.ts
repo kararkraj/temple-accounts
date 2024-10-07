@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { canActivateAuthenticatedRoutes, canActivateChild, canActivateTutorial, canActivateUnAuthenticatedRoutes } from './guard/auth.guard';
+import { canActivateAuthenticatedRoutes, canActivateTutorial, canActivateUnAuthenticatedRoutes } from './guard/auth.guard';
 
 export const routes: Routes = [
   {
@@ -34,8 +34,7 @@ export const routes: Routes = [
   {
     path: 'tabs',
     loadChildren: () => import('./pages/tabs/tabs.routes').then(m => m.TABS_ROUTES),
-    canActivate: [canActivateAuthenticatedRoutes],
-    canActivateChild: [canActivateChild]
+    canActivate: [canActivateAuthenticatedRoutes]
   },
   {
     path: 'profile',
