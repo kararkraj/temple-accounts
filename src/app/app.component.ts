@@ -6,6 +6,7 @@ import { addIcons } from 'ionicons';
 import { prismOutline, happyOutline, logInOutline, personAddOutline, moonOutline, hammerOutline, logOutOutline, person, listCircleOutline, addCircleOutline, trashOutline, createOutline, eyeOutline, addOutline, settingsOutline, codeWorkingOutline, downloadOutline, alertCircleOutline, refreshOutline, logoFacebook, logoGoogle, lockClosedOutline, arrowForward } from 'ionicons/icons';
 import { Auth } from '@angular/fire/auth';
 import { StorageService } from './services/storage.service';
+import { TempleService } from './services/temple.service';
 
 @Component({
   selector: 'app-root',
@@ -60,7 +61,8 @@ export class AppComponent implements OnInit {
     private loader: LoadingController,
     private router: Router,
     private storage: StorageService,
-    private menu: MenuController
+    private menu: MenuController,
+    private templeService: TempleService
   ) {
     addIcons({ prismOutline, happyOutline, logInOutline, personAddOutline, moonOutline, hammerOutline, logOutOutline, person, listCircleOutline, addCircleOutline, trashOutline, createOutline, eyeOutline, addOutline, settingsOutline, codeWorkingOutline, downloadOutline, alertCircleOutline, refreshOutline, logoFacebook, logoGoogle, lockClosedOutline, arrowForward });
   }
@@ -74,6 +76,7 @@ export class AppComponent implements OnInit {
     await loader.present();
     this.auth.signOut().then(() => {
       this.storage.resetStorage();
+      this.templeService.onLogout();
       this.router.navigate(['/login'], { replaceUrl: true });
       this.loader.dismiss();
     });

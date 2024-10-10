@@ -32,22 +32,22 @@ export class EditTemplePage extends AddTemplePage implements OnInit {
 
     override async onSubmit() {
         if (this.templeForm.valid && this.templeForm.dirty) {
-            const loader = await this.loader.create({ message: 'Updating temple...' });
-            await loader.present();
-
             const updatedTempleFields: Partial<TempleRequest> = {}
             this.templeForm.get('name')?.dirty ? updatedTempleFields.name = this.templeForm.get('name')?.value : null;
             this.templeForm.get('address')?.dirty ? updatedTempleFields.address = this.templeForm.get('address')?.value : null;
 
             try {
-                this.temple = await this.templeService.updateTemple(this.templeId, updatedTempleFields);
+                const updatedFields = await this.templeService.updateTemple(this.templeId, updatedTempleFields);
+                this.temple = {
+                    ...this.temple,
+                    ...updatedFields
+                }
                 this.toaster.presentToast({ message: 'Temple was updated successfully!', color: 'success' });
             } catch (e: any) {
                 this.toaster.presentToast({ message: `Error: ${e.code}`, color: 'danger' });
                 console.error("Error updating document: ", e);
             } finally {
                 this.resetForm();
-                loader.dismiss();
             }
         } else if (!this.templeForm.valid) {
             this.templeForm.markAllAsTouched();

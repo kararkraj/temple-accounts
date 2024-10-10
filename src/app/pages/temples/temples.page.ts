@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { IonContent, IonHeader, IonTitle, IonToolbar, IonButtons, IonMenuButton, IonGrid, IonRow, IonCol, IonIcon, IonButton, IonAlert, AlertController, LoadingController } from '@ionic/angular/standalone';
+import { Component, OnInit, effect } from '@angular/core';
+import { IonContent, IonHeader, IonTitle, IonToolbar, IonButtons, IonMenuButton, IonGrid, IonRow, IonCol, IonIcon, IonButton, IonAlert, AlertController } from '@ionic/angular/standalone';
 import { Temple } from 'src/app/interfaces/temple';
 import { RouterLink } from '@angular/router';
 import { TempleService } from 'src/app/services/temple.service';
@@ -14,24 +14,18 @@ import { ToasterService } from 'src/app/services/toaster.service';
 })
 export class TemplesPage implements OnInit {
 
-  temples: Temple[] = [];
+  temples: Temple[] | null = [];
+  templesEffect = effect(() => {
+    this.temples = this.templeService.temples();
+  });
 
   constructor(
     private templeService: TempleService,
     private alertController: AlertController,
-    private loader: LoadingController,
     private toaster: ToasterService
   ) { }
 
   ngOnInit() {
-  }
-
-  ionViewWillEnter() {
-    this.getAllTemples();
-  }
-
-  getAllTemples() {
-    this.templeService.getAllTemples().then(temples => this.temples = temples)
   }
 
   async presentDeleteTempleAlert(temple: Temple) {
@@ -49,17 +43,21 @@ export class TemplesPage implements OnInit {
           text: 'Yes, Delete',
           role: 'confirm',
           handler: async () => {
-            const loader = await this.loader.create({ message: 'Deleting temple...' });
-            await loader.present();
-            await this.templeService.deleteTemple(temple.id);
-            await this.toaster.presentToast({ message: 'Temple was deleted successfully.', color: 'success' });
-            await loader.dismiss();
-            this.getAllTemples();
+            this.deleteTemple(temple.id);
           },
         },
       ],
     });
     await alert.present();
+  }
+
+  async deleteTemple(templeId: string) {
+    try {
+      await this.templeService.deleteTemple(templeId);
+      await this.toaster.presentToast({ message: 'Temple was deleted successfully.', color: 'success' });
+    } catch (e: any) {
+      await this.toaster.presentToast({ message: e.code, color: 'danger' });
+    }
   }
 
 }

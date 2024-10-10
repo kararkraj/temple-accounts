@@ -8,4 +8,6 @@ export interface TempleRequest {
     createdAt: string;
     createdBy: string;
     updatedAt: string;
+    isActive: boolean;
+    roles: {[key: string]: string};
 }

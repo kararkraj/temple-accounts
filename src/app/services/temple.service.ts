@@ -1,44 +1,56 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal, WritableSignal } from '@angular/core';
 import { Temple, TempleRequest } from '../interfaces/temple';
-import { addDoc, collection, deleteDoc, doc, Firestore, getDocs, query, updateDoc, where } from '@angular/fire/firestore';
-import { Auth } from '@angular/fire/auth';
-import { NetworkService } from './network.service';
-import { StorageService } from './storage.service';
-import { STORAGE_KEYS } from '../storage.config';
+import { addDoc, collection, doc, FieldPath, Firestore, getDoc, onSnapshot, query, updateDoc, where } from '@angular/fire/firestore';
+import { Auth, Unsubscribe } from '@angular/fire/auth';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TempleService {
 
+  temples: WritableSignal<Temple[] | null> = signal(null);
+  templesCount: number | undefined;
+  templesListener: Unsubscribe | undefined;
+
   constructor(
     private fireStore: Firestore,
-    private auth: Auth,
-    private network: NetworkService,
-    private storage: StorageService
+    private auth: Auth
   ) { }
 
-  async getAllTemples(): Promise<Temple[]> {
-    const temples = await this.storage.get(STORAGE_KEYS.TEMPLE.temples);
-
-    // If temples is null then it is not yet fetched from server.
-    //  Hence, fetch temples from server and store it locally. This will happen only one time during the session.
-    if (temples === null) {
-      const q = query(collection(this.fireStore, "temples"), where("createdBy", "==", this.auth.currentUser?.uid));
-      const querySnapshot = await getDocs(q);
-      const templesFromServer = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as Temple[];
-
-      await this.storage.set(STORAGE_KEYS.TEMPLE.temples, templesFromServer);
-      return templesFromServer;
+  async getTemplesCount() {
+    if (!this.templesCount) {
+      return (await this.getAllTemples()).length;
     } else {
-      return temples;
+      return this.templesCount;
+    }
+  }
+
+  async getAllTemples(): Promise<Temple[]> {
+    if (!this.templesListener) {
+      const fieldPath = new FieldPath('roles', this.auth.currentUser?.email as string);
+      const q = query(
+        collection(this.fireStore, "temples"),
+        where(fieldPath, 'in', ['owner', 'admin', 'member', 'viewer']),
+        where('isActive', '==', true)
+      );
+      return new Promise(resolve => {
+        this.templesListener = onSnapshot(q, querySnapshot => {
+          const temples = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as Temple[];
+          this.temples.set(temples);
+          this.templesCount = temples.length;
+          resolve(temples);
+        });
+      });
+    } else {
+      return this.temples() as Temple[];
     }
   }
 
   async getTempleById(templeId: string): Promise<Temple> {
-    const temples = await this.storage.get(STORAGE_KEYS.TEMPLE.temples);
-    const temple = temples.find((temple: Temple) => temple.id === templeId);
-    if (temple) {
+    const templeRef = doc(this.fireStore, 'temples', templeId);
+    const docSnap = await getDoc(templeRef);
+    if (docSnap.exists()) {
+      const temple: Temple = { id: docSnap.id, ...docSnap.data() } as Temple;
       return temple;
     } else {
       // Firestore throws permission-denied error when unknown temple id is queried.
@@ -49,59 +61,53 @@ export class TempleService {
 
   async addTemple(temple: { name: string, address: string }): Promise<Temple> {
     try {
-      await this.network.isNetworkConnected();
       const isoDateTime = new Date().toISOString();
       const templeReq: TempleRequest = {
         name: temple.name,
         address: temple.address,
         createdAt: isoDateTime,
         createdBy: this.auth.currentUser?.uid as string,
-        updatedAt: isoDateTime
+        updatedAt: isoDateTime,
+        isActive: true,
+        roles: {
+          [this.auth.currentUser?.email as string]: 'owner'
+        }
       }
-      const doc = await addDoc(collection(this.fireStore, "temples"), templeReq);
+      const templeDoc = await addDoc(collection(this.fireStore, "temples"), templeReq);
 
-      const newTemple = { ...templeReq, id: doc.id };
-      const temples = await this.storage.get(STORAGE_KEYS.TEMPLE.temples);
-      temples.push(newTemple);
-      await this.storage.set(STORAGE_KEYS.TEMPLE.temples, temples);
-
+      const newTemple = { ...templeReq, id: templeDoc.id };
       return newTemple;
     } catch (err) {
       throw (err);
     }
   }
 
-  async updateTemple(templeId: string, updatedFields: Partial<TempleRequest>): Promise<Temple> {
+  async updateTemple(templeId: string, updatedFields: Partial<TempleRequest>): Promise<Partial<Temple>> {
     try {
-      await this.network.isNetworkConnected();
-      const templeRef = doc(this.fireStore, 'temples', templeId);
       updatedFields.updatedAt = new Date().toISOString();
+      const templeRef = doc(this.fireStore, 'temples', templeId);
       await updateDoc(templeRef, updatedFields);
-
-      const temples = await this.storage.get(STORAGE_KEYS.TEMPLE.temples);
-      const index = temples.findIndex((temple: Temple) => temple.id === templeId);
-      temples[index] = { ...temples[index], ...updatedFields };
-      await this.storage.set(STORAGE_KEYS.TEMPLE.temples, temples);
-
-      return temples[index];
+      return updatedFields;
     } catch (err) {
       throw (err);
     }
   }
 
-  async deleteTemple(templeId: string): Promise<Temple> {
+  async deleteTemple(templeId: string): Promise<Partial<Temple>> {
     try {
-      await this.network.isNetworkConnected();
-      await deleteDoc(doc(this.fireStore, "temples", templeId));
-
-      const temples = await this.storage.get(STORAGE_KEYS.TEMPLE.temples) as Temple[];
-      const index = temples.findIndex((temple: Temple) => temple.id === templeId);
-      const deletedTemple = temples.splice(index, 1)[0];
-      await this.storage.set(STORAGE_KEYS.TEMPLE.temples, temples);
-
-      return deletedTemple;
+      const updatedFields: { isActive: boolean } = { isActive: false };
+      return await this.updateTemple(templeId, updatedFields);
     } catch (err) {
       throw (err);
     }
+  }
+
+  onLogout() {
+    this.templesCount = undefined;
+    this.temples.set(null);
+    if (this.templesListener) {
+      this.templesListener();
+    }
+    this.templesListener = undefined;
   }
 }

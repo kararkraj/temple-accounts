@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonTextarea, IonInput, IonButtons, IonMenuButton, IonItem, IonIcon, LoadingController, IonLabel, IonItemDivider, IonItemGroup, IonGrid, IonRow, IonCol, IonBackButton } from '@ionic/angular/standalone';
+import { IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonTextarea, IonInput, IonButtons, IonMenuButton, IonItem, IonIcon, IonLabel, IonItemDivider, IonItemGroup, IonGrid, IonRow, IonCol, IonBackButton } from '@ionic/angular/standalone';
 import { ToasterService } from 'src/app/services/toaster.service';
 import { TempleService } from 'src/app/services/temple.service';
 
@@ -21,7 +21,6 @@ export class AddTemplePage implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     public templeService: TempleService,
-    public loader: LoadingController,
     public toaster: ToasterService,
     private cdr: ChangeDetectorRef
   ) {
@@ -36,20 +35,14 @@ export class AddTemplePage implements OnInit {
 
   async onSubmit() {
     if (this.templeForm.valid) {
-      const loader = await this.loader.create({ message: "Adding temple..." });
-      loader.present();
-
       try {
-        await this.templeService.addTemple(this.templeForm.getRawValue());
+        this.templeService.addTemple(this.templeForm.getRawValue());
         this.toaster.presentToast({ message: 'Temple was added successfully!', color: 'success' });
+        this.resetForm();
       } catch (e: any) {
         this.toaster.presentToast({ message: `Error: ${e.code}`, color: 'danger' });
         console.error("Error adding document: ", e);
-      } finally {
-        this.resetForm();
-        loader.dismiss();
       }
-
     } else {
       this.templeForm.markAllAsTouched();
 
