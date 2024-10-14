@@ -30,22 +30,23 @@ export class EditCharityTypePage extends AddCharityTypePage implements OnInit {
 
   override async onSubmit(): Promise<void> {
     if (this.charityTypeForm.valid && this.charityTypeForm.dirty) {
-      const loading = await this.loading.create({ message: "Updating service..." });
-      await loading.present();
 
       const updatedFields: Partial<CharityTypeRequest> = {};
       this.charityTypeForm.get('name')?.dirty ? updatedFields.name = this.charityTypeForm.get('name')?.value : null;
       this.charityTypeForm.get('amount')?.dirty ? updatedFields.amount = this.charityTypeForm.get('amount')?.value : null;
 
       try {
-        this.charityType = await this.charityTypeService.updateCharityType(this.charityTypeId, updatedFields);
+        const charityType = await this.charityTypeService.updateCharityType(this.charityTypeId, updatedFields);
+        this.charityType = {
+          ...this.charityType,
+          ...charityType
+        }
         this.toaster.presentToast({ message: "Service was updated successfully.", color: "success" });
       } catch (e: any) {
         this.toaster.presentToast({ message: `Error: ${e.code}`, color: 'danger' });
         console.error("Error updating document: ", e);
       } finally {
         this.resetForm();
-        loading.dismiss();
       }
     } else if (this.charityTypeForm.valid) {
       this.toaster.presentToast({ message: "Nothing to update." });

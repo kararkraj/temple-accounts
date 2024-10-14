@@ -8,4 +8,5 @@ export interface CharityTypeRequest {
     createdAt: string;
     createdBy: string;
     updatedAt: string;
+    isActive: boolean;
 }

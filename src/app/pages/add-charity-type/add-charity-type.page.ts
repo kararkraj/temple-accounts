@@ -34,20 +34,16 @@ export class AddCharityTypePage implements OnInit {
   ngOnInit() {
   }
 
-  async onSubmit() {
+  onSubmit() {
     if (this.charityTypeForm.valid) {
-      const loading = await this.loading.create({ message: "Adding service..." });
-      await loading.present();
-
       try {
-        await this.charityTypeService.addCharityType(this.charityTypeForm.getRawValue());
+        this.charityTypeService.addCharityType(this.charityTypeForm.getRawValue());
         this.toaster.presentToast({ message: 'Service was added successfully.', color: 'success' });
       } catch (e: any) {
         this.toaster.presentToast({ message: `Error: ${e.code}`, color: 'danger' });
         console.error("Error adding document: ", e);
       } finally {
         this.resetForm();
-        loading.dismiss();
       }
     } else {
       this.charityTypeForm.markAllAsTouched();
