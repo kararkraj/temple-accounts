@@ -5,7 +5,7 @@ import { Platform } from "@ionic/angular";
 import * as pdfMake from 'pdfmake/build/pdfmake';
 import * as pdfFonts from 'pdfmake/build/vfs_fonts';
 import { TDocumentDefinitions } from 'pdfmake/interfaces';
-import { Entry } from '../interfaces/entry';
+import { EntryForList } from '../interfaces/entry';
 (pdfMake as any).vfs = pdfFonts.pdfMake.vfs;
 
 @Injectable({
@@ -17,7 +17,7 @@ export class PdfmakeService {
     public platform: Platform
   ) { }
 
-  generateAndDownloadPDF(data: Entry) {
+  generateAndDownloadPDF(data: EntryForList) {
     return new Promise((resolve, reject) => {
       if (this.platform.is('desktop') || this.platform.is('mobileweb')) {
         pdfMake.createPdf(this.getDocDefinition(data)).download(`${data.name}`);
@@ -46,7 +46,7 @@ export class PdfmakeService {
     });
   }
 
-  getDocDefinition(data: Entry): TDocumentDefinitions {
+  getDocDefinition(data: EntryForList): TDocumentDefinitions {
     return {
       header: {
         columns: [
@@ -65,7 +65,7 @@ export class PdfmakeService {
           style: 'header'
         },
         {
-          text: `Received from ${data.title} ${data.name} a sum of Rs. ${data.charityTypeAmount} (Rs.${this.numberToWords(data.charityTypeAmount)}) towards ${data.charityTypeName}.`,
+          text: `Received from ${data.title} ${data.name} a sum of Rs. ${data.serviceAmount} (Rs.${this.numberToWords(data.serviceAmount)}) towards ${data.serviceName}.`,
           style: 'subheader',
           margin: [0, 20, 0, 0]
         }

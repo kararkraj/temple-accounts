@@ -32,10 +32,10 @@
 
       @if (!isEdit) {
       <ion-item lines="full">
-        <ion-select formControlName="temple" label="Temple *" label-placement="floating" placeholder="Select temple"
+        <ion-select formControlName="templeId" label="Temple *" label-placement="floating" placeholder="Select temple"
           required name="temple" (selectionChange)="onTempleSelection($event)">
           @for (temple of temples; track temple.id) {
-          <ion-select-option [value]="temple">{{temple.name}}</ion-select-option>
+          <ion-select-option [value]="temple.id">{{temple.name}}</ion-select-option>
           }
         </ion-select>
       </ion-item>

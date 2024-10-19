@@ -40,23 +40,23 @@ export class EditEntryPage {
 
   async onSubmit() {
     if (this.entryForm.valid && this.entryForm.dirty) {
-      const loader = await this.loader.create({ message: 'Updating entry...' });
-      await loader.present();
-
       let entry: Partial<{ name: string, title: string }> = {}
       this.entryForm.get('title')?.dirty ? entry.title = this.entryForm.get('title')?.value : null;
       this.entryForm.get('name')?.dirty ? entry.name = this.entryForm.get('name')?.value : null;
 
       try {
-        this.entry = await this.entryService.updateEntry(this.entryId, entry);
+        const updatedFields = await this.entryService.updateEntry(this.entryId, entry);
+        this.entry = {
+          ...this.entry,
+          ...updatedFields
+        }
         this.toaster.presentToast({ message: 'Entry was updated successfully.', color: 'success' });
-        this.pdfService.generateAndDownloadPDF(this.entry);
+        // this.pdfService.generateAndDownloadPDF(this.entry);
       } catch (e: any) {
         this.toaster.presentToast({ message: `Error: ${e.code}`, color: 'danger' });
         console.error("Error updating document: ", e);
       } finally {
         this.resetForm();
-        loader.dismiss();
       }
     } else if (!this.entryForm.valid) {
       this.entryForm.markAllAsTouched();

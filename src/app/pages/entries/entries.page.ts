@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { IonContent, IonHeader, IonTitle, IonToolbar, IonButtons, IonRow, IonButton, IonIcon, IonGrid, IonCol, AlertController, LoadingController, IonMenuButton } from '@ionic/angular/standalone';
-import { Entry } from 'src/app/interfaces/entry';
+import { Entry, EntryForList } from 'src/app/interfaces/entry';
 import { EntryService } from 'src/app/services/entry.service';
 import { PdfmakeService } from 'src/app/services/pdfmake.service';
 import { ToasterService } from 'src/app/services/toaster.service';
@@ -15,12 +15,11 @@ import { ToasterService } from 'src/app/services/toaster.service';
 })
 export class EntriesPage implements OnInit {
 
-  entries: Entry[] = [];
+  entries: EntryForList[] = [];
 
   constructor(
     private entryService: EntryService,
     private alertController: AlertController,
-    private loader: LoadingController,
     private pdfService: PdfmakeService,
     private toaster: ToasterService
   ) { }
@@ -51,11 +50,8 @@ export class EntriesPage implements OnInit {
           text: 'Yes, Delete',
           role: 'confirm',
           handler: async () => {
-            const loader = await this.loader.create({ message: 'Deleting entry...' });
-            await loader.present();
             await this.entryService.deleteEntry(entry.id);
             await this.toaster.presentToast({ message: 'Entry was deleted successfully.', color: 'success' });
-            await loader.dismiss();
             this.getEntries();
           },
         },
@@ -64,7 +60,7 @@ export class EntriesPage implements OnInit {
     await alert.present();
   }
 
-  downloadReceipt(entry: Entry) {
+  downloadReceipt(entry: EntryForList) {
     this.pdfService.generateAndDownloadPDF(entry);
   }
 

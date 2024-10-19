@@ -35,7 +35,7 @@ export class AddEntryPage implements OnInit {
     this.entryForm = this.formBuilder.group({
       title: [null, [Validators.required]],
       name: [null, [Validators.required, Validators.maxLength(100), Validators.pattern("[a-zA-Z0-9 ]+")]],
-      temple: [null, [Validators.required]],
+      templeId: [null, [Validators.required]],
       charityType: [null, [Validators.required]],
       charityTypeName: [null, [Validators.required, Validators.maxLength(50)]],
       charityTypeAmount: [null, [Validators.required, Validators.min(1)]],
@@ -71,35 +71,32 @@ export class AddEntryPage implements OnInit {
 
   async onSubmit() {
     if (this.entryForm.valid) {
-      const loader = await this.loader.create({ message: 'Adding entry...' });
-      await loader.present();
-
       const charityType = this.entryForm.get('charityType')?.value;
-      const temple = this.entryForm.get('temple')?.value;
 
       let entry: EntryAdd = {
         title: this.entryForm.get('title')?.value,
         name: this.entryForm.get('name')?.value,
-
-        templeName: temple.name,
-        templeAddress: temple.address,
-        templeId: temple.id,
-
-        charityTypeId: this.ionSegment.value === "custom" ? '' : charityType.id,
-        charityTypeAmount: this.ionSegment.value === "custom" ? this.entryForm.get('charityTypeAmount')?.value : charityType.amount,
-        charityTypeName: this.ionSegment.value === "custom" ? this.entryForm.get('charityTypeName')?.value : charityType.name,
+        serviceId: this.ionSegment.value === "custom" ? '' : charityType.id,
+        serviceAmount: this.ionSegment.value === "custom" ? this.entryForm.get('charityTypeAmount')?.value : charityType.amount,
+        serviceName: this.ionSegment.value === "custom" ? this.entryForm.get('charityTypeName')?.value : charityType.name,
       }
 
       try {
-        const entryRes = await this.entryService.addEntry(entry);
+        const templeId = this.entryForm.get('templeId')?.value;
+        const entryRes = await this.entryService.addEntry(entry, templeId);
         this.toaster.presentToast({ message: 'Entry was added successfully.', color: 'success' });
-        this.pdfService.generateAndDownloadPDF(entryRes);
+
+        const temple = this.temples.find(temple => temple.id === templeId) as Temple;
+        this.pdfService.generateAndDownloadPDF({ 
+          ...entryRes,
+          templeAddress: temple?.address,
+          templeName: temple?.name
+        });
       } catch (e: any) {
         this.toaster.presentToast({ message: `Error: ${e.code}`, color: 'danger' });
         console.error("Error adding document: ", e);
       } finally {
         this.resetForm();
-        loader.dismiss();
       }
     } else {
       this.entryForm.markAllAsTouched();

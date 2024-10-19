@@ -1,31 +1,26 @@
-export interface Entry extends EntryAdd {
+export interface Entry extends EntryRequest {
   id: string;
   createdBy: string;
   createdAt: string;
   updatedAt: string;
 }
 
-export interface EntryResponse extends EntryAdd {
-  createdAt: { seconds: number, nanoseconds: number};
-  createdBy: string;
-  updatedAt: { seconds: number, nanoseconds: number};
+export interface EntryForList extends Entry {
+  templeName: string;
+  templeAddress: string;
 }
 
 export interface EntryRequest extends EntryAdd {
   createdAt: any;
   createdBy: string;
   updatedAt: any;
+  isActive: boolean;
 }
 
 export interface EntryAdd {
   title: string;
   name: string;
-
-  templeName: string;
-  templeAddress: string;
-  templeId: string;
-
-  charityTypeName: string;
-  charityTypeAmount: number;
-  charityTypeId: string;
+  serviceName: string;
+  serviceAmount: number;
+  serviceId: string;
 }
