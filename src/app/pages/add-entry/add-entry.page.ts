@@ -53,7 +53,7 @@ export class AddEntryPage implements OnInit {
   async getTemples() {
     this.temples = await this.entryService.getTemples()
     if (this.temples.length === 1) {
-      this.entryForm.patchValue({ temple: this.temples[0] });
+      this.entryForm.patchValue({ templeId: this.temples[0].id });
     }
   }
 
