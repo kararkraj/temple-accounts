@@ -1,15 +1,15 @@
 export const environment = {
   production: true,
   firebase: {
-    projectId: "temple-accounts-1d8a7",
-    appId: "1:987336685961:web:498b1f3c16e9f8c5ebc958",
-    storageBucket: "temple-accounts-1d8a7.appspot.com",
-    apiKey: "AIzaSyCGF8te5tE4quTYERk-4agtk5nL2qmRgw8",
-    authDomain: "temple-accounts-1d8a7.firebaseapp.com",
-    messagingSenderId: "987336685961",
-    measurementId: "G-PPDVMP3EC5"
+    projectId: "temple-accounts-556e6",
+    appId: "1:132896477598:web:41a427ff6f06c65857068f",
+    storageBucket: "temple-accounts-556e6.appspot.com",
+    apiKey: "AIzaSyDOdPtsrEafCXKOC5nwAXr9KvU7pNMxam8",
+    authDomain: "temple-accounts-556e6.firebaseapp.com",
+    messagingSenderId: "132896477598",
+    measurementId: "G-JV6LKNZ5T3"
   },
   appCheck: {
-    siteKey: '6Lf8IS4qAAAAACmfEqzqyME-bvXzmketgBQ5C-TF'
+    siteKey: '6Lc1UygqAAAAAMTofSdpYhD6mzw7kokYHuvZ5tCr'
   }
 };
