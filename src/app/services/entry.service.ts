@@ -70,7 +70,7 @@ export class EntryService {
   }
 
   async updateEntry(entryId: string, updatedFields: Partial<Entry>): Promise<Partial<Entry>> {
-    const entryRef = doc(this.fireStore, 'entries', entryId);
+    const entryRef = doc(this.fireStore, 'temples/hlEzWnvn1pty1s0nzO3S/entries', entryId);
     const entryReq: Partial<EntryRequest> = {
       updatedAt: new Date().toISOString(),
       ...updatedFields

@@ -11,3 +11,12 @@
 .input-disabled, .textarea-disabled {
     opacity: 0.5;
 }
+
+ion-item {
+    ion-input.max-width-60 {
+        max-width: 60%;
+    }
+    ion-select {
+        align-self: flex-start;
+    }
+}

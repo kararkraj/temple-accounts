@@ -1,6 +1,6 @@
 import { Injectable, signal, WritableSignal } from '@angular/core';
 import { Temple, TempleRequest } from '../interfaces/temple';
-import { addDoc, collection, doc, FieldPath, Firestore, getDoc, onSnapshot, query, updateDoc, where } from '@angular/fire/firestore';
+import { addDoc, and, collection, doc, FieldPath, Firestore, getDoc, onSnapshot, or, query, updateDoc, where } from '@angular/fire/firestore';
 import { Auth, Unsubscribe } from '@angular/fire/auth';
 
 @Injectable({
@@ -29,9 +29,13 @@ export class TempleService {
     if (!this.templesListener) {
       const fieldPath = new FieldPath('roles', this.auth.currentUser?.email as string);
       const q = query(
-        collection(this.fireStore, "temples"),
-        where(fieldPath, 'in', ['owner', 'admin', 'member', 'viewer']),
-        where('isActive', '==', true)
+        collection(this.fireStore, "temples"), and(
+          or(
+            where(fieldPath, 'in', ['owner', 'admin', 'member', 'viewer']),
+            where('createdBy', '==', this.auth.currentUser?.uid),
+          ),
+          where('isActive', '==', true)
+        )
       );
       return new Promise(resolve => {
         this.templesListener = onSnapshot(q, querySnapshot => {
@@ -59,7 +63,7 @@ export class TempleService {
     }
   }
 
-  async addTemple(temple: { name: string, address: string }): Promise<Temple> {
+  async addTemple(temple: { name: string, address: string, roles: { [key: string]: string } }): Promise<Temple> {
     try {
       const isoDateTime = new Date().toISOString();
       const templeReq: TempleRequest = {
@@ -70,7 +74,8 @@ export class TempleService {
         updatedAt: isoDateTime,
         isActive: true,
         roles: {
-          [this.auth.currentUser?.email as string]: 'owner'
+          [this.auth.currentUser?.email as string]: 'owner',
+          ...temple.roles
         }
       }
       const templeDoc = await addDoc(collection(this.fireStore, "temples"), templeReq);

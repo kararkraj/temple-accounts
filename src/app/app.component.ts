@@ -3,7 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { IonApp, IonRouterOutlet, IonSplitPane, IonContent, IonMenu, IonList, IonListHeader, IonMenuToggle, IonItem, IonIcon, IonLabel, IonToggle, IonButton, IonAlert, LoadingController, MenuController } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { prismOutline, happyOutline, logInOutline, personAddOutline, moonOutline, hammerOutline, logOutOutline, person, listCircleOutline, addCircleOutline, trashOutline, createOutline, eyeOutline, addOutline, settingsOutline, codeWorkingOutline, downloadOutline, alertCircleOutline, refreshOutline, logoFacebook, logoGoogle, lockClosedOutline, arrowForward } from 'ionicons/icons';
+import { prismOutline, happyOutline, logInOutline, personAddOutline, moonOutline, hammerOutline, logOutOutline, person, listCircleOutline, addCircleOutline, trashOutline, createOutline, eyeOutline, addOutline, settingsOutline, codeWorkingOutline, downloadOutline, alertCircleOutline, refreshOutline, logoFacebook, logoGoogle, lockClosedOutline, arrowForward, closeCircleOutline } from 'ionicons/icons';
 import { Auth } from '@angular/fire/auth';
 import { StorageService } from './services/storage.service';
 import { TempleService } from './services/temple.service';
@@ -64,7 +64,7 @@ export class AppComponent implements OnInit {
     private menu: MenuController,
     private templeService: TempleService
   ) {
-    addIcons({ prismOutline, happyOutline, logInOutline, personAddOutline, moonOutline, hammerOutline, logOutOutline, person, listCircleOutline, addCircleOutline, trashOutline, createOutline, eyeOutline, addOutline, settingsOutline, codeWorkingOutline, downloadOutline, alertCircleOutline, refreshOutline, logoFacebook, logoGoogle, lockClosedOutline, arrowForward });
+    addIcons({ prismOutline, happyOutline, logInOutline, personAddOutline, moonOutline, hammerOutline, logOutOutline, person, listCircleOutline, addCircleOutline, trashOutline, createOutline, eyeOutline, addOutline, settingsOutline, codeWorkingOutline, downloadOutline, alertCircleOutline, refreshOutline, logoFacebook, logoGoogle, lockClosedOutline, arrowForward, closeCircleOutline });
   }
 
   async ngOnInit() {

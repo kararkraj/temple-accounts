@@ -28,6 +28,38 @@
       </ion-item>
     </ion-item-group>
 
+    <ion-item-group>
+      <ion-item-divider>
+        <ion-label>Share Temple with other users:</ion-label>
+      </ion-item-divider>
+      <ion-button type="button" color="primary" shape="round" (click)="addUser()">
+        <ion-icon slot="start" name="add-outline"></ion-icon>
+        Add user
+      </ion-button>
+    
+      <ng-container formArrayName="roles">
+        @for (user of roles.controls; let i = $index; track i) {
+        @if (i > 0) {
+        <ion-item-divider></ion-item-divider>
+        }
+        <ion-item lines="none" [formGroup]="user">
+          <ion-input formControlName="email" label="Email *" label-placement="floating" placeholder="example@domain.com"
+            type="text" name="email" required maxlength="100" minlength="5" helperText="example@domain.com"
+            errorText="Invalid Email" class="max-width-60"></ion-input>
+          <ion-select formControlName="role" required class="ion-margin-start" label="Role *" label-placement="floating">
+            <ion-select-option value="admin">Admin</ion-select-option>
+            <ion-select-option value="member">Member</ion-select-option>
+            <ion-select-option value="viewer">Viewer</ion-select-option>
+          </ion-select>
+          <ion-button (click)="deleteUser(i)" size="default">
+            <ion-icon slot="icon-only" name="close-circle-outline"></ion-icon>
+          </ion-button>
+        </ion-item>
+        }
+      </ng-container>
+    
+    </ion-item-group>
+
     @if (canEdit) {
     <ion-grid class="ion-no-padding">
       <ion-row>
